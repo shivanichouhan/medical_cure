@@ -24,9 +24,9 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-const {add_image}=require('../controller/products');
+const {add_image,image_data}=require('../controller/products');
 
 router.post("/add_image",upload.single('image'),add_image)
-
+router.get('/image_data',image_data)
 
 module.exports = router;

@@ -13,17 +13,25 @@ const product = require('./routes/products')
 const app = express()
 
 mongoose.Promise = global.Promise
-mongoose
-    .connect(
-        // 'mongodb://127.0.0.1:27017/litlight',   
-        // 'mongodb+srv://shivani:123navgurukul@cluster0.kpjuc.mongodb.net/medical?retryWrites=true&w=majority',
-        {
-            useNewUrlParser: true,
-            useCreateIndex: true
-        }
-    )
+const PASSWORD = encodeURIComponent('@123navgurukul');
+const database = 'xpresscure' 
+const databs =  encodeURI(``)
+mongoose.set('useFindAndModify', false);
 
-    .then(() => console.log('DB Connected'))
+mongoose
+  .connect( 
+    'mongodb+srv://xpresscure:@123navgurukul@123s.jvop3.mongodb.net/<dbname>?retryWrites=true&w=majority',
+    // process.env.MONGO_URI,   
+ {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true
+    }
+  )
+
+  .then(() => console.log('DB Connected'))
+  .catch(()=> console.log('not conected'))
+
 
 // app.use(expressValidator())
 app.set('view engine', 'ejs')
@@ -37,7 +45,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-
+app.get("/demo",(req,res)=>{
+    res.send("good shivani")
+})
 
 app.use('/', product)
 
