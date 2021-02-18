@@ -8,9 +8,12 @@ var path = require('path')
 const cors = require('cors')
 const morgan = require('morgan')
 const autoIncrement = require('mongoose-auto-increment');
-const product = require('./routes/products')
-
 const app = express()
+
+
+const product = require('./routes/products');
+const Users = require('./routes/users')
+
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -50,6 +53,7 @@ app.get("/demo",(req,res)=>{
 })
 
 app.use('/', product)
+app.use('/',Users)
 
 
 const port = process.env.PORT || 8000
