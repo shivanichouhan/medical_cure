@@ -22,20 +22,20 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 
 exports.normal_signup = async (req, res) => {
-    try {
+    // try {
 
         const { user_name, email, password, phone, con_password } = req.body;
-        if(req.file){
+        // if(req.file){
 
-        const path=req.file.path
-        cloudenary.uploader.upload(
-            path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-           async function (err, images) {
-                if (err) console.log(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(path)
+        // const path=req.file.path
+        // cloudenary.uploader.upload(
+        //     path,
+        //     { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+        //    async function (err, images) {
+        //         if (err) console.log(err)
+        //         console.log('file uploaded to Cloudinary')
+        //         const fs = require('fs')
+        //         fs.unlinkSync(path)
                 if (password == con_password) {
                     const hashedPassword = await hashPassword(password)
                     const data_check = await User.findOne({ email: email })
@@ -45,8 +45,8 @@ exports.normal_signup = async (req, res) => {
                             username: user_name,
                             email: email,
                             password: hashedPassword,
-                            Mobile: phone,
-                            profile_pic:images.secure_url
+                            Mobile: phone
+                            // profile_pic:images.secure_url
 
                         })
                         datas.save()
@@ -60,14 +60,14 @@ exports.normal_signup = async (req, res) => {
                 } else {
                     res.json({ code: 200, msg: "confirm password is wrong" })
                 }
-            })
-        }else{
-            res.json({code:200,msg:"profile didn't add"})
-        }
+            // })
+        // }else{
+        //     res.json({code:200,msg:"profile didn't add"})
+        // }
 
-    } catch (err) {
-        res.send(err)
-    }
+    // } catch (err) {
+    //     res.send(err)
+    // }
 
 };
 
