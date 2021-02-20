@@ -151,8 +151,7 @@ const EventSchema = new mongoose.Schema(
     },userType:{
       type:Number
     },Mobile:{
-      type:String,
-      default:""
+      type:String
     },videos:{
       type:Number,
       default:0
