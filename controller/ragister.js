@@ -31,7 +31,7 @@ exports.normal_signup = async (req, res) => {
         cloudenary.uploader.upload(
             path,
             { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, images) {
+           async function (err, images) {
                 if (err) console.log(err)
                 console.log('file uploaded to Cloudinary')
                 const fs = require('fs')
