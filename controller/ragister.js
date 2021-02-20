@@ -36,7 +36,7 @@ exports.normal_signup = async (req, res) => {
         //         console.log('file uploaded to Cloudinary')
         //         const fs = require('fs')
         //         fs.unlinkSync(path)
-                if (password == con_password) {
+                // if (password == con_password) {
                     const hashedPassword = await hashPassword(password)
                     const data_check = await User.findOne({ email: email })
                     console.log(data_check)
@@ -57,9 +57,9 @@ exports.normal_signup = async (req, res) => {
                         res.json({ code: 200, msg: "Email already exist" })
                     }
 
-                } else {
-                    res.json({ code: 200, msg: "confirm password is wrong" })
-                }
+                // } else {
+                //     res.json({ code: 200, msg: "confirm password is wrong" })
+                // }
             // })
         // }else{
         //     res.json({code:200,msg:"profile didn't add"})
