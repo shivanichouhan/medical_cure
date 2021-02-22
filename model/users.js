@@ -152,6 +152,7 @@ const EventSchema = new mongoose.Schema(
       type:Number
     },Mobile:{
       type:String,
+      unique:true,
       default:""
     },videos:{
       type:Number,
@@ -164,6 +165,14 @@ const EventSchema = new mongoose.Schema(
     },mobile_verify:{
       type:Boolean,
       default:false
+    },
+    lt:{
+      type:String,
+      default:' '
+    },
+    lg:{
+      type:String,
+      default:' '
     }
   },
   { timestamps: true }

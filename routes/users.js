@@ -1,6 +1,3 @@
-
-
-
 var express = require('express');
 var router = express.Router();
 
@@ -27,8 +24,11 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-const {normal_signup}=require('../controller/ragister');
+const {normal_signup,normal_signin,otp_send,otp_verify}=require('../controller/users');
 
-router.post("/ragister_user",normal_signup)
+router.post("/signin_user",normal_signin)
+router.post("/register_user",normal_signup)
+router.post("/user/send_otp",otp_send)
+router.post("/user/verify_otp",otp_verify)
 
 module.exports = router;

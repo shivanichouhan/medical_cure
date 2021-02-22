@@ -10,11 +10,17 @@ const morgan = require('morgan')
 const autoIncrement = require('mongoose-auto-increment');
 const app = express()
 
-
+//user routes
 const product = require('./routes/products');
 const Users = require('./routes/users')
+const dashboard_img = require('./routes/dashboard_img_list')
+//
 
-
+//admin routes 
+const img_banner = require("./routes/admin/banner_img")
+const img_offer = require("./routes/admin/offer_img")
+const specialList = require("./routes/admin/add_speacialist")
+//
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
 const database = 'xpresscure' 
@@ -25,7 +31,7 @@ mongoose
   .connect( 
     'mongodb+srv://xpresscure:@123navgurukul@123s.jvop3.mongodb.net/<dbname>?retryWrites=true&w=majority',
     // process.env.MONGO_URI,   
- {
+   {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true
@@ -51,11 +57,17 @@ app.use(bodyParser.urlencoded({
 app.get("/demo",(req,res)=>{
     res.send("good shivani")
 })
+//users middleware
+app.use('/api',dashboard_img)
+app.use('/api', product)
+app.use('/api',Users)
+//
 
-app.use('/', product)
-app.use('/',Users)
-
-
+//admin middleware
+app.use('/api',img_banner)
+app.use('/api',img_offer)
+app.use('/api',specialList)
+//
 const port = process.env.PORT || 8000
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
