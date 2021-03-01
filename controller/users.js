@@ -117,12 +117,14 @@ exports.normal_signin = async (req, res) => {
     const { email, password } = req.body
     console.log(email,password)
     const user = await User.findOne({email:email})
+    console.log(user)
     if (!user) {
         res.json({
-            code: 200,
-            msg: 'User with that email does not exist. Please signup'
+            code: 400,
+            msg: 'not exist'
         })
-    }
+    }else{
+
     console.log(user)
     const validPassword = await validatePassword(password, user.password)
     console.log(validPassword,'44')
@@ -134,6 +136,8 @@ exports.normal_signin = async (req, res) => {
     const ss = await User.updateOne({ bearer_token: token })
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
+}
+
 }
 
 
