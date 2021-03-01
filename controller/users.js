@@ -136,8 +136,13 @@ exports.normal_signin = async (req, res) => {
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
     }
+<<<<<<< HEAD
+
+}
+=======
 }
 
+>>>>>>> 4e3afd33bb9abc36752ce1e20e892c33884a0188
 
 exports.clinic_reg = async(req,res)=>{
     var certificate = req.files.certificate
