@@ -1,5 +1,4 @@
 const product = require('../model/products');
-
 const cloudenary = require('cloudinary').v2
 
 cloudenary.config({
@@ -7,7 +6,6 @@ cloudenary.config({
     api_key: '844719118241756',
     api_secret: '6IPsNfYyr9i43_qOhNPvLTh7Tg4'
 })
-
 
 exports.add_image = (req, res) => {
     const { title, summery } = req.body
@@ -35,13 +33,11 @@ exports.add_image = (req, res) => {
                 // product
             }
         )
-    } else {
+    }else{
         res.send("you dint choose image file")
     }
 
 }
-
-
 
 exports.image_data =(req,res)=>{
     product.find()

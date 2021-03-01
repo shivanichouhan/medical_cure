@@ -1,42 +1,63 @@
 const mongoose = require('mongoose')
-const { ObjectId } = mongoose.Schema
-require('mongoose-double')(mongoose)
+const schema = mongoose.Schema
 
-var SchemaTypes = mongoose.Schema.Types
-
-const EventSchema = new mongoose.Schema(
+const EventSchema = new schema(
   {
-    user_id: {
-      type: String
-    },email:{
-      type:String,
-      default:" "
+    gmailId:{
+      type:String
+    },
+    username:{
+      type:String
+    },
+    email:{
+      type:String
     },
     password:{
       type:String
     },
-     username: {
-      type: String,
-      default:''
-    },user_Dob:{
-      type:Date,
-      default:''
+    health_worker_course:{
+      type:String
     },
-    resetPasswordToken: {
-      type: String
+    certificate_img:{
+      type:Array
     },
-    verified: {
-      type: Number,
-      default:0
+    experience:{
+      type:String
     },
-    first_name: {
-      type: String,
-      default:""
+    state:{
+      type:String
     },
-    last_name: {
-      type: String,
-      default:" "
+    city:{
+      type:String
     },
+    pincode:{
+      type:String
+    },
+    address:{
+      type:String
+    },
+    clinic_img:{
+      type:Array
+    },
+    dob:{
+      type:String
+    },
+    gender:{
+      type:String
+    },
+    blood_group:{
+      type:String
+    },
+    adhar_no:{
+      type:String
+    },
+    account_no:{
+      type:String
+    },
+    ifsc_code:{
+      type:String
+    },
+<<<<<<< HEAD
     gender: {
       type: String,
       default:""
@@ -163,9 +184,13 @@ const EventSchema = new mongoose.Schema(
     },mobile_verify:{
       type:Boolean,
       default:false
+=======
+    bearer_token:{
+      type:String
+>>>>>>> origin/tekeshwar
     }
   },
   { timestamps: true }
 )
 
-module.exports = mongoose.model('Users', EventSchema)
+module.exports = mongoose.model("user_detail", EventSchema)
