@@ -213,7 +213,7 @@ exports.edit_profile =(req,res)=>{
 }
 
 exports.gmail_signin =(req,res)=>{
-    const {email,gmailId,username} = req.body
+    const {email,gmailId,username,photo} = req.body
     console.log("shivani gmail data",req.body)
     User.findOne({$or:[{email:email},{gmailId:gmailId}]})
     .then((resp)=>{
@@ -234,7 +234,8 @@ exports.gmail_signin =(req,res)=>{
             var userinfo = new User({
                 email:req.body.email,
                 gmailId:req.body.gmailId,
-                username:username
+                username:username,
+                photo:photo
             })
             var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
             userinfo.bearer_token = Token
