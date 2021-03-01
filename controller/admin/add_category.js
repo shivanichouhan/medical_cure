@@ -1,9 +1,8 @@
 const category = require('../../model/admin/add_category')
-const cloud = require("../../cloudinary")
-const fs = require('fs')
 
 exports.list_cat =(req,res)=>{
     category.find()
+    .populate('sub_category')
     .exec((err,list)=>{
         if(err){
             res.json(err)
@@ -14,62 +13,28 @@ exports.list_cat =(req,res)=>{
     })
 }
 
-exports.create_cat= async (req,res)=>{
+exports.create_cat= (req,res)=>{
+    console.log(req.body)
     var catObj = new category(req.body)
-    catObj.save(async(err,cat)=>{
+    console.log(catObj)
+    catObj.save((err,cat)=>{
         if(err){
             res.json(err)
         }
         else{
-            if(req.file){
-                  const { path }  =req.file
-                  const cat_path = async (path)=> await cloud.uploads(path)
-                  const newpath = await cat_path(path)
-                  console.log(newpath)
-                  fs.unlinkSync(path)
-                  category.findByIdAndUpdate({_id:cat._id},{$set:{category_img:newpath.url}},(err,resp)=>{
-                    if(err){
-                        res.json(err)
-                    }
-                    else{
-                        res.json({code:200,result:resp})
-                    }
-                })    
-            }
-            else{
-                res.json({code:200,resp:cat})
-            }
+            res.send(cat)
         }
     })
-    
 }
 
 exports.edit_cat =(req,res)=>{
     console.log(req.body)
-    category.updateOne({_id:req.params.catId},req.body,async(err,catUpdte)=>{
+    category.updateOne({_id:req.params.catId},req.body,(err,catUpdte)=>{
         if(err){
             res.json(err)
         }
         else{
-            if(req.file){
-                const { path }  =req.file
-                const cat_path = async (path)=> await cloud.uploads(path,'Images')
-                const newpath = await cat_path(path)
-                console.log(newpath)
-                fs.unlinkSync(path)
-              
-                category.updateOne({_id:req.params.catId},{$set:{category_img:newpath.url}},(err,resp)=>{
-                  if(err){
-                      res.json(err)
-                  }
-                  else{
-                      res.json({msg:'category is update with image',result:resp})
-                  }
-              })    
-            }
-            else{
-                res.json({msg:'category is update',result:catUpdte})
-            }
+            res.json({catUpdte})
         }
     })
 
