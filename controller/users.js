@@ -124,7 +124,10 @@ exports.normal_signin = async (req, res) => {
             msg: 'not exist'
         })
     }else{
+<<<<<<< HEAD
+=======
 
+>>>>>>> d4244a45e0774535089ebd972f7382a573ef2796
     console.log(user)
     const validPassword = await validatePassword(password, user.password)
     console.log(validPassword,'44')
@@ -136,6 +139,7 @@ exports.normal_signin = async (req, res) => {
     const ss = await User.updateOne({ bearer_token: token })
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
+    }
 }
 
 }

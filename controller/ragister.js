@@ -23,7 +23,7 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.normal_signup23 = async (req, res) => {
 
-    const { user_name, email, password, phone, con_password } = req.body;
+    const { user_name, email, password, phone, con_password } = req.body
 
     const hashedPassword = await hashPassword(password)
     const data_check = await User.findOne({ email: email })
@@ -63,8 +63,8 @@ exports.normal_signup23 = async (req, res) => {
 exports.normal_signin123 = async (req, res) => {
     const { email, password } = req.body
     console.log(req.body)
-    const user = await User.find_user(
-        email
+    const user = await User.findOne(
+        email:email
     )
     console.log(user)
     if (!user) {
@@ -73,12 +73,12 @@ exports.normal_signin123 = async (req, res) => {
             msg: 'User with that email does not exist. Please signup'
         })
     }
-    const validPassword = await validatePassword(password, user[0].password)
+    const validPassword = await validatePassword(password, user.password)
     if (!validPassword) {
         res.json({ code: 400, msg: 'Password is not correct' })
     }
     const token = jwt.sign({ _id: user }, process.env.JWT_SECRET)
     const ss = await User.updateOne({ bearer_token: token })
     res.cookie('token', token, { expire: new Date() + 9999 })
-    res.json({ code: 200, msg: user[0] })
+    res.json({ code: 200, msg: user })
 }
