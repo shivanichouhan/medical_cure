@@ -14,12 +14,14 @@ const app = express()
 const product = require('./routes/products');
 const Users = require('./routes/users')
 const dashboard_img = require('./routes/dashboard_img_list')
+const patient = require('./routes/patient_registration')
 //
 
 //admin routes 
 const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
+const addCategory = require("./routes/admin/add_category")
 //
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -28,30 +30,26 @@ const databs =  encodeURI(``)
 mongoose.set('useFindAndModify', false);
 
 mongoose
-  .connect( 
-    'mongodb+srv://xpresscure:@123navgurukul@123s.jvop3.mongodb.net/<dbname>?retryWrites=true&w=majority',
-    // process.env.MONGO_URI,   
-   {
+  .connect(process.env.MONGO_URI,{
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true
-    }
-  )
-
-  .then(() => console.log('DB Connected'))
-  .catch(()=> console.log('not conected'))
+    })
+.then(() => console.log('DB Connected'))
+.catch(()=> console.log('not conected'))
 
 
 // app.use(expressValidator())
 app.set('view engine', 'ejs')
 app.use(cors())
 app.use(morgan('dev'))
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({
-    limit: '50mb',
-    extended: true,
-    parameterLimit: 50000
-}));
+app.use(express.json());
+// app.use(bodyParser.json({ limit: '50mb' }));
+// app.use(bodyParser.urlencoded({
+//     limit: '50mb',
+//     extended: false,
+//     parameterLimit: 50000
+// }));
 
 
 app.get("/demo",(req,res)=>{
@@ -61,12 +59,14 @@ app.get("/demo",(req,res)=>{
 app.use('/api',dashboard_img)
 app.use('/api', product)
 app.use('/api',Users)
+app.use('/api',patient)
 //
 
 //admin middleware
 app.use('/api',img_banner)
 app.use('/api',img_offer)
 app.use('/api',specialList)
+app.use('/api',addCategory)
 //
 const port = process.env.PORT || 8000
 app.listen(port, () => {

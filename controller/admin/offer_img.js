@@ -4,7 +4,8 @@ const fs = require('fs')
 
 exports.offers = async (req,res)=>{
     const uploader = async (path)=> await cloud.uploads(path,'Offers')
-        const urls =[]
+    
+    const urls =[]
         const files = req.files
 
         for(const file of files){
@@ -13,6 +14,7 @@ exports.offers = async (req,res)=>{
             urls.push(newpath)
             fs.unlinkSync(path)
         }
+
         var img = new add_offers({
             offer_img:urls
         })
