@@ -59,6 +59,9 @@ const EventSchema = new schema(
     },
     bearer_token:{
       type:String
+    },
+    photo:{
+      type:String
     }
   },
   { timestamps: true }
