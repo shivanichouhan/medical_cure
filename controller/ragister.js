@@ -22,48 +22,36 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 
 exports.normal_signup = async (req, res) => {
-    // try {
 
-        const { user_name, email, password, phone, con_password } = req.body;
-        // if(req.file){
+    const { user_name, email, password, phone, con_password } = req.body;
 
-        // const path=req.file.path
-        // cloudenary.uploader.upload(
-        //     path,
-        //     { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-        //    async function (err, images) {
-        //         if (err) console.log(err)
-        //         console.log('file uploaded to Cloudinary')
-        //         const fs = require('fs')
-        //         fs.unlinkSync(path)
-                // if (password == con_password) {
-                    const hashedPassword = await hashPassword(password)
-                    const data_check = await User.findOne({ email: email })
-                    console.log(data_check)
-                    if (!data_check) {
-                        const datas = new User({
-                            username: user_name,
-                            email: email,
-                            password: hashedPassword,
-                            Mobile: phone
-                            // profile_pic:images.secure_url
+    const hashedPassword = await hashPassword(password)
+    const data_check = await User.findOne({ email: email })
+    console.log(data_check)
+    if (!data_check) {
+        const datas = new User({
+            username: user_name,
+            email: email,
+            password: hashedPassword
+            // Mobile: phone
+            // profile_pic:images.secure_url
 
-                        })
-                        datas.save()
-                            .then((resp) => {
-                                res.json({ code: 200, msg: "signup successfully" })
-                            })
-                    } else {
-                        res.json({ code: 200, msg: "Email already exist" })
-                    }
+        })
+        datas.save()
+            .then((resp) => {
+                res.json({ code: 200, msg: "signup successfully" })
+            })
+    } else {
+        res.json({ code: 200, msg: "Email already exist" })
+    }
 
-                // } else {
-                //     res.json({ code: 200, msg: "confirm password is wrong" })
-                // }
-            // })
-        // }else{
-        //     res.json({code:200,msg:"profile didn't add"})
-        // }
+    // } else {
+    //     res.json({ code: 200, msg: "confirm password is wrong" })
+    // }
+    // })
+    // }else{
+    //     res.json({code:200,msg:"profile didn't add"})
+    // }
 
     // } catch (err) {
     //     res.send(err)

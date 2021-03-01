@@ -83,9 +83,9 @@ exports.otp_verify=(req,res)=>{
 }
 
 exports.normal_signup = async (req, res) => {
-    try {
+    // try {
         const { user_name, email, password, con_password } = req.body;
-        if (password == con_password) {
+        // if (password == con_password) {
             const hashedPassword = await hashPassword(password)
             const data_check = await User.findOne({ email: email })
             if (!data_check) {
@@ -103,19 +103,19 @@ exports.normal_signup = async (req, res) => {
                 res.json({ code: 200, msg: "Email already exist" })
             }
 
-        } else {
-            res.json({ code: 200, msg: "confirm password is wrong" })
-        }
-    }catch(err){
-        res.send(err)
-    }
+        // } else {
+        //     res.json({ code: 200, msg: "confirm password is wrong" })
+        // }
+    // }catch(err){
+    //     res.send(err)
+    // }
 
 };
 
 
 exports.normal_signin = async (req, res) => {
     const { email, password } = req.body
-    console.log(email)
+    console.log(email,password)
     const user = await User.find({email:email})
     console.log(user)
     console.log(user[0])
@@ -125,6 +125,7 @@ exports.normal_signin = async (req, res) => {
             msg: 'User with that email does not exist. Please signup'
         })
     }
+    console.log(user)
     const validPassword = await validatePassword(password, user[0].password)
     console.log(validPassword,'44')
     if (!validPassword) {
