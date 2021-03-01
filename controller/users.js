@@ -117,12 +117,17 @@ exports.normal_signin = async (req, res) => {
     const { email, password } = req.body
     console.log(email,password)
     const user = await User.findOne({email:email})
+    console.log(user)
     if (!user) {
         res.json({
-            code: 200,
-            msg: 'User with that email does not exist. Please signup'
+            code: 400,
+            msg: 'not exist'
         })
     }else{
+<<<<<<< HEAD
+=======
+
+>>>>>>> d4244a45e0774535089ebd972f7382a573ef2796
     console.log(user)
     const validPassword = await validatePassword(password, user.password)
     console.log(validPassword,'44')
@@ -135,6 +140,8 @@ exports.normal_signin = async (req, res) => {
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
     }
+}
+
 }
 
 
