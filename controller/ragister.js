@@ -21,7 +21,7 @@ async function validatePassword(plainPassword, hashedPassword) {
 }
 
 
-exports.normal_signup = async (req, res) => {
+exports.normal_signup23 = async (req, res) => {
 
     const { user_name, email, password, phone, con_password } = req.body
 
@@ -60,11 +60,11 @@ exports.normal_signup = async (req, res) => {
 };
 
 
-exports.normal_signin = async (req, res) => {
+exports.normal_signin123 = async (req, res) => {
     const { email, password } = req.body
     console.log(req.body)
-    const user = await User.findOne(
-        email:email
+    const user = await User.findOne({
+        email:email}
     )
     console.log(user)
     if (!user) {

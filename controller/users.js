@@ -138,8 +138,6 @@ exports.normal_signin = async (req, res) => {
     }
 
 
-}
-
 
 exports.clinic_reg = async(req,res)=>{
     var certificate = req.files.certificate
@@ -215,18 +213,18 @@ exports.edit_profile =(req,res)=>{
 }
 
 exports.gmail_signin =(req,res)=>{
-    User.findOne({$or:[{email:req.body.email},{gmailId:req.body.gmailId}]})
+    const {email,gmailId,username} = req.body
+    User.findOne({$or:[{email:email},{gmailId:gmailId}]})
     .then((resp)=>{
         console.log(resp)
        if(resp){
-           
-           User.updateOne({_id:resp._id},{$set:{gmailId:req.body.gmailId}},(err,userUpdate)=>{
+           User.updateOne({_id:resp._id},{$set:{gmailId:gmailId}},(err,userUpdate)=>{
                if(err){
                    res.json(err)
                }
                else{
                    
-                   res.send({code:200,msg:'user login successfully'})
+                   res.json({code:200,msg:resp})
                }
            })
        }
@@ -235,6 +233,7 @@ exports.gmail_signin =(req,res)=>{
             var userinfo = new User({
                 email:req.body.email,
                 gmailId:req.body.gmailId,
+                username:username
             })
             var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
             userinfo.bearer_token = Token
@@ -245,7 +244,7 @@ exports.gmail_signin =(req,res)=>{
                     res.send(err)
                 }
                 else{
-                    res.send(Data)
+                    res.send({code:200,msg:Data})
                 }
             })
        }
