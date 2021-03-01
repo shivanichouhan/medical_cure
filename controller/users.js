@@ -136,7 +136,7 @@ exports.normal_signin = async (req, res) => {
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
     }
-
+}
 
 
 exports.clinic_reg = async(req,res)=>{
@@ -214,6 +214,7 @@ exports.edit_profile =(req,res)=>{
 
 exports.gmail_signin =(req,res)=>{
     const {email,gmailId,username} = req.body
+    console.log("shivani gmail data",req.body)
     User.findOne({$or:[{email:email},{gmailId:gmailId}]})
     .then((resp)=>{
         console.log(resp)
