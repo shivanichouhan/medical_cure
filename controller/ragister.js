@@ -14,44 +14,41 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 
 exports.normal_signup = async (req, res) => {
-    try {
-
-        const { user_name, email, password, phone, con_password } = req.body;
+    console.log(req.body)
+        const { user_name, email, password, con_password } = req.body;
         if (password == con_password) {
-            const hashedPassword = await hashPassword(password)
-            const data_check = await User.findOne({ email: email })
+            const Password = await hashPassword(password)
+            const data_check = await User.find({ email: email })
             console.log(data_check)
-            if (!data_check) {
-                const datas = new User({
-                    username: user_name,
+            if (data_check.length == 0) {
+                var datas = new User({
+                    user_name: user_name,
                     email: email,
-                    password: hashedPassword,
-                    Mobile: phone
+                    password: Password
 
                 })
+                console.log(datas)
                 datas.save()
                     .then((resp) => {
                         res.json({ code: 200, msg: "signup successfully" })
                     })
             } else {
-                res.json({ code: 200, msg: "Email already exist" })
+                res.json({ code: 201, msg: "Email already exist" })
             }
 
         } else {
-            res.json({ code: 200, msg: "confirm password is wrong" })
+            res.json({ code: 204, msg: "confirm password is wrong" })
         }
-    }catch(err){
-        res.send(err)
-    }
 
 };
 
 
-exports.normal_signin = async (req, res) => {
+exports.users_signin = async (req, res) => {
     const { email, password } = req.body
     console.log(req.body)
-    const user = await User.find_user(
-        email
+    const user = await User.findOne({
+        email: email
+    }
     )
     console.log(user)
     if (!user) {
@@ -60,12 +57,13 @@ exports.normal_signin = async (req, res) => {
             msg: 'User with that email does not exist. Please signup'
         })
     }
-    const validPassword = await validatePassword(password, user[0].password)
+    const validPassword = await validatePassword(password, user.password)
     if (!validPassword) {
         res.json({ code: 400, msg: 'Password is not correct' })
     }
     const token = jwt.sign({ _id: user }, process.env.JWT_SECRET)
     const ss = await User.updateOne({ bearer_token: token })
     res.cookie('token', token, { expire: new Date() + 9999 })
-    res.json({ code: 200, msg: user[0] })
+    res.send({code:200,msg:user})
 }
+

@@ -1,6 +1,3 @@
-
-
-
 var express = require('express');
 var router = express.Router();
 
@@ -15,20 +12,21 @@ var storage = multer.diskStorage({
       cb(
         null,
         file.fieldname +
-          '-' +
-          Date.now() +
-          file.originalname.substr(
-            file.originalname.length - 6,
-            file.originalname.length
-          )
+        '-' +
+        Date.now() +
+        file.originalname.substr(
+          file.originalname.length - 6,
+          file.originalname.length
+        )
       )
     else cb(null, file.fieldname + '-' + Date.now() + file.originalname)
   }
 })
 var upload = multer({ storage: storage })
 
-const {normal_signup}=require('../controller/ragister');
+const { normal_signup, users_signin } = require('../controller/ragister');
 
-router.post("/ragister_user",normal_signup)
+router.post("/ragister_user", normal_signup)
+router.post("/user_signin", users_signin)
 
 module.exports = router;

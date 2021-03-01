@@ -3,9 +3,9 @@ const product = require('../model/products');
 const cloudenary = require('cloudinary').v2
 
 cloudenary.config({
-    cloud_name: 'dph53engs',
-    api_key: '844719118241756',
-    api_secret: '6IPsNfYyr9i43_qOhNPvLTh7Tg4'
+    cloud_name: 'dha2sjb75',
+    api_key: '893623795746522',
+    api_secret: '3dwh3SUUvf0yEsLU-Fl1O-yi8Tw'
 })
 
 

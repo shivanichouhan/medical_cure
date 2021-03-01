@@ -8,7 +8,8 @@ const EventSchema = new mongoose.Schema(
   {
     user_id: {
       type: String
-    },email:{
+    },
+    email:{
       type:String,
       default:" "
     },
@@ -169,4 +170,4 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-module.exports = mongoose.model('User', EventSchema)
+module.exports = mongoose.model('Product', EventSchema)
