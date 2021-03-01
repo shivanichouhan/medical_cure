@@ -137,7 +137,7 @@ exports.normal_signin = async (req, res) => {
     res.json({ code: 200, msg: user })
     }
 
-
+}
 
 exports.clinic_reg = async(req,res)=>{
     var certificate = req.files.certificate
