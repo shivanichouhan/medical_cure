@@ -12,7 +12,6 @@ exports.uploads = (file)=>{
     return new Promise(resolve=>{
         var uniqueFilename=Date.now()
         cloudenary.uploader.upload(file,{public_id: `medial/${uniqueFilename}`, tags: `medical`},(err,result)=>{
-            console.log(result)
             resolve({url:result.url,imgId:result.asset_id})
         }) 
     })

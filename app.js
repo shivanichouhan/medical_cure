@@ -24,6 +24,11 @@ const specialList = require("./routes/admin/add_speacialist")
 const addCategory = require("./routes/admin/add_category")
 const addsubCategory = require("./routes/admin/add_sub_category")
 const disease = require("./routes/admin/add_disease")
+const blogs = require("./routes/admin/blog")
+//
+
+//doctor routes
+const doctor_reg = require("./routes/doctor/doctor_registration")
 //
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -71,7 +76,11 @@ app.use('/api',specialList)
 app.use('/api',addCategory)
 app.use('/api',addsubCategory)
 app.use('/api',disease)
+app.use('/api',blogs)
 //
+
+//doctor middleware
+app.use('/api',doctor_reg)
 const port = process.env.PORT || 8000
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)

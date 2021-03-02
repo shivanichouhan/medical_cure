@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
 const offerSchema = new schema(
-    {
+  {
     offer_img:{
         type:Array
     }      
