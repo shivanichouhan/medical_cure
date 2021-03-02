@@ -17,7 +17,13 @@ async function hashPassword(password) {
 async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
+const cloudenary = require('cloudinary').v2
 
+cloudenary.config({
+    cloud_name: 'dph53engs',
+    api_key: '844719118241756',
+    api_secret: '6IPsNfYyr9i43_qOhNPvLTh7Tg4'
+})
 
 exports.otp_send = (req, res) => {
     sendOtp.send(req.body.Mobile, "VIRALL", function (error, data) {
@@ -97,8 +103,9 @@ exports.normal_signup = async (req, res) => {
         })
         datas.save()
             .then((resp) => {
-                res.json({ code: 200, msg: "signup successfully" })
+                res.json({ code: 200, msg: resp })
             })
+
     } else {
         res.json({ code: 200, msg: "Email already exist" })
     }
