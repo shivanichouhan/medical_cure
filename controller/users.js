@@ -138,6 +138,10 @@ exports.normal_signin = async (req, res) => {
     }
 
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7a006426eddc58b2c0d44fa3a6ea1c507a6c4cc0
 
 exports.clinic_reg = async (req, res) => {
     var certificate = req.files.certificate
