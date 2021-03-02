@@ -22,6 +22,9 @@ const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
 const addCategory = require("./routes/admin/add_category")
+
+const admin_data = require('./routes/Admin_route')
+
 //
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -67,6 +70,7 @@ app.use('/api',img_banner)
 app.use('/api',img_offer)
 app.use('/api',specialList)
 app.use('/api',addCategory)
+app.use('/api',admin_data)
 //
 const port = process.env.PORT || 8000
 app.listen(port, () => {
