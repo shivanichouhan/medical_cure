@@ -139,11 +139,7 @@ exports.normal_signin = async (req, res) => {
 
 }
 
-<<<<<<< HEAD
-exports.clinic_reg = async(req,res)=>{
-=======
 exports.clinic_reg = async (req, res) => {
->>>>>>> effb9a8d8c039d33ade94ffaa8041af15ca2ee79
     var certificate = req.files.certificate
     var clinic = req.files.clinic
 
