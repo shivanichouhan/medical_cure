@@ -62,6 +62,8 @@ const EventSchema = new schema(
     },
     photo:{
       type:String
+    },imgId:{
+      type:String
     }
   },
   { timestamps: true }

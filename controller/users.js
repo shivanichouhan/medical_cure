@@ -98,7 +98,7 @@ exports.normal_signup = async (req, res) => {
         const datas = new User({
             username: user_name,
             email: email,
-            password: hashedPassword,
+            password: hashedPassword
 
         })
         datas.save()
@@ -145,6 +145,8 @@ exports.normal_signin = async (req, res) => {
     }
 
 }
+
+// expo
 
 exports.clinic_reg = async (req, res) => {
     var certificate = req.files.certificate
@@ -263,46 +265,69 @@ exports.gmail_signin = (req, res) => {
             }).catch((error) => {
                 res.json(error)
             })
-    }else if(login_type == 'facebook'){
+    } else if (login_type == 'facebook') {
         User.findOne({ gmailId: gmailId })
-        .then((resp) => {
+            .then((resp) => {
+                console.log(resp)
+                if (resp) {
+                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId } }, (err, userUpdate) => {
+                        if (err) {
+                            res.json(err)
+                        }
+                        else {
+
+                            res.json({ code: 200, msg: resp })
+                        }
+                    })
+                }
+                else {
+                    console.log(req.body)
+                    var userinfo = new User({
+                        email: req.body.email,
+                        gmailId: req.body.gmailId,
+                        username: username,
+                        photo: photo
+                    })
+                    var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
+                    userinfo.bearer_token = Token
+                    console.log(userinfo)
+
+                    userinfo.save((err, Data) => {
+                        if (err) {
+                            res.send(err)
+                        }
+                        else {
+                            res.send({ code: 200, msg: Data })
+                        }
+                    })
+                }
+            }).catch((error) => {
+                res.json(error)
+            })
+    }
+}
+
+exports.edit_user_profile = (req, res) => {
+    const { user_id } = req.body
+    if (req.file) {
+        const path = req.file.path
+        cloud.edit_profile(path, 'profile').then((resp) => {
             console.log(resp)
-            if (resp) {
-                User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId } }, (err, userUpdate) => {
-                    if (err) {
-                        res.json(err)
-                    }
-                    else {
-
-                        res.json({ code: 200, msg: resp })
-                    }
+            fs.unlinkSync(path)
+            User.updateOne({ _id: user_id }, { $set: { photo:resp.url ,imgId:resp.imgId}})
+                .then((resPatient) => {
+                    res.json({ code:200, msg:"profile changed" })
+                }).catch((error) => {
+                    res.json(error)
                 })
-            }
-            else {
-                console.log(req.body)
-                var userinfo = new User({
-                    email: req.body.email,
-                    gmailId: req.body.gmailId,
-                    username: username,
-                    photo: photo
-                })
-                var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
-                userinfo.bearer_token = Token
-                console.log(userinfo)
-
-                userinfo.save((err, Data) => {
-                    if (err) {
-                        res.send(err)
-                    }
-                    else {
-                        res.send({ code: 200, msg: Data })
-                    }
-                })
-            }
-        }).catch((error) => {
-            res.json(error)
+        }).catch((err) => {
+            res.send(err)
         })
     }
+    else {
+        res.json({ code: 400, msg: 'image not selected' })
+    }
+
 }
 
 exports.clinic_info = (req, res) => {
