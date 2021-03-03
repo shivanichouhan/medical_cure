@@ -18,6 +18,7 @@ const patient = require('./routes/patient_registration')
 //
 
 //admin routes 
+const adminReg = require("./routes/admin/admin_login")
 const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
@@ -25,6 +26,8 @@ const addCategory = require("./routes/admin/add_category")
 const addsubCategory = require("./routes/admin/add_sub_category")
 const disease = require("./routes/admin/add_disease")
 const blogs = require("./routes/admin/blog")
+const cat_blog = require("./routes/admin/blog_cat")
+const subcat_blog = require("./routes/admin/blog_sub_cat")
 //
 
 //doctor routes
@@ -70,6 +73,7 @@ app.use('/api',patient)
 //
 
 //admin middleware
+app.use('/api',adminReg)
 app.use('/api',img_banner)
 app.use('/api',img_offer)
 app.use('/api',specialList)
@@ -77,6 +81,8 @@ app.use('/api',addCategory)
 app.use('/api',addsubCategory)
 app.use('/api',disease)
 app.use('/api',blogs)
+app.use('/api',cat_blog)
+app.use('/api',subcat_blog)
 //
 
 //doctor middleware

@@ -1,4 +1,5 @@
 const blogModal = require("../../model/admin/blog")
+const blogsubcat = require("../../model/admin/blog_sub_cat")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
@@ -37,12 +38,29 @@ exports.create_blog =(req,res)=>{
                         res.json(err)
                     }
                     else{
-                        res.json(blogUpdte)
+                        // res.json(blogUpdte)
+                        blogsubcat.updateOne({blog_sub_cat:req.body.blog_sub_cat},{$push:{blogs:blogUpdte._id}},
+                            (err,blogupdte)=>{
+                             if(err){
+                                 res.json(err)
+                             }
+                             else{
+                                 res.json({result:blogUpdte,blog:blogupdte})
+                             }
+                         })
                     }
                 })
             }
             else{
-               res.json(resp)
+                blogsubcat.updateOne({blog_sub_cat:req.body.blog_sub_cat},{$push:{blogs:resp._id}},
+                   (err,blogupdte)=>{
+                    if(err){
+                        res.json(err)
+                    }
+                    else{
+                        res.json({result:resp,blog:blogupdte})
+                    }
+                })
             }
         }
     })
@@ -67,7 +85,7 @@ exports.edit_blog =(req,res)=>{
                         res.json(err)
                     }
                     else{
-                        res.json({blogUpdte})
+                        res.json({updteBlog})
                     }
                 })
             }).catch((error)=>{

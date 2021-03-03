@@ -9,10 +9,10 @@ const blogSchema = new schema(
        blog_img:{
            type:Array
        },
-       cat:{
+       blog_cat_name:{
            type:String
        },
-       sub_cat:{
+       blog_sub_cat:{
            type:String
        },
        discription:{
