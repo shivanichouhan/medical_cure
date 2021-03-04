@@ -1,6 +1,6 @@
 const blogCat = require("")
 
-exports.list_cat_blog =(req,res)=>{
+exports.list_blog =(req,res)=>{
     blogCat.find()
     .populate({
         path:'blog_subcategory',
