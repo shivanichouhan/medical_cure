@@ -110,12 +110,6 @@ exports.normal_signup = async (req, res) => {
         res.json({ code: 200, msg: "Email already exist" })
     }
 
-    // } else {
-    //     res.json({ code: 200, msg: "confirm password is wrong" })
-    // }
-    // }catch(err){
-    //     res.send(err)
-    // }
 
 };
 

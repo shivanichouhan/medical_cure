@@ -9,6 +9,8 @@ const cors = require('cors')
 const morgan = require('morgan')
 const autoIncrement = require('mongoose-auto-increment');
 const app = express()
+app.set('view engine', 'ejs')
+app.use(express.static(path.join(__dirname, 'public')));
 
 //user routes
 const product = require('./routes/products');
@@ -71,6 +73,14 @@ app.use('/api',img_offer)
 app.use('/api',specialList)
 app.use('/api',addCategory)
 app.use('/api',admin_data)
+
+
+app.get("/admin_login",(req,res)=>{
+    res.sendFile(path.join(__dirname + '/views/login.html'));
+
+})
+
+
 //
 const port = process.env.PORT || 8000
 app.listen(port, () => {
