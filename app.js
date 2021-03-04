@@ -27,6 +27,10 @@ const addCategory = require("./routes/admin/add_category")
 
 const admin_data = require('./routes/Admin_route')
 
+
+//blogs
+const blog = require('./routes/blog_list')
+
 //
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -49,12 +53,7 @@ app.set('view engine', 'ejs')
 app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json());
-// app.use(bodyParser.json({ limit: '50mb' }));
-// app.use(bodyParser.urlencoded({
-//     limit: '50mb',
-//     extended: false,
-//     parameterLimit: 50000
-// }));
+
 
 
 app.get("/demo",(req,res)=>{
@@ -73,6 +72,7 @@ app.use('/api',img_offer)
 app.use('/api',specialList)
 app.use('/api',addCategory)
 app.use('/api',admin_data)
+app.use('/api',blog)
 
 
 app.get("/admin_login",(req,res)=>{
@@ -84,6 +84,8 @@ app.get("/admin_login",(req,res)=>{
 //
 const port = process.env.PORT || 8000
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`)
-})
+    console.log(`Server is running on port ${`port`}`)
+});
+
+
 
