@@ -19,7 +19,83 @@ const EventSchema = new mongoose.Schema(
     },
     Mobile: {
       type: String,
+<<<<<<< HEAD
       default: '0'
+=======
+      default:''
+    },
+    language: {
+      type: String,
+      default:''
+    },
+    account_type: {
+      type: String,
+      default:'Public'
+    },
+    deactivation: {
+      type: Boolean,
+      default: false
+    },
+    action:{type:String},
+    follwers: {
+      type: Number,
+      default: 0
+    },
+    followings:
+      {
+        type: Number,
+        default: 0
+      }
+    ,
+    user_videos: [
+      {
+        type: ObjectId,
+        ref: 'Video'
+      }
+    ],device_token:{
+      type:String
+    },
+    official_account: {
+      type: String,
+      default: 'false'
+    },
+    likes: {
+      type: Number,
+      default: 0
+    },
+    no_of_share: {
+      type: Number,
+      default: 0
+    },
+    user_audio_path: [
+      {
+        type: ObjectId,
+        ref: 'admin_Sounds'
+      }
+    ],
+    allow_download_my_video: {
+      type: String,
+      default:'0'
+    },
+    allow_sharing: {
+      type: String,
+      default:'0'
+    },userType:{
+      type:Number
+    },Mobile:{
+      type:String
+    },videos:{
+      type:Number,
+      default:0
+    },created:{
+      type:String,
+      default:""
+    },user_old_fb:{
+      type:String
+    },mobile_verify:{
+      type:Boolean,
+      default:false
+>>>>>>> 4bca3085942825d492c946dee74e94d524101e2e
     }
   })
 
