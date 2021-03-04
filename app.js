@@ -28,6 +28,8 @@ const disease = require("./routes/admin/add_disease")
 const blogs = require("./routes/admin/blog")
 const cat_blog = require("./routes/admin/blog_cat")
 const subcat_blog = require("./routes/admin/blog_sub_cat")
+const appoinment = require("./routes/admin/appoinment/appoinments")
+const department = require("./routes/admin/department/departments")
 //
 
 //doctor routes
@@ -83,6 +85,8 @@ app.use('/api',disease)
 app.use('/api',blogs)
 app.use('/api',cat_blog)
 app.use('/api',subcat_blog)
+app.use('/api',appoinment)
+app.use('/api',department)
 //
 
 //doctor middleware

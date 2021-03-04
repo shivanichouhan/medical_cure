@@ -24,6 +24,10 @@ const patientSchema = new schema(
     weight:{
         type:String
     },
+    Appoinment:[{
+        type:schema.Types.ObjectId,
+        ref:"appoinment"
+    }],
     userId:{
         type:String
     }

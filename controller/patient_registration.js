@@ -28,7 +28,7 @@ exports.create =(req,res)=>{
             if(req.file){
                 const { path } = req.file
                 cloud.uploads(path,'patient').then((resp)=>{
-                    patient.findByIdAndUpdate(patientData._id,{$set:{patient_img:resp}})
+                    patient.findByIdAndUpdate(patientData._id,{$set:{patient_img:resp.url}})
                     .then((resPatient)=>{
                         res.json(resPatient)
                     }).catch((error)=>{

@@ -27,6 +27,7 @@
     "multer": "^1.4.2",
     "plivo": "^4.14.2",
     "sendotp": "^1.2.9",
-    "springedge": "^1.0.5"
+    "springedge": "^1.0.5",
+    "unirest": "^0.6.0"
   }
 }
