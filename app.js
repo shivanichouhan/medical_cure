@@ -24,6 +24,7 @@ const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
 const addCategory = require("./routes/admin/add_category")
+<<<<<<< HEAD
 
 const admin_data = require('./routes/Admin_route')
 
@@ -31,6 +32,10 @@ const admin_data = require('./routes/Admin_route')
 //blogs
 const blog = require('./routes/blog_list')
 
+=======
+const addsubCategory = require("./routes/admin/add_sub_category")
+const disease = require("./routes/admin/add_disease")
+>>>>>>> origin/tekeshwar
 //
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -71,6 +76,7 @@ app.use('/api',img_banner)
 app.use('/api',img_offer)
 app.use('/api',specialList)
 app.use('/api',addCategory)
+<<<<<<< HEAD
 app.use('/api',admin_data)
 app.use('/api',blog)
 
@@ -81,6 +87,10 @@ app.get("/admin_login",(req,res)=>{
 })
 
 
+=======
+app.use('/api',addsubCategory)
+app.use('/api',disease)
+>>>>>>> origin/tekeshwar
 //
 const port = process.env.PORT || 8000
 app.listen(port, () => {
