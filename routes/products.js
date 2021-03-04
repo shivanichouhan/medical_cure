@@ -26,6 +26,6 @@ var upload = multer({ storage: storage })
 const {add_image,image_data}=require('../controller/products');
 
 router.post("/add_image",upload.single('image'),add_image)
-router.get('/image_data',image_data)
+router.get('/front_images',image_data)
 
 module.exports = router;

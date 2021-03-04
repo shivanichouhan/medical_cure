@@ -19,7 +19,6 @@ exports.signup = async (req, res) => {
         const { user_name, email, password, con_password } = req.body;
             const Password = await hashPassword(password)
             const data_check = await Admin.findOne({ email: email })
-
             console.log(data_check)
             if (!data_check) {
                 const datas = new Admin({

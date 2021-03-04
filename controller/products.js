@@ -25,7 +25,6 @@ exports.add_image = (req, res) => {
                     summery: summery,
                     image: image.secure_url
                 })
-                data.p_id = data._id
                 data.save()
                     .then((resp) => {
                         res.json({ code: 200, msg: "data save" })
