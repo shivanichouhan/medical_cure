@@ -73,3 +73,33 @@ exports.Add_Health_Worker = (req, res) => {
         res.send("you dint choose image file")
     }
 }
+
+exports.findhealthworker = async (req, res) => {
+    try {
+        const workersData = await HealthWorker.find();
+        res.send(workersData);
+    } catch (e) {
+        res.send(e);
+    }
+};
+
+exports.DeleteHealthworker = (req, res) => {
+    HealthWorker.findByIdAndRemove(req.params.healthworkerId)
+        .then(healthworker => {
+            if (!healthworker) {
+                return res.status(404).send({
+                    message: "Healthworker Not found with id " + req.params.healthworkerId
+                });
+            }
+            res.send({ message: "HealthWorker deleted successfully!" });
+        }).catch(err => {
+            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                return res.status(404).send({
+                    message: "HealthWorker not found with id " + req.params.healthworkerId
+                });
+            }
+            return res.status(500).send({
+                message: "Could not delete Healthworker  with id " + req.params.healthworkerId
+            });
+        });
+};

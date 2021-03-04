@@ -14,11 +14,22 @@ const app = express()
 const product = require('./routes/products');
 const Users = require('./routes/users')
 const Admin = require('./routes/Admin_route')
-const Doctor = require('./routes/register_doctors')
-const DoctorList = require('./routes/Catg_Drlist')
+//const Doctor = require('./routes/register_doctors')
+//const DoctorList = require('./routes/Catg_Drlist')
 const Contact = require('./routes/Contacts')
 const Feedback = require('./routes/feedback')
 const Health_Worker = require('./routes/Admin_add_healthworker')
+const Admin_approve = require('./routes/Admin_approve')
+const Block_Worker = require('./routes/BlockWorker')
+
+
+//Doctor
+const Doctor = require('./routes/Doctor/Registration')
+const Educational = require('./routes/Doctor/doctor_educational')
+
+
+
+
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -60,11 +71,19 @@ app.get("/demo", (req, res) => {
 app.use('/', product)
 app.use('/', Users)
 app.use('/', Admin)
-app.use('/', Doctor)
-app.use('/', DoctorList)
+//app.use('/', Doctor)
+//app.use('/', DoctorList)
 app.use('/', Contact)
 app.use('/', Feedback)
 app.use('/',Health_Worker)
+app.use('/',Admin_approve)
+app.use('/',Block_Worker)
+
+
+
+//doctor
+app.use('/', Doctor)
+app.use('/',Educational)
 
 
 const port = process.env.PORT || 8000

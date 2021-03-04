@@ -26,8 +26,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-const { Add_Health_Worker } = require('../controller/Admin_Add_Healthworker');
+const { Add_Health_Worker,findhealthworker, DeleteHealthworker } = require('../controller/Admin_Add_Healthworker');
 router.post("/Health_Worker",upload.fields([{name:'Certificate'},{name:'Clinic'}]),Add_Health_Worker)
-//router.post("/Health_Worker",upload.ar('Certificate'), Add_Health_Worker)
+router.get("/findhealthworkers", findhealthworker)
+router.delete("/healthworker/:healthworkerId", DeleteHealthworker)
 
 module.exports = router;

@@ -5,7 +5,8 @@ require('mongoose-double')(mongoose)
 var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
-    { 
+    {
+
         health_worker_course: {
             type: String
         },
@@ -50,91 +51,98 @@ const EventSchema = new mongoose.Schema(
         },
         bearer_token: {
             type: String
+        },
+        approval: {
+            type: String,
+            default: "0"
+        },
+        Block_User: {
+            type: String
         }
     },
     { timestamps: true }
 )
 
-        /* Digital_clinic_details: {
+/* Digital_clinic_details: {
  
-             State: {
-                 type: String,
-                 default: ""
-             },
-             city: {
-                 type: String,
-                 default: ""
-             },
-             pincode: {
-                 type: String,
-                 default: ""
-             },
-             Upload_clinic_images: {
-                 type: String,
-                 default: ""
-             }
+     State: {
+         type: String,
+         default: ""
+     },
+     city: {
+         type: String,
+         default: ""
+     },
+     pincode: {
+         type: String,
+         default: ""
+     },
+     Upload_clinic_images: {
+         type: String,
+         default: ""
+     }
  
+ },
+ Professional_Detail: {
+     Health_Worker_Course: {
+         type: String,
+         default: ""
+     },
+     Upload_Certificate: {
+         type: String,
+         default: ""
+     },
+     Experience: {
+         type: String,
+         default: ""
+     }
+ },
+ Personal_details: {
+     Date_of_birth: {
+         type: Date,
+         default: ""
+     },
+     Gender: {
+         type: String,
+         default: ""
+     },
+     Blood_group: {
+         type: String,
+         default: ""
+     }
+ },
+ Identity_Details: {
+     Choose_on_identity_proof: {
+         AadharCard: {
+             type: String,
+             default: ""
          },
-         Professional_Detail: {
-             Health_Worker_Course: {
-                 type: String,
-                 default: ""
-             },
-             Upload_Certificate: {
-                 type: String,
-                 default: ""
-             },
-             Experience: {
-                 type: String,
-                 default: ""
-             }
+         PancCard: {
+             type: String,
+             default: ""
          },
-         Personal_details: {
-             Date_of_birth: {
-                 type: Date,
-                 default: ""
-             },
-             Gender: {
-                 type: String,
-                 default: ""
-             },
-             Blood_group: {
-                 type: String,
-                 default: ""
-             }
-         },
-         Identity_Details: {
-             Choose_on_identity_proof: {
-                 AadharCard: {
-                     type: String,
-                     default: ""
-                 },
-                 PancCard: {
-                     type: String,
-                     default: ""
-                 },
-                 VoterId: {
-                     type: String,
-                     default: ""
-                 }
-             },
-             Bank_Account_Details: {
-                 Account_No: {
-                     type: String,
-                     details: ""
-                 },
-                 Confirm_Account_No: {
-                     type: String,
-                     default: ""
-                 },
-                 IFSC_Code: {
-                     type: String,
-                     default: ""
-                 }
-             }
- 
+         VoterId: {
+             type: String,
+             default: ""
          }
- */
+     },
+     Bank_Account_Details: {
+         Account_No: {
+             type: String,
+             details: ""
+         },
+         Confirm_Account_No: {
+             type: String,
+             default: ""
+         },
+         IFSC_Code: {
+             type: String,
+             default: ""
+         }
+     }
+ 
+ }
+*/
 
-            
+
 module.exports = mongoose.model('Health_Worker', EventSchema)

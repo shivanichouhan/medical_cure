@@ -50,7 +50,7 @@ exports.updatedoctors = (req, res) => {
 
     if (!req.body) {
         return res.status(400).send({
-            message: "Product content can not be empty"
+            message: "Doctor list can not be empty"
         });
     }
 
