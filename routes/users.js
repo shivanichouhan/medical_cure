@@ -9,6 +9,7 @@ router.post("/register_user",normal_signup)
 router.post("/login_from_gmail",gmail_signin)
 router.put("/clinic_registration/:userId",upload.fields([{name:'certificate'},{name:'clinic'}]),clinic_reg)
 router.put("/edit_profile_user/:userId/:imgID",upload.fields([{name:'clinic'},{name:'certificate'}]),edit_profile)
+
 router.post("/user/send_otp",otp_send)
 router.post("/user/verify_otp",otp_verify)
 router.post('/edit_user_profile',upload.single("profile_pic"),edit_user_profile)

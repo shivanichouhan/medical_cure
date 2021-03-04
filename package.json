@@ -21,13 +21,12 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^5.11.16",
-    "mongoose-auto-increment": "^5.0.1",
-    "mongoose-double": "0.0.1",
     "morgan": "^1.10.0",
     "msg91": "^0.0.6",
     "multer": "^1.4.2",
     "plivo": "^4.14.2",
     "sendotp": "^1.2.9",
-    "springedge": "^1.0.5"
+    "springedge": "^1.0.5",
+    "unirest": "^0.6.0"
   }
 }

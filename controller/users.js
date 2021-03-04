@@ -188,8 +188,8 @@ exports.edit_profile = (req, res) => {
         if (err) {
             res.json(err)
         }
-        else {
-            if (req.files) {
+        else{
+            if(req.files.lenght>0){
                 console.log(req.files.clinic)
                 for (row of req.files.clinic) {
                     var p = row.path
