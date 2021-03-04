@@ -22,33 +22,6 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 
 exports.normal_signup = async (req, res) => {
-<<<<<<< HEAD
-    console.log(req.body)
-        const { user_name, email, password, con_password } = req.body;
-        if (password == con_password) {
-            const Password = await hashPassword(password)
-            const data_check = await User.find({ email: email })
-            console.log(data_check)
-            if (data_check.length == 0) {
-                var datas = new User({
-                    user_name: user_name,
-                    email: email,
-                    password: Password
-
-                })
-                console.log(datas)
-                datas.save()
-                    .then((resp) => {
-                        res.json({ code: 200, msg: "signup successfully" })
-                    })
-            } else {
-                res.json({ code: 201, msg: "Email already exist" })
-            }
-
-        } else {
-            res.json({ code: 204, msg: "confirm password is wrong" })
-        }
-=======
     // try {
 
         const { user_name, email, password, phone, con_password } = req.body;
@@ -95,7 +68,6 @@ exports.normal_signup = async (req, res) => {
     // } catch (err) {
     //     res.send(err)
     // }
->>>>>>> 4bca3085942825d492c946dee74e94d524101e2e
 
 };
 

@@ -19,9 +19,6 @@ const EventSchema = new mongoose.Schema(
     },
     Mobile: {
       type: String,
-<<<<<<< HEAD
-      default: '0'
-=======
       default:''
     },
     language: {
@@ -95,7 +92,6 @@ const EventSchema = new mongoose.Schema(
     },mobile_verify:{
       type:Boolean,
       default:false
->>>>>>> 4bca3085942825d492c946dee74e94d524101e2e
     }
   })
 
