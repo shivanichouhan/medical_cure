@@ -91,9 +91,12 @@ app.use('/api',blog)
 
 app.get("/admin_login",(req,res)=>{
     res.sendFile(path.join(__dirname + '/views/login.html'));
+});
+
+app.get("/deshboard",(req,res)=>{
+    res.sendFile(path.join(__dirname + '/views/index.html'));
 
 })
-
 
 app.use('/api',addsubCategory)
 app.use('/api',disease)

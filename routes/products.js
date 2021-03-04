@@ -11,21 +11,21 @@ var storage = multer.diskStorage({
       cb(
         null,
         file.fieldname +
-          '-' +
-          Date.now() +
-          file.originalname.substr(
-            file.originalname.length - 6,
-            file.originalname.length
-          )
+        '-' +
+        Date.now() +
+        file.originalname.substr(
+          file.originalname.length - 6,
+          file.originalname.length
+        )
       )
     else cb(null, file.fieldname + '-' + Date.now() + file.originalname)
   }
 })
 var upload = multer({ storage: storage })
 
-const {add_image,image_data}=require('../controller/products');
+const { add_image, image_data } = require('../controller/products');
 
-router.post("/add_image",upload.single('image'),add_image)
-router.get('/front_images',image_data)
+router.post("/add_image", upload.single('image'), add_image)
+router.get('/front_images', image_data)
 
 module.exports = router;
