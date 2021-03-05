@@ -3,67 +3,69 @@ const schema = mongoose.Schema
 
 const EventSchema = new schema(
   {
-    gmailId:{
-      type:String
+    gmailId: {
+      type: String
     },
-    username:{
-      type:String
+    username: {
+      type: String
     },
-    email:{
-      type:String
+    email: {
+      type: String
     },
-    password:{
-      type:String
+    password: {
+      type: String
     },
-    health_worker_course:{
-      type:String
+    health_worker_course: {
+      type: String
     },
-    certificate_img:{
-      type:Array
+    certificate_img: {
+      type: Array
     },
-    experience:{
-      type:String
+    experience: {
+      type: String
     },
-    state:{
-      type:String
+    state: {
+      type: String
     },
-    city:{
-      type:String
+    city: {
+      type: String
     },
-    pincode:{
-      type:String
+    pincode: {
+      type: String
     },
-    address:{
-      type:String
+    address: {
+      type: String
     },
-    clinic_img:{
-      type:Array
+    clinic_img: {
+      type: Array
     },
-    dob:{
-      type:String
+    dob: {
+      type: String
     },
-    gender:{
-      type:String
+    gender: {
+      type: String
     },
-    blood_group:{
-      type:String
+    blood_group: {
+      type: String
     },
-    adhar_no:{
-      type:String
+    adhar_no: {
+      type: String
     },
-    account_no:{
-      type:String
+    account_no: {
+      type: String
     },
-    ifsc_code:{
-      type:String
+    ifsc_code: {
+      type: String
     },
-    bearer_token:{
-      type:String
+    bearer_token: {
+      type: String
     },
-    photo:{
-      type:String
-    },imgId:{
-      type:String
+    photo: {
+      type: String
+    }, imgId: {
+      type: String
+    }, mobile: {
+      type: String
     }
   },
   { timestamps: true }
