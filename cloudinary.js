@@ -44,3 +44,56 @@ exports.edit_profile = (file, folder) => {
         })
     })
 }
+
+exports.doctor_reg = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+
+exports.licence_front = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+
+exports.licence_back = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+
+exports.doc_pass = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+
+exports.iden_front = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+exports.iden_back = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}

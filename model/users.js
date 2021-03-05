@@ -15,8 +15,20 @@ const EventSchema = new schema(
     password: {
       type: String
     },
-    health_worker_course: {
-      type: String
+    mobile:{
+      type:String,
+      unique:true
+    },
+    otp:{
+      type:String,
+      default:""
+    },
+    status:{
+      type:Boolean,
+      default:false
+    },
+    health_worker_course:{
+      type:String
     },
     certificate_img: {
       type: Array
