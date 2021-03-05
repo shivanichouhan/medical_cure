@@ -6,9 +6,8 @@ const cloud = require("../cloudinary")
 const fs = require('fs')
 const _ = require('lodash')
 const Async = require('async')
-
-// const SendOtp = require('sendotp');
-// const sendOtp = new SendOtp("4603359F95325E",'Otp for your order is {{otp}}, please do not share it with anybody');
+const otp = require("../otp")
+const otpGenerator = require('otp-generator')
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -18,88 +17,70 @@ async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
-
 exports.otp_send =(req,res)=>{
-    console.log('run')
-    var unirest = require('unirest');
-    var req = unirest("POST", "http://sms.webappssoft.com/app/smsapi/index.php?");
-    
-    req.query({
-      "key": "26040A8E6A4428",
-      "campaign":"10072",
-      "routeid": "7",
-      "type":"unicode",
-      "contacts": "6267743107",
-      "senderid": "VIRALL",
-      "msg": "This is a test message",
-    });
-    
-    req.headers({
-      "cache-control": "no-cache"
-    });
-    
-    req.end(function(resp){
-      if (resp.error) {
-            res.send(error)
+  User.findOne({mobile:req.body.mobile}) 
+  .exec((err,data)=>{
+      if(err || !data){
+          res.json({code:400, error:'this number does not exist'})  
       }
       else{
-          res.send(resp)
-      }
-    
-      
-    });
+        const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+        otp.send_otp(req.body.mobile,OTP).then((data)=>{
+        User.updateOne({mobile:req.body.mobile},{$set:{otp:OTP}},(err,respdata)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json({code:200,msg:"otp send successfully"})
+            }
+        })
+   }).catch((err)=>{
+        res.send(err)
+      })
+    }
+ }) 
 }
 
-// exports.otp_send =(req,res)=>{
-//     var number = req.body.Mobile
-//     console.log(number)
-//     sendOtp.send(number,"VIRALL", function (error, data) {
-//         res.send(data);
-//       });
-    // User.findOne({Mobile:req.body.Mobile})
-    // .then((resp)=>{
-    //     console.log(resp)
-    //     if(resp.otp == ''){
-    //         console.log('otp blank')
-    //         sendOtp.send(req.body.Mobile,"",(error, data)=>{
-    //             res.send(data)
-    //             // User.updateOne({_id:resp._id},{$set:{otp:data.otp}})
-    //             // .then((otp)=>{
-    //             //    res.json({code:200,msg:'otp send successfully',Data:Data})     
-    //             // })
-    //             // .catch((error)=>{
-    //             //     console.log(error)
-    //             //     res.json({code:400,msg:'otp is not add in user'})
-    //             // })
-    //         });
-    //     }
-    //     else{
-    //         console.log('otp blank not')
-    //         // sendOtp.retry(resp.Mobile, true,(error, data)=>{
-    //         //     res.json({code:200,msg:'otp resend successfully',Data:data}) 
-    //         // });
-    //     }
-
-    // }).catch((error)=>{
-    //     res.json({code:400,msg:'mobile no is not register'})
-    // })
-// }
-
-exports.otp_verify=(req,res)=>{
-    User.find({otp:req.body.otp})
-    .then((resp)=>{
-        sendOtp.verify(resp.Mobile, resp.otp, function (error, data) {
-            console.log(data); // data object with keys 'message' and 'type'
-            if(data.type == 'success'){
-                res.json({code:200,msg:'otp verify successfully'})
-            } 
-            if(data.type == 'error'){
-                res.json({code:400,msg:'otp is not verify'})
+exports.otp_verify =(req,res)=>{
+    User.findOne({mobile:req.body.mobile})
+    .exec((err,resp)=>{
+        if(err){
+            res.json(err)
+        }
+       else{
+            if(resp.otp === req.body.otp){
+                User.findOneAndUpdate({mobile:req.body.mobile},{$set:{otp:" "}},(err,userUpdate)=>{
+                    if(err){
+                        res.json(err)
+                    }
+                    else{
+                        res.json({code:200,health_worker_id:userUpdate._id})
+                    }   
+                })
             }
-          });
-    }).catch((err)=>{
-        res.json({code:400,msg:'wrong otp'})
+            else{
+                res.json({code:400 ,error:'wrong otp'})
+            }
+       } 
     })
+}
+
+exports.updatePass= async(req,res)=>{
+    if(req.body.password === req.body.confirmPass){
+        const Password = await hashPassword(req.body.password)
+        User.findByIdAndUpdate(req.body.health_worker_id,{$set:{password:Password}},
+        (err,passupdate)=>{
+           if(err){
+               res.json({code:400, error:'password does not update'})
+           }
+           else{
+               res.json({code:200, msg:'password update successfully'})
+           }
+       })
+    }
+    else{
+        res.json({code:400,error:'password does not match'})
+    }
 }
 
 exports.normal_signup = async (req, res) => {
@@ -136,25 +117,28 @@ exports.normal_signup = async (req, res) => {
 exports.normal_signin = async (req, res) => {
     const { email, password } = req.body
     console.log(email)
-    const user = await User.find({email:email})
-    console.log(user)
-    console.log(user[0])
+    const user = await User.findOne({email:email})
+    
     if (!user) {
         res.json({
             code: 200,
             msg: 'User with that email does not exist. Please signup'
         })
     }
-    const validPassword = await validatePassword(password, user[0].password)
+    else{
+    const validPassword = await validatePassword(password, user.password)
     console.log(validPassword,'44')
-    if (!validPassword) {
+    if (!validPassword){
         res.json({ code: 400, msg: 'Password is not correct' })
     }
+    else{
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
     console.log(token)
     const ss = await User.updateOne({ bearer_token: token })
     res.cookie('token', token, { expire: new Date() + 9999 })
     res.json({ code: 200, msg: user })
+    }
+  }
 }
 
 

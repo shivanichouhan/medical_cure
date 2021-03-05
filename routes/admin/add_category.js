@@ -5,7 +5,7 @@ const{ isAdmin } = require("../../auth")
 
 router.get("/admin/category_list/:adminId",isAdmin,list_cat)
 router.post("/admin/add_category/:adminId",isAdmin,create_cat)
-router.put("/admin/edit_category/:catId/:adminId",isAdmin,edit_cat)
+router.put("/admin/edit_category/:adminId/:catId",isAdmin,edit_cat)
 router.delete("/admin/remove_category/:adminId/:catId",isAdmin,remove_cat)
 
 module.exports = router;

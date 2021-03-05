@@ -19,6 +19,7 @@ const patient = require('./routes/patient_registration')
 
 //admin routes 
 const adminReg = require("./routes/admin/admin_login")
+const docRegistration = require("./routes/admin/Doctor/doctor_reg")
 const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
@@ -35,6 +36,7 @@ const department = require("./routes/admin/department/departments")
 //doctor routes
 const doctor_reg = require("./routes/doctor/doctor_registration")
 //
+
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
 const database = 'xpresscure' 
@@ -76,6 +78,7 @@ app.use('/api',patient)
 
 //admin middleware
 app.use('/api',adminReg)
+app.use('/api',docRegistration)
 app.use('/api',img_banner)
 app.use('/api',img_offer)
 app.use('/api',specialList)
