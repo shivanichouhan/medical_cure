@@ -26,8 +26,9 @@ const Block_Worker = require('./routes/BlockWorker')
 //Doctor
 const Doctor = require('./routes/Doctor/Registration')
 const Educational = require('./routes/Doctor/doctor_educational')
-
-
+const Professional = require('./routes/Doctor/doctor_professional')
+const Identity = require('./routes/Doctor/doctor_identity')
+const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
 
 
 
@@ -84,7 +85,9 @@ app.use('/',Block_Worker)
 //doctor
 app.use('/', Doctor)
 app.use('/',Educational)
-
+app.use('/',Professional)
+app.use('/',Identity)
+app.use('/',Bank_Account)
 
 const port = process.env.PORT || 8000
 app.listen(port, () => {

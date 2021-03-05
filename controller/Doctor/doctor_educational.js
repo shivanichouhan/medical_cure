@@ -36,7 +36,7 @@ exports.doctor_edu = (req, res) => {
                 console.log('file uploaded to Cloudinary')
                 const fs = require('fs')
                 fs.unlinkSync(path)
-                const data = new Educational({
+                const data = {
                     UGCollege_University: UGCollege_University,
                     Course: Course,
                     passing_year: passing_year,
@@ -47,9 +47,9 @@ exports.doctor_edu = (req, res) => {
                     certificate_Img: certificate_Img,
                     passing_year_certificate: passing_year_certificate,
                     certificate_Img: certificate_Img.secure_url
-                })
-                data.p_id = data._id
-                data.save()
+                }
+                //data.p_id = data._id
+                Educational.updateOne({_id:req.params.user_id},{$set:data})
                     .then((resp) => {
                         res.json({ code: 200, msg: "data save" })
                     })

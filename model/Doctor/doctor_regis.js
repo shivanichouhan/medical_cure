@@ -69,19 +69,24 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         issued_date: {
-            type: Date,
-            
+            type: Date,      
         },
-        License_image: {
+        License_img_front_side: {
+            type: String
+        },
+        License_img_back_side: {
             type: String
         },
         select_identity: {
             type: String
         },
-        Pan_Number: {
+        PAN_Number: {
             type: String
         },
-        upload_image: {
+        PanCard_front_side_img: {
+            type: String
+        },
+        PanCard_back_side_img: {
             type: String
         },
         select_bank: {

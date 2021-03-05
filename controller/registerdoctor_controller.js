@@ -7,7 +7,7 @@ exports.doctor = async (req, res) => {
         Address,
         Education,
         MobileNumber
-        //Image
+
     } = req.body
 
     const data_find = await Doctor.findOne({ MobileNumber: MobileNumber })
@@ -21,8 +21,8 @@ exports.doctor = async (req, res) => {
             EmailId: EmailId,
             Address: Address,
             Education: Education,
-            MobileNumber: MobileNumber,
-            //Image : Image
+            MobileNumber: MobileNumber
+            
         })
         cont_details
             .save()
