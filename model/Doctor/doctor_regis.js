@@ -23,7 +23,7 @@ const EventSchema = new mongoose.Schema(
         },
         passing_year: {
             type: Date,
-        
+
         },
         PGCollege_or_University: {
             type: String
@@ -33,7 +33,7 @@ const EventSchema = new mongoose.Schema(
         },
         pass_year: {
             type: Date,
-         
+
         },
         Certificate_University: {
             type: String
@@ -69,7 +69,7 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         issued_date: {
-            type: Date,      
+            type: Date,
         },
         License_img_front_side: {
             type: String
@@ -106,7 +106,26 @@ const EventSchema = new mongoose.Schema(
         },
         otp: {
             type: Number
-        }
+        }, gmailId: {
+            type: String
+        },
+        username: {
+            type: String
+        },
+        email: {
+            type: String
+        },
+        password: {
+            type: String
+        },
+        bearer_token: {
+            type: String
+        }, profile_pic: {
+            type: String,
+            default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
+        }, user_id:
+            { type: String },
+        dumy_userName: { type: String }
     })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)
