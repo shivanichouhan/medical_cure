@@ -20,3 +20,19 @@ exports.isAdmin = (req, res, next) => {
         res.sendStatus(403);
     }
 };
+
+exports.checkLogin =(req,res,next)=>{
+    var myToken = localStorage.getItem('token')
+    console.log(myToken)
+        jwt.verify(myToken,process.env.JWT_SECRET,(err,data)=>{
+            if(err){
+                res.json({error:"token is expire"})
+            }
+            else{
+                if(data.role === 1){
+                console.log(data)
+                next()
+           }    
+       }
+   })
+}

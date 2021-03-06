@@ -10,7 +10,11 @@ const departmentSchema = new schema(
       },
       department_status:{
           type:String
-      }
+      },
+      disease:[{
+        type:schema.Types.ObjectId,
+        ref:'disease'
+      }]
    },
   { timestamps: true }
 )

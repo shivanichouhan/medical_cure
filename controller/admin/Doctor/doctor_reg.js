@@ -63,7 +63,6 @@ exports.reg_doctor = async(req,res)=>{
                         res.send({data:resDoc})
                     }
                 })
-
              }
              else{
                  res.send({data:regDoc})
@@ -99,6 +98,29 @@ exports.edit_doctor =(req,res)=>{
             }
         }
     })
+}
+
+exports.status_manage =(req,res)=>{
+    if(req.body.status === 0){
+        docReg.updateOne({_id:req.body.doctorId},{$set:{status:1}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
+    else if(req.body.status === 1){
+        docReg.updateOne({_id:req.body.doctorId},{$set:{status:0}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
 }
 
 exports.remove_doctor =(req,res)=>{

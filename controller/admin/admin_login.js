@@ -62,12 +62,18 @@ exports.signin = async (req, res) => {
         res.json({ code: 400, msg: 'Password is not correct' })
     }
     else{
-    const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET)
-    console.log(token)
+    const token = jwt.sign({ _id: admin._id,role:admin.role }, process.env.JWT_SECRET,{expiresIn:'24h'} )
+
+    localStorage.setItem('token',token)
     // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
     // res.cookie('token', token, { expire: new Date() + 9999 })
-        res.redirect("/deshboard")
-    // return res.json({ token, data: {_id:admin._id,name:admin.username,email:admin.email,password:admin.password}});
+    // res.redirect("/deshboard")
+    return res.json({ token, data: {_id:admin._id,name:admin.username,email:admin.email,password:admin.password}});
     }
   }
+}
+
+exports.logout=(req,res)=>{
+    localStorage.removeItem('token')
+    res.json({msg:'logout successfully'})
 }

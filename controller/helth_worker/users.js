@@ -16,18 +16,22 @@ async function hashPassword(password) {
 async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
-const cloudenary = require('cloudinary').v2
 
 exports.otp_send =(req,res)=>{
-  User.findOne({mobile:req.body.mobile}) 
-  .exec((err,data)=>{
-      if(err || !data){
+    var str = req.body.forgetpass  
+    var patt1 = /^[0-9]*$/;
+    
+    if(str.match(patt1)){
+        console.log('number come')
+        User.findOne({mobile:req.body.forgetpass}) 
+        .exec((err,data)=>{
+        if(err || !data){
           res.json({code:400, error:'this number does not exist'})  
-      }
-      else{
+        }
+        else{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-        otp.send_otp(req.body.mobile,OTP).then((data)=>{
-        User.updateOne({mobile:req.body.mobile},{$set:{otp:OTP}},(err,respdata)=>{
+        otp.send_otp(str,OTP).then((data)=>{
+        User.updateOne({mobile:str},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
                 res.json(err)
             }
@@ -35,11 +39,15 @@ exports.otp_send =(req,res)=>{
                 res.json({code:200,msg:"otp send successfully"})
             }
         })
-   }).catch((err)=>{
+       }).catch((err)=>{
         res.send(err)
       })
     }
- }) 
+  }) 
+    }
+    else{
+        console.log('email is coming')
+}
 }
 
 exports.otp_verify =(req,res)=>{

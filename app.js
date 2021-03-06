@@ -12,6 +12,11 @@ const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
 
+if(typeof localStorage === "undefined" || localStorage === null){
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+}
+
 //user routes
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
@@ -34,9 +39,6 @@ const doctor_reg = require("./routes/Doctor/doctor_signin")
 
 //
 
-
-
-
 //admin routes 
 const adminReg = require("./routes/admin/admin_login")
 const docRegistration = require("./routes/admin/Doctor/doctor_reg")
@@ -44,12 +46,6 @@ const img_banner = require("./routes/admin/banner_img")
 const img_offer = require("./routes/admin/offer_img")
 const specialList = require("./routes/admin/add_speacialist")
 const addCategory = require("./routes/admin/add_category")
-
-
-
-
-
-//blogs
 const blog = require('./routes/helth_worker/blog_list')
 const addsubCategory = require("./routes/admin/add_sub_category")
 const disease = require("./routes/admin/add_disease")
@@ -105,8 +101,8 @@ app.use('/api', img_banner)
 app.use('/api', img_offer)
 app.use('/api', specialList)
 app.use('/api', addCategory)
-
 app.use('/api', blog)
+//
 
 
 app.use('/api', product)

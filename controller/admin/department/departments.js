@@ -1,12 +1,15 @@
 const depart = require("../../../model/admin/department/departments")
 
 exports.list_dep =(req,res)=>{
-    depart.find().exec((err,depList)=>{
+    depart.find()
+    .select('department_name')
+    .populate('disease','disease_name icon')
+    .exec((err,depList)=>{
         if(err){
             res.json(err)
         }
         else{
-            res.json(depList)
+            res.json({data:depList})
         }
     })
 }

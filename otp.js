@@ -1,6 +1,6 @@
 function otp(){
  
-  this.send_otp = (mobile,OTP)=>{
+  this.send_otp = (str,OTP)=>{
       return new Promise((resolve,reject)=>{
       var unirest = require('unirest');
       var req = unirest("GET", "http://sms.webappssoft.com/app/smsapi/index.php?");
@@ -10,7 +10,7 @@ function otp(){
       "campaign":"10072",
       "routeid": "7",
       "type":"text",
-      "contacts": `${mobile}`,
+      "contacts": `${str}`,
       "senderid": "VIRALL",
       "msg": `Please do not share this OTP ${OTP}`,
       });
@@ -25,6 +25,7 @@ function otp(){
        }
       else{
           resolve(resp)
+          console.log('resolve')
         }
       });
     })

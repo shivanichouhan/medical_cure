@@ -1,14 +1,16 @@
+const depart = require("../../model/admin/department/departments")
 const disease = require("../../model/admin/add_disease")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
 exports.list_disease=(req,res)=>{
-    disease.find().exec((err,resp)=>{
+    disease.find()
+   .exec((err,resp)=>{
         if(err){
             res.json(err)
         }
         else{
-            res.json(resp)
+            res.json({data:resp})
         }
     })
 
@@ -28,7 +30,16 @@ exports.create_disease=(req,res)=>{
                     fs.unlinkSync(path)
                     disease.findByIdAndUpdate(resp._id,{$set:{icon:result.url}})
                     .then((data)=>{
-                        res.json(data)
+                        // res.json(data)
+                          depart.updateOne({department_name:req.body.department_name},{$push:{disease:data}}
+                            ,(err,depatUpdte)=>{
+                                if(err){
+                                    res.json(err)
+                                }
+                                else{
+                                    res.json({Data:data})
+                                }
+                            })  
                     }).catch((err)=>{
                         res.json(err)
                     })

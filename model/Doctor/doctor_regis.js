@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 require('mongoose-double')(mongoose)
-
 var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
@@ -104,6 +103,10 @@ const EventSchema = new mongoose.Schema(
         Account_holder_name: {
             type: String
         },
+        status:{
+            type:Number,
+            default:0
+        },
         otp: {
             type: Number
         }, gmailId: {
@@ -115,7 +118,7 @@ const EventSchema = new mongoose.Schema(
         email: {
             type: String
         },
-        password: {
+        password:{
             type: String
         },
         bearer_token: {
