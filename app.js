@@ -20,12 +20,14 @@ if(typeof localStorage === "undefined" || localStorage === null){
 //user routes
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
+
 // const Doctors = require('./routes/register_doctors')
 const Contact = require('./routes/helth_worker/Contacts')
 const Health_Worker = require('./routes/admin/Admin_add_healthworker')
 const Admin_approve = require('./routes/admin/Admin_approve')
 const Block_Worker = require('./routes/helth_worker/BlockWorker')
-
+const courseHealth = require('./routes/helth_worker/courseList')
+//
 
 //Doctor
 const Doctor = require('./routes/Doctor/Registration')
@@ -36,7 +38,6 @@ const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
 const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
-
 //
 
 //admin routes 
@@ -54,6 +55,7 @@ const cat_blog = require("./routes/admin/blog_cat")
 const subcat_blog = require("./routes/admin/blog_sub_cat")
 const appoinment = require("./routes/admin/appoinment/appoinments")
 const department = require("./routes/admin/department/departments")
+const employee = require("./routes/admin/employee/emp_reg")
 //
 
 
@@ -87,11 +89,13 @@ app.use(express.json());
 app.get("/demo", (req, res) => {
   res.send("good shivani")
 })
+
 //users middleware
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
 app.use('/api', patient)
+app.use('/api', courseHealth)
 //
 
 //admin middleware
@@ -102,8 +106,8 @@ app.use('/api', img_offer)
 app.use('/api', specialList)
 app.use('/api', addCategory)
 app.use('/api', blog)
+app.use('/api', employee)
 //
-
 
 app.use('/api', product)
 app.use('/api', Users)
@@ -111,8 +115,6 @@ app.use('/api', Contact)
 app.use('/api', Health_Worker)
 app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
-
-
 
 //doctor
 app.use('/api', Doctor)
@@ -139,8 +141,10 @@ app.use('/api', appoinment)
 app.use('/api', department)
 //
 
+
 //doctor middleware
 app.use('/api', doctor_reg)
+
 const port = process.env.PORT || 8000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

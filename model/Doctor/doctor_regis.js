@@ -121,14 +121,19 @@ const EventSchema = new mongoose.Schema(
         password:{
             type: String
         },
-        bearer_token: {
+        bearer_token:{
             type: String
-        }, profile_pic: {
+        },
+         profile_pic:{
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
-        }, user_id:
-            { type: String },
-        dumy_userName: { type: String }
+        },
+         user_id:{           
+             type: String 
+        },
+        dumy_userName:{
+            type: String
+        }
     })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)

@@ -3,8 +3,8 @@ const cloud = require("../../../cloudinary")
 const fs = require("fs") 
 
 exports.reg_doctor = async(req,res)=>{
-    console.log(req.body)
-    console.log(req.files)
+     var doc = await docReg.find({Phone_Number:req.body.Phone_Number})   
+     if(doc.length === 0){
      var docObj = new docReg(req.body)
      docObj.save(async(err,regDoc)=>{
          if(err){
@@ -69,6 +69,10 @@ exports.reg_doctor = async(req,res)=>{
              }
          }
      })
+    }
+    else{
+        res.json({code:400,msg:'mobile no already exist'})
+    }
 }
 
 exports.list_doctor =(req,res)=>{

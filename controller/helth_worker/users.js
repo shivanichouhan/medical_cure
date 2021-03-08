@@ -174,7 +174,6 @@ exports.clinic_reg = async (req, res) => {
         certificate_img: urlsF,
         clinic_img: urlsS
     }
-
     var detail = _.extend(req.body, URL)
     console.log(detail)
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {

@@ -20,7 +20,7 @@ exports.AdminApprove = async (req, res) => {
                 })
                 .catch(e => {
                     res.send(e)
-                })
+              })
         }
     }
 }

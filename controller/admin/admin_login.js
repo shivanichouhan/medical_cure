@@ -1,9 +1,7 @@
- 
 const bcrypt = require('bcryptjs')
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const Admin = require('../../model/admin/admin_login')
-
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -12,7 +10,6 @@ async function hashPassword(password) {
 async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
-
 
 exports.signup = async (req, res) => {
     console.log(req.body)
@@ -26,7 +23,6 @@ exports.signup = async (req, res) => {
                     email: email,
                     password: Password
                     // phone: phone
-
                 })
                 datas.save()
                     .then((resp) => {
@@ -37,19 +33,12 @@ exports.signup = async (req, res) => {
                     })
             } else {
                 res.json({ code: 200, msg: "Email already exist" })
-            }
-
-
+          }
 };
 
 exports.signin = async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body)
-
-    const admin = await Admin.findOne({
-        email:email}
-    )
-    console.log(admin)
+    const admin = await Admin.findOne({email:email})
     if (!admin) {
         res.json({
             code: 400,
