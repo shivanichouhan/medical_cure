@@ -20,6 +20,7 @@ if(typeof localStorage === "undefined" || localStorage === null){
 //user routes
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
+const list_state_district = require('./routes/helth_worker/city_list')
 
 // const Doctors = require('./routes/register_doctors')
 const Contact = require('./routes/helth_worker/Contacts')
@@ -56,6 +57,7 @@ const subcat_blog = require("./routes/admin/blog_sub_cat")
 const appoinment = require("./routes/admin/appoinment/appoinments")
 const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
+const medicine = require("./routes/admin/pharmacy/medicine")
 //
 
 
@@ -96,6 +98,7 @@ app.use('/api', product)
 app.use('/api', Users)
 app.use('/api', patient)
 app.use('/api', courseHealth)
+app.use('/api', list_state_district)
 //
 
 //admin middleware
@@ -107,6 +110,7 @@ app.use('/api', specialList)
 app.use('/api', addCategory)
 app.use('/api', blog)
 app.use('/api', employee)
+app.use('/api', medicine)
 //
 
 app.use('/api', product)

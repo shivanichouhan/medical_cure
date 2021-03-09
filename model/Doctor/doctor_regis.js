@@ -134,6 +134,7 @@ const EventSchema = new mongoose.Schema(
         dumy_userName:{
             type: String
         }
-    })
+        
+    },{timestamps:true})
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)
