@@ -65,3 +65,70 @@ exports.doctorLogin = async (req, res) => {
         // res.json({ code: 200, msg: Doc })
     }
 }
+
+exports.log_social =(req,res)=>{
+    const { email, gmailId, username, photo, login_type } = req.body
+    console.log("shivani gmail data", req.body)
+    if (login_type == "gmail") {
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
+            .then((resp) => {
+                console.log(resp)
+                if (resp) {
+                       res.json({ code: 200, msg: resp })
+                   }
+                else {
+                    console.log(req.body)
+                    var userinfo = new doc({
+                        email: req.body.email,
+                        gmailId: req.body.gmailId,
+                        username: username,
+                        // profile_pic: photo
+                    })
+                    var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
+                    userinfo.bearer_token = Token
+                    console.log(userinfo)
+
+                    userinfo.save((err, Data) => {
+                        if (err) {
+                            res.send(err)
+                        }
+                        else {
+                            res.send({ code: 200, msg: Data })
+                        }
+                    })
+                }
+            }).catch((error) => {
+                res.json(error)
+            })
+    } else if (login_type == 'facebook') {
+        doc.findOne({ gmailId: gmailId })
+        .then((resp) => {
+                console.log(resp)
+                if(resp){
+                    res.json({ code: 200, msg: resp })
+                }
+                else {
+                    console.log(req.body)
+                    var userinfo = new doc({
+                        email: req.body.email,
+                        gmailId: req.body.gmailId,
+                        username: username,
+                        // profile_pic: photo
+                    })
+                    var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
+                    userinfo.bearer_token = Token
+                    console.log(userinfo)
+                    userinfo.save((err, Data) => {
+                        if (err) {
+                            res.send(err)
+                        }
+                        else {
+                            res.send({ code: 200, msg: Data })
+                        }
+                    })
+                }
+            }).catch((error) => {
+                res.json(error)
+            })
+    }
+}

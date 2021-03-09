@@ -1,0 +1,80 @@
+const mongoose = require('mongoose')
+const schema = mongoose.Schema
+
+const medicineSchema = new schema(
+  {
+       medicine_name:{
+           type:String 
+       },
+       med_img:{
+           type:Array 
+       },
+       manufacturer_name:{
+           type:String
+       },
+       salt:{
+           type:String
+       },
+       mrp:{
+           type:String
+       },
+       pack_size:{
+           type:String
+       },
+       intro_text:{
+           type:String
+       },
+       uses:{
+           type:String
+       },
+       side_effect:{
+           type:String
+       },
+       how_to_use:{
+           type:String
+       },
+       how_it_work:{
+           type:String
+       },
+       alcohol:{
+           type:String
+       },
+       pregnancy:{
+           type:String
+       },
+       feeding:{
+           type:String
+       },
+       driving:{
+           type:String
+       },
+       kidney:{
+           type:String
+       },
+       liver:{
+           type:String
+       },
+       if_forget:{
+           type:String
+       },
+       alternate_brands:{
+           type:String
+       },
+       tips:{
+           type:String
+       },
+       interactions:{
+           type:String
+       },
+       faq:{
+           type:String
+       },
+       lab_test:{
+           type:String
+       }
+  }
+,
+  { timestamps: true }
+)
+
+module.exports = mongoose.model('medicine', medicineSchema)
