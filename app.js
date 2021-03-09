@@ -39,6 +39,7 @@ const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
 const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
+const listDepartment = require("./routes/Doctor/area_of_interest")
 //
 
 //admin routes 
@@ -58,6 +59,7 @@ const appoinment = require("./routes/admin/appoinment/appoinments")
 const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
+const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 //
 
 
@@ -99,6 +101,12 @@ app.use('/api', Users)
 app.use('/api', patient)
 app.use('/api', courseHealth)
 app.use('/api', list_state_district)
+app.use('/api', product)
+app.use('/api', Users)
+app.use('/api', Contact)
+app.use('/api', Health_Worker)
+app.use('/api', Admin_approve)
+app.use('/api', Block_Worker)
 //
 
 //admin middleware
@@ -111,14 +119,15 @@ app.use('/api', addCategory)
 app.use('/api', blog)
 app.use('/api', employee)
 app.use('/api', medicine)
+app.use('/api', addsubCategory)
+app.use('/api', disease)
+app.use('/api', blogs)
+app.use('/api', cat_blog)
+app.use('/api', subcat_blog)
+app.use('/api', appoinment)
+app.use('/api', department)
+app.use('/api', lab_test)
 //
-
-app.use('/api', product)
-app.use('/api', Users)
-app.use('/api', Contact)
-app.use('/api', Health_Worker)
-app.use('/api', Admin_approve)
-app.use('/api', Block_Worker)
 
 //doctor
 app.use('/api', Doctor)
@@ -127,6 +136,9 @@ app.use('/api', Professional)
 app.use('/api', Identity)
 app.use('/api', Bank_Account)
 app.use('/api',doctor_reg)
+app.use('/api', listDepartment)
+app.use('/api', doctor_reg)
+//
 app.get("/admin_login", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/login.html'));
 });
@@ -136,18 +148,6 @@ app.get("/deshboard", (req, res) => {
 
 })
 
-app.use('/api', addsubCategory)
-app.use('/api', disease)
-app.use('/api', blogs)
-app.use('/api', cat_blog)
-app.use('/api', subcat_blog)
-app.use('/api', appoinment)
-app.use('/api', department)
-//
-
-
-//doctor middleware
-app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
 app.listen(port, () => {
