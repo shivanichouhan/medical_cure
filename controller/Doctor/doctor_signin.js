@@ -15,9 +15,12 @@ exports.doctor_reg = async (req, res) => {
 
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     console.log(req.body)
+
     const { user_name, email, password } = req.body;
+    console.log(email)
     const hashedPassword = await hashPassword(password)
     const data_check = await doc.findOne({ email: email })
+
     console.log(data_check)
     if (!data_check) {
         const datas = new doc({
@@ -33,7 +36,7 @@ exports.doctor_reg = async (req, res) => {
                 res.json({ code: 200, msg: resp })
             })
 
-    } else {
+    }else{
         res.json({ code: 400, msg: "Email already exist" })
     }
 }
@@ -60,7 +63,8 @@ exports.doctorLogin = async (req, res) => {
             // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
             // res.cookie('token', token, { expire: new Date() + 9999 })
             console.log(user)
-            return res.json({ token, data: {username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
+            console.log('run')
+            return res.json({ code:200, msg: {token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
         }
         // res.json({ code: 200, msg: Doc })
     }
