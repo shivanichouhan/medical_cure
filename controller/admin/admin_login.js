@@ -56,8 +56,8 @@ exports.signin = async (req, res) => {
     localStorage.setItem('token',token)
     // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
     // res.cookie('token', token, { expire: new Date() + 9999 })
-    // res.redirect("/deshboard")
-    return res.json({ token, data: {_id:admin._id,name:admin.username,email:admin.email,password:admin.password}});
+    res.redirect("/deshboard")
+    // return res.json({ token, data: {_id:admin._id,name:admin.username,email:admin.email,password:admin.password}});
     }
   }
 }

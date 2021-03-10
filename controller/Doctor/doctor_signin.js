@@ -64,6 +64,7 @@ exports.doctorLogin = async (req, res) => {
             // res.cookie('token', token, { expire: new Date() + 9999 })
             console.log(user)
             console.log('run')
+            // res.redirect("/deshboard")
             return res.json({ code:200, msg: {token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
         }
         // res.json({ code: 200, msg: Doc })

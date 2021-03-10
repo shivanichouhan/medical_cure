@@ -7,6 +7,7 @@ const path = require("path")
 exports.reg_doctor = async(req,res)=>{
      var doc = await docReg.find({Phone_Number:req.body.Phone_Number})   
      if(doc.length === 0){
+         req.body.status = 1
      var docObj = new docReg(req.body)
      docObj.save(async(err,regDoc)=>{
          if(err){
@@ -78,7 +79,7 @@ exports.reg_doctor = async(req,res)=>{
 }
 
 exports.list_doctor =(req,res)=>{
-    docReg.find().exec((err,doctor_list)=>{
+    docReg.find({otp_verify:1}).exec((err,doctor_list)=>{
         if(err){
             res.json(err)
         }
