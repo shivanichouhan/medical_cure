@@ -28,6 +28,7 @@ const Health_Worker = require('./routes/admin/Admin_add_healthworker')
 const Admin_approve = require('./routes/admin/Admin_approve')
 const Block_Worker = require('./routes/helth_worker/BlockWorker')
 const courseHealth = require('./routes/helth_worker/courseList')
+const states = require('./routes/helth_worker/state');
 //
 
 //Doctor
@@ -107,6 +108,7 @@ app.use('/api', Contact)
 app.use('/api', Health_Worker)
 app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
+app.use('/api',states);
 //
 
 //admin middleware

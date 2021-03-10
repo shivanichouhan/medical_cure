@@ -34,7 +34,7 @@ exports.doctor_reg = async (req, res) => {
             })
 
     } else {
-        res.json({ code: 200, msg: "Email already exist" })
+        res.json({ code: 400, msg: "Email already exist" })
     }
 }
 
