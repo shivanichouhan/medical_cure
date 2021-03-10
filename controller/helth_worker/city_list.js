@@ -23,7 +23,7 @@ exports.list_state = (req,res)=>{
         }
     })
 }
-
+ 
 exports.list_district =(req,res)=>{
     state.find({State:req.body.State})
     .select('District')
