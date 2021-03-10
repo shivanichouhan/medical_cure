@@ -12,6 +12,13 @@ const patientSchema = new schema(
     mobile:{
         type:String
     },
+    otp:{
+        type:String
+    },
+    mob_verify:{
+        type:Boolean,
+        default:false
+    },
     age:{
         type:String
     },
@@ -28,10 +35,9 @@ const patientSchema = new schema(
         type:schema.Types.ObjectId,
         ref:"appoinment"
     }],
-    userId:{
+    health_worker_id:{
         type:String
     }
-
   },
   { timestamps: true }
 )

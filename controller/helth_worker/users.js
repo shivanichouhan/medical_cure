@@ -94,6 +94,7 @@ exports.updatePass= async(req,res)=>{
 
 exports.normal_signup = async (req, res) => {
     // try {
+        console.log(req.body)
     const { user_name, email, password, con_password } = req.body;
     // if (password == con_password) {
     const hashedPassword = await hashPassword(password)
@@ -119,6 +120,7 @@ exports.normal_signup = async (req, res) => {
 
 
 exports.normal_signin = async (req, res) => {
+    
     const { email, password } = req.body
     console.log(email, password)
     const user = await User.findOne({ email: email })
