@@ -54,17 +54,25 @@ exports.create =(req,res)=>{
 }
 
 exports.patient_verfiy =(req,res)=>{
-    patient.find({mobile:req.body.mobile})
+    patient.findOne({mobile:req.body.mobile})
     .exec((err,resp)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'mobile no not come'})
         }
         else{
+            console.log(resp)
                 if(resp.otp === req.body.otp){
-                    res.json({ code:200,'patient_id':resp._id })
+                    patient.updateOne({_id:resp._id},{$set:{otp:'',mob_verify:true}},(err,updtePatient)=>{
+                        if(err){
+                              res.json({code:400,msg:'phone no is verify'})  
+                        }
+                        else{
+                             res.json({ code:200,'patient_id':resp._id })
+                        }
+                    })
                 }
                 else{
-                    res.json({ code:400,msg:'otp not match'})
+                    res.json({ code:400,msg:'wrong otp'})
                 }
             }
         })
