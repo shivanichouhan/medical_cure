@@ -113,7 +113,7 @@ app.use('/api',states);
 
 //admin middleware
 app.use('/api', adminReg)
-app.use('/api', docRegistration)
+app.use('/', docRegistration)
 app.use('/api', img_banner)
 app.use('/api', img_offer)
 app.use('/api', specialList)

@@ -1,6 +1,8 @@
 const docReg = require("../../../model/Doctor/doctor_regis")
 const cloud = require("../../../cloudinary")
 const fs = require("fs") 
+const path = require("path")
+// const s = require("../../../views")
 
 exports.reg_doctor = async(req,res)=>{
      var doc = await docReg.find({Phone_Number:req.body.Phone_Number})   
@@ -81,7 +83,12 @@ exports.list_doctor =(req,res)=>{
             res.json(err)
         }
         else{
-            res.json({data:doctor_list})
+            console.log(doctor_list)
+            res.render(
+                path.join(__dirname, '../../../views/doctors.ejs'),
+                { data: doctor_list }
+              )
+            // res.json({data:doctor_list})
         }
     })
 }
