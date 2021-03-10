@@ -12,3 +12,4 @@ const offerSchema = new schema(
 )
 
 module.exports = mongoose.model('offer_pic', offerSchema)
+//lklljlkjklj
