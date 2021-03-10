@@ -31,6 +31,7 @@ const courseHealth = require('./routes/helth_worker/courseList')
 //
 
 //Doctor
+
 const Doctor = require('./routes/Doctor/Registration')
 const Educational = require('./routes/Doctor/doctor_educational')
 const Professional = require('./routes/Doctor/doctor_professional')
@@ -39,6 +40,17 @@ const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
 const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
+const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
+const Phone_varify = require('./routes/Doctor/phone_varify')
+
+/*const Doctor = require('./routes/Doctor/Registration')
+const Educational = require('./routes/Doctor/doctor_educational')
+const Professional = require('./routes/Doctor/doctor_professional')
+const Identity = require('./routes/Doctor/doctor_identity')
+const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
+const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
+const patient = require('./routes/helth_worker/patient_registration')
+const doctor_reg = require("./routes/Doctor/doctor_signin")*/
 //
 
 //admin routes 
@@ -121,7 +133,24 @@ app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
 
 //doctor
+app.use('/api', doctor_reg)
 app.use('/api', Doctor)
+app.use('/api', Doctor_Certificate)
+app.use('/api', Educational)
+app.use('/api', Professional)
+app.use('/api', Identity)
+app.use('/api', Bank_Account)
+app.use('/api', doctor_reg)
+app.use('/api',Phone_varify)
+app.get("/admin_login", (req, res) => {
+  res.sendFile(path.join(__dirname + '/views/login.html'));
+});
+
+app.get("/deshboard", (req, res) => {
+  res.sendFile(path.join(__dirname + '/views/index.html'));
+
+})
+/*app.use('/api', Doctor)
 app.use('/api', Educational)
 app.use('/api', Professional)
 app.use('/api', Identity)
@@ -134,7 +163,7 @@ app.get("/admin_login", (req, res) => {
 app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
 
-})
+})*/
 
 app.use('/api', addsubCategory)
 app.use('/api', disease)

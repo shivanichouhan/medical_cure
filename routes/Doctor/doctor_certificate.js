@@ -24,8 +24,8 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-const{ doctor_edu } = require("../../controller/Doctor/doctor_educational")
+const{ doctor_certificate } = require("../../controller/Doctor/doctor_certificate")
 
-router.put("/doctor_educational/:user_id",upload.single('certificate_Img'),doctor_edu)
+router.put("/doctor_certificate/:user_id",upload.array('certificate'),doctor_certificate)
 
 module.exports = router;

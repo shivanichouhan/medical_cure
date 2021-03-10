@@ -33,7 +33,7 @@ exports.doctor_identity = (req, res) => {
         const pancard_front = pancard[0].path
         cloudenary.uploader.upload(
             pancard_front,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, 
             function (err, pancardimg) {
                 if (err) console.log(err)
                 console.log('file uploaded to Cloudinary')
@@ -46,7 +46,9 @@ exports.doctor_identity = (req, res) => {
         const image_path = path[0].path
         cloudenary.uploader.upload(
             image_path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, 
+            
+            // directory and tags are optional
             function (err, pancardimg) {
                 if (err) console.log(err)
                 console.log('file uploaded to Cloudinary')

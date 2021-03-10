@@ -28,6 +28,7 @@ exports.doctor_edu = (req, res) => {
 
         console.log(req.file)
         const path = req.file.path
+        console.log(path)
         cloudenary.uploader.upload(
             path,
             { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
@@ -36,6 +37,7 @@ exports.doctor_edu = (req, res) => {
                 console.log('file uploaded to Cloudinary')
                 const fs = require('fs')
                 fs.unlinkSync(path)
+
                 const data = {
                     UGCollege_University: UGCollege_University,
                     Course: Course,
@@ -58,7 +60,6 @@ exports.doctor_edu = (req, res) => {
     } else {
         res.send("you didn't choose Certificate")
     }
-
 }
 
 
