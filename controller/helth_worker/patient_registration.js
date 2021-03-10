@@ -3,6 +3,7 @@ const _ = require("lodash")
 const cloud = require("../../cloudinary")
 const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
+const fs = require('fs')
 
 exports.patient_list =(req,res)=>{
     patient.find({$and:[{userId:req.params.userId},
@@ -81,6 +82,7 @@ exports.patient_verfiy =(req,res)=>{
 exports.patient_info =(req,res)=>{
     if(req.file){
     cloud.patient(req.file.path).then((resp)=>{
+        fs.unlinkSync(req.file.path)
         console.log(resp.url)
     patient.updateOne({_id:req.params.patientId},{$set:{
         age:req.body.age,
@@ -97,4 +99,8 @@ exports.patient_info =(req,res)=>{
         res.json({code:400,msg:'image url not create'})
     })
    }
+   else{
+       res.json({code:400,msg:'patient image not come'})
+   }
+
 }
