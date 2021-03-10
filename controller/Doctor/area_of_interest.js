@@ -24,7 +24,7 @@ exports.list =(req,res)=>{
             console.log(err)
         }
         else{
-            res.json({list:list_Dis})
+            res.json({code:200,msg:list_Dis})
         }
     })
 }
