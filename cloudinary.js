@@ -109,10 +109,18 @@ exports.emp_iden_front = (file,folder)=>{
 }
 
 exports.emp_iden_back = (file,folder)=>{
-    
     return new Promise(resolve=>{
         var uniqueFilename=Date.now()
         cloudenary.uploader.upload(file,{public_id: `employee/${uniqueFilename}`, tags: `employee`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}
+
+exports.patient = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `patient/${uniqueFilename}`, tags: `patient`},(err,result)=>{
             resolve({url:result.url,imgId:result.asset_id})
         }) 
     })

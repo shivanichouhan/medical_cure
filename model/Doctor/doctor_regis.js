@@ -105,11 +105,11 @@ const EventSchema = new mongoose.Schema(
         },
         status:{
             type:Number,
-            default:0
         },
         otp: {
             type: Number
-        }, gmailId: {
+        },
+        gmailId: {
             type: String
         },
         username: {
