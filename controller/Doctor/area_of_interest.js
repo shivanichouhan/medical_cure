@@ -1,4 +1,5 @@
 const area = require("../../model/admin/department/departments")
+const dis = require("../../model/admin/add_disease")
 
 exports.depList =(req,res)=>{
      area.find()
@@ -15,15 +16,15 @@ exports.depList =(req,res)=>{
 }
 
 exports.list =(req,res)=>{
-    area.find({department_name:req.body.department_name},{upsert:true})
-    .populate('disease','disease_name')
+     dis.find()
+    .select('disease_name')
     .exec((err,list_Dis)=>{
         if(err){
             res.json({code:400,msg:'disease list not found'})
             console.log(err)
         }
         else{
-            res.json({list:list_Dis})
+            res.json({code:200,msg:list_Dis})
         }
     })
 }
