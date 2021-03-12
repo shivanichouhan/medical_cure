@@ -98,7 +98,8 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         Phone_Number: {
-            type: String
+            type: String,
+            default:""
         },
         Account_holder_name: {
             type: String
@@ -107,7 +108,7 @@ const EventSchema = new mongoose.Schema(
             type:Number,
         },
         otp: {
-            type: Number
+            type: String
         },
         gmailId: {
             type: String

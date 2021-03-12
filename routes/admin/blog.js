@@ -10,5 +10,4 @@ router.put("/admin/edit_blog/:blogId",checkLogin,upload.array('blog_img'),edit_b
 router.delete("/admin/remove_blog/:blogId",checkLogin,remove_blog)
 router.put("/admin/manage_blog_status",checkLogin,blog_status)
 
-
 module.exports = router;

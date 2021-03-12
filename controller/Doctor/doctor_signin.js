@@ -2,7 +2,8 @@ const doc = require("../../model/Doctor/doctor_regis")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 var otpGenerator = require('otp-generator')
-
+const otp = require("../../otp")
+const _ = require('lodash')
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
 }
@@ -12,7 +13,6 @@ async function validatePassword(plainPassword, hashedPassword) {
 }
 
 exports.doctor_reg = async (req, res) => {
-
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     console.log(req.body)
 
@@ -63,22 +63,24 @@ exports.doctorLogin = async (req, res) => {
             // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
             // res.cookie('token', token, { expire: new Date() + 9999 })
             console.log(user)
-            console.log('run')
-            return res.json({ code:200, msg: {token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
+            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
         }
         // res.json({ code: 200, msg: Doc })
     }
 }
 
 exports.log_social =(req,res)=>{
+    const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     const { email, gmailId, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
         doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
-                console.log(resp)
                 if (resp) {
-                       res.json({ code: 200, msg: resp })
+                    console.log(resp)
+                        const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
+                        var result = _.extend(resp,{bearer_token:token})
+                        res.json({ code: 200, msg: result })
                    }
                 else {
                     console.log(req.body)
@@ -90,8 +92,7 @@ exports.log_social =(req,res)=>{
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
-                    console.log(userinfo)
-
+                    userinfo.dumy_userName =  '@' + username + OTP
                     userinfo.save((err, Data) => {
                         if (err) {
                             res.send(err)
@@ -102,14 +103,16 @@ exports.log_social =(req,res)=>{
                     })
                 }
             }).catch((error) => {
-                res.json(error)
+                res.json({code:400,msg:'data not come'})
             })
     } else if (login_type == 'facebook') {
-        doc.findOne({ gmailId: gmailId })
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }]})
         .then((resp) => {
                 console.log(resp)
                 if(resp){
-                    res.json({ code: 200, msg: resp })
+                    const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
+                    var result = _.extend(resp,{bearer_token:token})
+                    res.json({ code: 200, msg: result })
                 }
                 else {
                     console.log(req.body)
@@ -121,6 +124,7 @@ exports.log_social =(req,res)=>{
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
+                    userinfo.dumy_userName =  '@' + username + OTP
                     console.log(userinfo)
                     userinfo.save((err, Data) => {
                         if (err) {
@@ -132,7 +136,89 @@ exports.log_social =(req,res)=>{
                     })
                 }
             }).catch((error) => {
-                res.json(error)
+                res.json({code:400,msg:'data not come'})
             })
+    }
+}
+
+exports.otpSend = async (req,res)=>{
+    var str = req.body.forgetpass  
+    var patt1 = /^[0-9]*$/;
+    if(str.match(patt1)){
+        doc.findOne({Phone_Number:req.body.forgetpass}) 
+        .exec((err,data)=>{
+        if(err || !data){
+          res.json({code:400, error:'this number does not exist'})  
+        }
+        else{
+        const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+        console.log(OTP, typeof OTP)
+        
+        otp.send_otp(str,OTP).then((data)=>{
+        doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json({code:200,msg:"otp send successfully"})
+            }
+             })
+          }).catch((err)=>{
+            res.send(err)
+      })
+    }
+  }) 
+}
+    else{
+        // res.json({msg:'email is coming'})
+        var Email = await doc.findOne({email:req.body.email})
+        if(!Email){
+            res.json({code:400, msg:'this email id not exist'})
+        }else{
+
+        }
+    }
+}
+
+exports.otpVerify =(req,res)=>{
+    doc.findOne({Phone_Number:req.body.Phone_Number})
+    .exec((err,resp)=>{
+        if(err || !resp){
+            res.json({ code:400,msg:'mobile not does not exist'})
+        }
+       else{
+            if(resp.otp === req.body.otp){
+                doc.findOneAndUpdate({Phone_Number:req.body.Phone_Number},{$set:{otp:" "}},(err,docUpdate)=>{
+                if(err){
+                        res.json(err)
+                    }
+                    else{
+                        res.json({code:200,doctor_id:docUpdate._id,msg:'otp verfiy successfully'})
+                    }   
+                })
+            }
+            else{
+                res.json({code:400 ,error:'wrong otp'})
+            }
+       } 
+    })
+}
+
+exports.passupdate = async(req,res)=>{
+    console.log(req.body.password,req.body.confirmPass)
+    if(req.body.password === req.body.confirmPass){
+        const Password = await hashPassword(req.body.password)
+        doc.findByIdAndUpdate(req.body.doctor_id,{$set:{password:Password}},
+        (err,passupdate)=>{
+           if(err){
+               res.json({code:400, error:'password does not update'})
+           }
+           else{
+               res.json({code:200, msg:'password update successfully'})
+           }
+       })
+    }
+    else{
+        res.json({code:400,error:'password does not match'})
     }
 }

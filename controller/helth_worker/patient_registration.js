@@ -32,6 +32,7 @@ exports.create =(req,res)=>{
             }
             else{   
                     const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+                    res.send(resp)
                     otp.send_otp(req.body.mobile,OTP).then((resp)=>{
                         var patObj = new patient(req.body)
                         patObj.health_worker_id =req.params.userId
