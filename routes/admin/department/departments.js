@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const{ create_dep,list_dep,edit_department,edit_dep,remove_dep } = require("../../../controller/admin/department/departments")
+// const{ create_dep,list_dep,edit_department,edit_dep,remove_dep } = require("../../../controller/admin/department/departments")
+const{ create_dep,edit_department,list_dep,edit_dep,remove_dep,dep_status } = require("../../../controller/admin/department/departments")
 const{ isAdmin,checkLogin } = require("../../../auth")
 
 router.get("/list_department",checkLogin,list_dep)
