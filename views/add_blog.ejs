@@ -19,21 +19,26 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
 
 </head>
-<!-- document.getElementById("blog_category").value; -->
 <script type="text/javascript">
     $(document).ready(function () {
         $("#blog_category").change(function (testMessage) {
-                <% data.forEach(element => {%>
-                    var vals = $("#blog_category").val()
+            var categoryId = $(this).find('option:selected').val();
+            // alert(categoryId)
+            $.ajax({
+                url: "/blog_sub_category",
+                type: "POST",
+                data: { data: categoryId },
+                success: function (response) {
+                    response.forEach(element => {
+                        $('#blog_sub_cat')
+                            .append($("<option></option>")
+                                .attr("value", element.blog_sub_cat)
+                                .text(element.blog_sub_cat));
+                    });
 
-                    <%const ss = element.blog_cat_name%>
-                    if(vals  == <%=ss%>){
-                        alert("jjhjkhjhj")
+                },
+            });
 
-                    }
-            <%}) %>
-
-                alert(vals)
         });
     });
 </script>
@@ -429,6 +434,7 @@
                                             <select class="select" name="blog_cat_name" id="blog_category">
                                                 <%data.forEach((item)=>{%>
                                                     <!-- <option><%=item.blog_subcategory%></option> -->
+                                                    <option>Choose category</option>
                                                     <option value="<%=item.blog_cat_name%>">
                                                         <%=item.blog_cat_name%>
                                                     </option>
@@ -441,7 +447,6 @@
                                     <div class="form-group">
                                         <label>Blog Sub Category</label>
                                         <select class="select" id="blog_sub_cat" name="blog_sub_cat">
-                                            <option>Health Care</option>
                                             <!-- <option>Health Care</option>
                                             <option>Health Care</option>
                                             <option>Health Care</option>

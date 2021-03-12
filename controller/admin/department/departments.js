@@ -1,15 +1,40 @@
 const depart = require("../../../model/admin/department/departments")
-
+const path = require("path")
+const url =require("url")
 exports.list_dep =(req,res)=>{
-    depart.find()
-    .select('department_name')
-    .populate('disease','disease_name icon')
+    depart.find({},{department_name:1,department_status:1,_id:1})
+    // .select('department_name')
+    // .populate('disease','disease_name icon')
     .exec((err,depList)=>{
         if(err){
             res.json(err)
         }
         else{
-            res.json({data:depList})
+            // res.json({data:depList})
+            res.render(
+                path.join(__dirname, '../../../views/departments.ejs'),
+                { data: depList }
+              )
+        }
+    })
+}
+
+
+exports.edit_department=(req,res)=>{
+    const all = url.parse(req.url,true).query
+    console.log(all)
+    depart.find({_id:all.k},{department_name:1,department_status:1})
+    .exec((err,depList)=>{
+        if(err){
+            res.json(err)
+        }
+        else{
+            // res.json({data:depList})
+            console.log(depList)
+            res.render(
+                path.join(__dirname, '../../../views/edit-department.ejs'),
+                { data: depList }
+              )
         }
     })
 }

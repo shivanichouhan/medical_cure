@@ -10,7 +10,8 @@ const morgan = require('morgan')
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
 app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.set( "views", path.join(__dirname, "views"));
 
 if(typeof localStorage === "undefined" || localStorage === null){
   var LocalStorage = require('node-localstorage').LocalStorage;
@@ -127,7 +128,7 @@ app.use('/api', blogs)
 app.use('/', cat_blog)
 app.use('/api', subcat_blog)
 app.use('/api', appoinment)
-app.use('/api', department)
+app.use('/', department)
 app.use('/api', lab_test)
 //
 
