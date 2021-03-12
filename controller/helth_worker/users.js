@@ -22,7 +22,6 @@ exports.otp_send =(req,res)=>{
     var patt1 = /^[0-9]*$/;
     
     if(str.match(patt1)){
-        console.log('number come')
         User.findOne({mobile:req.body.forgetpass}) 
         .exec((err,data)=>{
         if(err || !data){
@@ -31,16 +30,16 @@ exports.otp_send =(req,res)=>{
         else{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         otp.send_otp(str,OTP).then((data)=>{
-        User.updateOne({mobile:str},{$set:{otp:OTP}},(err,respdata)=>{
+        doc.updateOne({mobile:str},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
-                res.json(err)
+                res.json({code:400,msg:'otp no is not add in doctor'})
             }
             else{
                 res.json({code:200,msg:"otp send successfully"})
             }
         })
        }).catch((err)=>{
-        res.send(err)
+        res.json({code:400,msg:'otp not sent'})
       })
     }
   }) 
@@ -118,7 +117,6 @@ exports.normal_signup = async (req, res) => {
 
 };
 
-
 exports.normal_signin = async (req, res) => {
     
     const { email, password } = req.body
@@ -147,9 +145,9 @@ exports.normal_signin = async (req, res) => {
     }
 }
 
-// expo
-
 exports.clinic_reg = async (req, res) => {
+    var data = await User.find({mobile:req.body.mobile})
+    if(!data){
     var certificate = req.files.certificate
     var clinic = req.files.clinic
 
@@ -180,12 +178,16 @@ exports.clinic_reg = async (req, res) => {
     console.log(detail)
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {
         if (err) {
-            res.json(err)
+            res.json({code:400,msg:'health worker detail no add'})
         }
         else {
-            res.json(data)
+            res.json({code:200,msg:data})
         }
     })
+}
+else{
+    res.json({code:400,msg:'mobile no already exist'})
+}
 
 }
 
@@ -220,8 +222,6 @@ exports.edit_profile = (req, res) => {
         }
     })
 }
-
-// exports.f
 
 exports.gmail_signin = (req, res) => {
     const { email, gmailId, username, photo, login_type } = req.body

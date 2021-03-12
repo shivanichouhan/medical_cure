@@ -4,7 +4,6 @@ const dotenv =require('dotenv')
 dotenv.config()
 
 exports.create =(req,res)=>{
-    console.log('run')
     var specialObj = new specialist(req.body)
     specialObj.save((err,sp)=>{
         if(err){

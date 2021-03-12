@@ -98,18 +98,19 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         Phone_Number: {
-            type: String
+            type: String,
+            default:""
         },
         Account_holder_name: {
             type: String
         },
         status:{
             type:Number,
-            default:0
         },
         otp: {
-            type: Number
-        }, gmailId: {
+            type: String
+        },
+        gmailId: {
             type: String
         },
         username: {

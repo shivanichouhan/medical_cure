@@ -62,6 +62,29 @@ exports.edit_dep =(req,res)=>{
     })
 }
 
+exports.dep_status =(req,res)=>{
+    if(req.body.department_status == 1){
+        depart.updateOne({_id:req.params.depId},{$set:{department_status:'Active'}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
+    else if(req.body.department_status == 0){
+        depart.updateOne({_id:req.params.depId},{$set:{department_status:'Inactive'}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
+}
+
 exports.remove_dep =(req,res)=>{
     depart.remove({_id:req.params.depId},(err,depRemove)=>{
         if(err){

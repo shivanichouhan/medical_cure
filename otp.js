@@ -22,13 +22,12 @@ function otp(){
      });
  
     req.end(function(resp){
-      console.log(resp)
-      // if(resp.error){
-        // reject(resp.error)
+      if(resp.error){
+        reject(resp.error)
         if (resp.body == 'ERR: NOT VALID SENDERID'){
           reject(resp)
         }
-      // }
+      }
       else{
           resolve(resp)
           console.log('resolve')

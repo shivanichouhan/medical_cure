@@ -109,3 +109,26 @@ exports.remove_blog =(req,res)=>{
         }
     })
 }
+
+exports.blog_status =(req,res)=>{
+    if(req.body.status === 1){
+        blogModal.updateOne({_id:req.body._id},{$set:{status:0}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json({code:200,msg:'blog status deactive'})
+            }
+        })
+    }
+    else if(req.body.status === 0){
+        blogModal.updateOne({_id:req.body._id},{$set:{status:1}},(err,resp)=>{
+            if(err){
+                res.jsone(err)
+            }
+            else{
+                res.json({code:200,msg:'blog status active'})
+            }
+        })
+    }
+}
