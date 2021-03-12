@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const health = require("./model/helth_worker/users")
 
 exports.isAdmin = (req, res, next) => {
     var Token = req.headers["authorization"]
@@ -35,4 +36,14 @@ exports.checkLogin =(req,res,next)=>{
            }    
        }
    })
+}
+
+exports.chk_helth_status = async(req,res)=>{
+    var data = await health.findOne({_id:req.params.userId})
+    if(data.status == 1){
+        next()
+    }
+    else if(data.status == 0){
+        res.json({code:400, msg:'health worker not approve'})
+    }    
 }

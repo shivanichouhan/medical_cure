@@ -146,7 +146,8 @@ exports.normal_signin = async (req, res) => {
 }
 
 exports.clinic_reg = async (req, res) => {
-    var data = await User.find({mobile:req.body.mobile})
+    var data = await User.findOne({mobile:req.body.mobile})
+    console.log(data)
     if(!data){
     var certificate = req.files.certificate
     var clinic = req.files.clinic
@@ -176,6 +177,7 @@ exports.clinic_reg = async (req, res) => {
     }
     var detail = _.extend(req.body, URL)
     console.log(detail)
+    
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {
         if (err) {
             res.json({code:400,msg:'health worker detail no add'})

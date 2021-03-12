@@ -24,8 +24,8 @@ const EventSchema = new schema(
       default:""
     },
     status:{
-      type:Boolean,
-      default:false
+      type:Number,
+      default:0
     },
     health_worker_course:{
       type:String
@@ -78,7 +78,12 @@ const EventSchema = new schema(
       type: String
     }, mobile: {
       type: String
+    },
+    mobile_verfiy:{
+      type:Number,
+      default:0
     }
+    
   })
 
 
