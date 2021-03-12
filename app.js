@@ -61,8 +61,8 @@ const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
+const listPatient = require("./routes/admin/patient")
 //
-
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -129,6 +129,7 @@ app.use('/api', subcat_blog)
 app.use('/api', appoinment)
 app.use('/api', department)
 app.use('/api', lab_test)
+app.use('/api', listPatient)
 //
 
 //doctor

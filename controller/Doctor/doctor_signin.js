@@ -77,7 +77,6 @@ exports.log_social =(req,res)=>{
         doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
                 if (resp) {
-                    console.log(resp)
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp,{bearer_token:token})
                         res.json({ code: 200, msg: result })

@@ -20,7 +20,6 @@ const blogSchema = new schema(
        },
        status:{
            type:String,
-           default:1
        }
   }
 ,
