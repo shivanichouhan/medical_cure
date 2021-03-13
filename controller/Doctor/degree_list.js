@@ -1,9 +1,18 @@
 const docDeg = require("../../model/Doctor/certificate")
 const docPg = require("../../model/Doctor/postgraduate")
 const docSuper = require("../../model/Doctor/super_specilist")
+const specilization = require("../../model/admin/department/departments")
+const clg = require("../../model/Doctor/clg_name")
 
-exports.addUg = (req,res)=>{
-    
+exports.list_specilization = (req,res)=>{
+    specilization.find({},{department_name:1}).exec((err,resp)=>{
+        if(err){
+            res.json({code:400, msg:'list not found'})
+        }
+        else{
+            res.json({code:200, List:resp})
+        }   
+    })
 }
 
 exports.add_super =(req,res)=>{
@@ -33,6 +42,18 @@ exports.addPg =(req,res)=>{
 exports.addCer =(req,res)=>{
     var docObj = new docDeg(req.body)
     docObj.save((err,data)=>{
+        if(err){
+            res.json(err)
+        }
+        else{
+            res.json(data)
+        }
+    })
+}
+
+exports.clgAdd =(req,res)=>{
+    var clgObj = new clg(req.body)
+    clgObj.save((err,data)=>{
         if(err){
             res.json(err)
         }
@@ -74,6 +95,18 @@ exports.list_cer =(req,res)=>{
         }
         else{
             res.json({code:200,List:ugList})
+        }
+    })
+}
+
+exports.list_clg =(req,res)=>{
+    clg.find()
+    .exec((err,clgList)=>{
+        if(err || !clgList){
+            res.json({code:400,msg:'list not found'})
+        }
+        else{
+            res.json({code:200,List:clgList})
         }
     })
 }

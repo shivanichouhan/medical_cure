@@ -23,6 +23,7 @@ exports.clinic_otp = async(req,res)=>{
    if(!data){
     const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
     otp.send_otp(str,OTP).then((resp)=>{
+        
         User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
             res.json({code:200 ,msg:'otp send successfully'})
       
