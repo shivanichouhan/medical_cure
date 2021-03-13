@@ -17,6 +17,49 @@ async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
+exports.clinic_otp = async(req,res)=>{
+   var str = req.body.mobile
+   var data = await User.findOne({mobile:str})
+   if(!data){
+    const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+    otp.send_otp(str,OTP).then((resp)=>{
+        User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
+            res.json({code:200 ,msg:'otp send successfully'})
+      
+        }).catch((err)=>{
+            res.json({code:400,msg:'otp not set in user'})    
+        })
+    }).catch((err)=>{
+        res.json({code:400,msg:'otp not sent'})
+    })
+   }
+   else{
+       res.json({code:400,msg:'mobile no already exist'})
+   }   
+}
+
+exports.clinic_otp_verify = async(req,res)=>{
+   var result = await User.findOne({mobile:req.body.mobile})
+   if(result){
+        if(result.otp == req.body.otp){
+                User.updateOne({mobile:req.body.mobile},{$set:{mobile_verfiy:1, otp:''}},
+                (err,resp)=>{
+                    if(err){
+                        res.json({code:400, msg:'mobile no not verfiy'})
+                    }
+                    else{
+                        res.json({code:200, userId:resp._id})
+                    }
+                })
+        }else{
+            res.json({code:400, msg:'wrong otp'})
+        }
+   }
+   else{
+       res.json({code:400, msg:'data not found'})
+   }
+}
+
 exports.otp_send =(req,res)=>{
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
@@ -146,7 +189,8 @@ exports.normal_signin = async (req, res) => {
 }
 
 exports.clinic_reg = async (req, res) => {
-    var data = await User.find({mobile:req.body.mobile})
+    var data = await User.findOne({mobile:req.body.mobile})
+    console.log(data)
     if(!data){
     var certificate = req.files.certificate
     var clinic = req.files.clinic
@@ -176,6 +220,7 @@ exports.clinic_reg = async (req, res) => {
     }
     var detail = _.extend(req.body, URL)
     console.log(detail)
+    
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {
         if (err) {
             res.json({code:400,msg:'health worker detail no add'})

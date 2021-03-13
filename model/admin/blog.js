@@ -17,7 +17,10 @@ const blogSchema = new schema(
        },
        discription:{
            type:String
-       },status:{type:String}
+       },
+       status:{
+           type:String,
+       }
   }
 ,
   { timestamps: true }

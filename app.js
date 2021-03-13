@@ -42,6 +42,7 @@ const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
+const doc_deg = require("./routes/Doctor/degree_list")
 //
 
 //admin routes 
@@ -62,8 +63,8 @@ const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
+const listPatient = require("./routes/admin/patient")
 //
-
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -130,6 +131,7 @@ app.use('/api', subcat_blog)
 app.use('/api', appoinment)
 app.use('/', department)
 app.use('/api', lab_test)
+app.use('/api', listPatient)
 //
 
 //doctor
@@ -141,6 +143,7 @@ app.use('/api', Bank_Account)
 app.use('/api',doctor_reg)
 app.use('/api', listDepartment)
 app.use('/api', doctor_reg)
+app.use('/api', doc_deg)
 //
 app.get("/admin_login", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/login.html'));

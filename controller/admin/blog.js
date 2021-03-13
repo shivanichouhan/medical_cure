@@ -111,23 +111,23 @@ exports.remove_blog =(req,res)=>{
 }
 
 exports.blog_status =(req,res)=>{
-    if(req.body.status === 1){
-        blogModal.updateOne({_id:req.body._id},{$set:{status:0}},(err,resp)=>{
+    if(req.body.status == 1){
+        blogModal.updateOne({_id:req.body._id},{$set:{status:'Active'}},(err,resp)=>{
             if(err){
                 res.json(err)
             }
             else{
-                res.json({code:200,msg:'blog status deactive'})
+                res.json({code:200,msg:'blog status Active'})
             }
         })
     }
-    else if(req.body.status === 0){
-        blogModal.updateOne({_id:req.body._id},{$set:{status:1}},(err,resp)=>{
+    else if(req.body.status == 0){
+        blogModal.updateOne({_id:req.body._id},{$set:{status:'Inactive'}},(err,resp)=>{
             if(err){
                 res.jsone(err)
             }
             else{
-                res.json({code:200,msg:'blog status active'})
+                res.json({code:200,msg:'blog status Inactive'})
             }
         })
     }
