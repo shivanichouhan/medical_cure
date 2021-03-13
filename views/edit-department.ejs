@@ -339,19 +339,19 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form>
+                        <form action="/edit_department?k=<%=data._id%>" method="POST">
                             <div class="form-group">
                                 <label>Department Name</label>
                                 <%if(data){%>
-                                    <input class="form-control" type="text" value="<%=data[0].department_name%>">
+                                    <input class="form-control" type="text" name="department_name" value="<%=data.department_name%>">
                                     <%}else{%>
-                                        <input class="form-control" type="text" value="Dentists">
+                                        <input class="form-control" name="department_name" type="text" value="Dentists">
 
                                         <%}%>
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea cols="30" rows="4" class="form-control"></textarea>
+                                <textarea cols="30" rows="4" name="description" class="form-control"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="display-block">Department Status</label>

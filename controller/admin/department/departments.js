@@ -23,14 +23,14 @@ exports.list_dep =(req,res)=>{
 exports.edit_department=(req,res)=>{
     const all = url.parse(req.url,true).query
     console.log(all)
-    depart.find({_id:all.k},{department_name:1,department_status:1})
+    depart.findOne({_id:all.k},{department_name:1,department_status:1})
     .exec((err,depList)=>{
         if(err){
             res.json(err)
         }
         else{
             // res.json({data:depList})
-            console.log(depList)
+            console.log(depList,"kjhkjhjkhjkgjhg")
             res.render(
                 path.join(__dirname, '../../../views/edit-department.ejs'),
                 { data: depList }
@@ -46,18 +46,48 @@ exports.create_dep =(req,res)=>{
             res.json(err)
         }
         else{
-            res.json(resp)
+            res.redirect("/list_department")
+
+            // res.json(resp)
         }
     })
 }
 
+exports.add_department =(req,res)=>{
+    // add-department
+    res.render(
+        path.join(__dirname, '../../../views/add-department.ejs')
+       
+      )
+}
+
 exports.edit_dep =(req,res)=>{
-    depart.updateOne({_id:req.params.depId},req.body,(err,depUpdate)=>{
+    const {department_name,description,status}=req.body
+    console.log(req.body)
+    const obj ={}
+    if(department_name){
+        obj.department_name = department_name
+    }if(description){
+        obj.description = description
+    }if(status){
+        if(status == "option1"){
+            obj.department_status = "Active"
+
+        }else{
+            obj.department_status = "Inactive"
+        }
+    }
+    console.log(obj)
+    const all = url.parse(req.url,true).query
+    console.log(all,"hjghghjhgfghfghdf")
+    depart.updateOne({_id:all.k},{$set:obj},(err,depUpdate)=>{
         if(err){
             res.json(err)
         }
         else{
-            res.json(depUpdate)
+            console.log(depUpdate)
+            // res.json(depUpdate)
+            res.redirect("/list_department")
         }
     })
 }
@@ -86,12 +116,15 @@ exports.dep_status =(req,res)=>{
 }
 
 exports.remove_dep =(req,res)=>{
-    depart.remove({_id:req.params.depId},(err,depRemove)=>{
+    const {ids}=req.body
+    console.log(req.body)
+    depart.remove({department_name:ids},(err,depRemove)=>{
         if(err){
             res.json(err)
         }
         else{
-            res.json(depRemove)
+            res.redirect("/list_department")
+            // res.json(depRemove)
         }
     })
 }
