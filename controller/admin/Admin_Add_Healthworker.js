@@ -46,8 +46,8 @@ exports.Add_Health_Worker = async (req, res) => {
    
      }
      else{
-                res.json({msg:'health worker register successfully',data:data})
-       }
+             res.json({msg:'health worker register successfully',data:data})
+        }
      }
    })
   }
@@ -57,8 +57,8 @@ exports.Add_Health_Worker = async (req, res) => {
 }
 
 exports.findhealthworker = async (req, res) => {
-     try{
-        const workersData = await HealthWorker.find();
+    try{
+        const workersData = await HealthWorker.find({mobile_verfiy:1});
         res.send(workersData);
     }catch(e){
         res.send(e);
