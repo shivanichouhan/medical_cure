@@ -14,6 +14,5 @@ router.get("/doctor/pg_list",list_pg)
 router.get("/doctor/super_specilist",list_super)
 router.get("/doctor/specilization_list",list_specilization)
 router.get("/doctor/collage_list",list_clg)
-//fsdfds
 
 module.exports = router;

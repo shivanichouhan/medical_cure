@@ -8,6 +8,8 @@ const _ = require('lodash')
 const Async = require('async')
 const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
+var Up = require("../../handler/multer")
+Up = Up.fields([{name:'clinic'},{name:'certificate'}])
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -238,35 +240,62 @@ else{
 }
 
 exports.edit_profile = (req, res) => {
-    User.updateOne({ _id: req.params.userId }, req.body, (err, updteUser) => {
-        if (err) {
+ User.updateOne({ _id: req.params.userId }, req.body, (err, updteUser) => {
+     if (err) {
             res.json(err)
-        }
-        else{
-            if(req.files.lenght>0){
+    }
+     else{
+        Up(req,res,function(err){
+         if(err){
+                 res.send({code:400,msg:'file formart not support'})
+             }
+          else{
+            if(req.files.clinic){
                 console.log(req.files.clinic)
                 for (row of req.files.clinic) {
                     var p = row.path
                 }
                 const path = p
-                cloud.uploads(path, 'clinic').then((resp) => {
+                cloud.Clinic(path).then((resp) => {
                     fs.unlinkSync(path)
                     console.log(resp)
-                    User.updateOne({ 'clinic_img.imgId': req.params.imgID }, { $set: { "clinic_img.$.url": resp.url, "clinic_img.$.id": resp.id } })
+                    User.updateOne({ 'clinic_img.imgId': req.params.imgID }, {$set:{"clinic_img.$.url":resp.url,"clinic_img.$.id":resp.id}})
                         .then((resPatient) => {
-                            res.json({ resp: resPatient, msg: 'user details update with image' })
+                            res.json({ code:200, msg: 'user details update with clinic image' })
                         }).catch((error) => {
-                            res.json(error)
+                            res.json({code:400,msg:'clinic image not update'})
+                        })
+                }).catch((err) => {
+                    res.send(err)
+                })
+            }
+           
+           else if(req.files.certificate){
+                console.log(req.files.certificate)
+                for (row of req.files.certificate) {
+                    var p = row.path
+                }
+                const path = p
+                cloud.Certificate(path).then((resp) => {
+                    fs.unlinkSync(path)
+                    console.log(resp)
+                    User.updateOne({ 'certificate_img.imgId': req.params.imgID }, { $set: { "certificate_img.$.url": resp.url, "certificate_img.$.id": resp.id } })
+                        .then((resPatient) => {
+                            res.json({ code: 200, msg: 'user details update with certificate image' })
+                        }).catch((error) => {
+                            res.json({code:400,msg:'certificate image not update'})
                         })
                 }).catch((err) => {
                     res.send(err)
                 })
             }
             else {
-                res.json({ code: 200, msg: 'user details update successfully' })
-            }
+                   res.json({ code: 200, msg: 'user details update successfully' })
+            }   
         }
     })
+    }
+ })
 }
 
 exports.gmail_signin = (req, res) => {
@@ -379,11 +408,11 @@ exports.edit_user_profile = (req, res) => {
 exports.clinic_info = (req, res) => {
     User.find({ _id: req.params.userId })
         .exec((err, userInfo) => {
-            if (err) {
-                res.json(err)
+            if (err || !userInfo) {
+                res.json({code:400, msg:'health worker profile not found'})
             }
             else {
-                res.json(userInfo)
+                res.json({code:200, msg:userInfo})
             }
         })
 }

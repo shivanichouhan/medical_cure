@@ -72,7 +72,7 @@ const EventSchema = new schema(
     bearer_token: {
       type: String
     },
-    photo: {
+    photo:{
       type: String
     }, imgId: {
       type: String
