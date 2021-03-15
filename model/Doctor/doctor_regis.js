@@ -39,7 +39,7 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         certificate_Img: {
-            type: Array
+            type:Array
         },
         passing_year_certificate: {
             type: String

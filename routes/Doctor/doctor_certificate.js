@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+//const upload = require("../../handler/multer")
+
 const multer = require('multer')
 
 var storage = multer.diskStorage({
@@ -23,6 +25,8 @@ var storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: storage })
+
+
 
 const{ doctor_certificate } = require("../../controller/Doctor/doctor_certificate")
 

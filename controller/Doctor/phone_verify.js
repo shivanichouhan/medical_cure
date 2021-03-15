@@ -50,7 +50,7 @@ exports.number_verify = (req, res) => {
         .then((resp) => {
             console.log(resp)
             if (resp.otp == otp) {
-                Doctor_num.findOneAndUpdate({ mobile_number: req.body.mobile_number }, { $set: { otp: " ", otp_verify : 1 } }, (err, doctorUpdate) => {
+                Doctor_num.findOneAndUpdate({ mobile_number: req.body.mobile_number }, { $set: { otp: " ", otp_verify: 1 } }, (err, doctorUpdate) => {
                     if (err) {
                         res.json(err)
                     }
