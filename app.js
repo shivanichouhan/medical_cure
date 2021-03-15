@@ -30,6 +30,7 @@ const Admin_approve = require('./routes/admin/Admin_approve')
 const Block_Worker = require('./routes/helth_worker/BlockWorker')
 const courseHealth = require('./routes/helth_worker/courseList')
 const states = require('./routes/helth_worker/state');
+const dep_health = require('./routes/helth_worker/list_dep')
 //
 
 //Doctor
@@ -110,7 +111,8 @@ app.use('/api', Contact)
 app.use('/api', Health_Worker)
 app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
-app.use('/api',states);
+app.use('/api', states);
+app.use('/api', dep_health)
 //
 
 //admin middleware
@@ -153,7 +155,6 @@ app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
 
 })
-
 
 const port = process.env.PORT || 8000
 app.listen(port, () => {

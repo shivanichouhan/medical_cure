@@ -13,7 +13,7 @@ router.post("/clinic_registration/otp_send/:userId",clinic_otp)
 router.post("/clinic_registration/otp_verify",clinic_otp_verify)
 
 router.put("/clinic_registration/:userId",upload.fields([{name:'certificate'},{name:'clinic'}]),clinic_reg)
-router.put("/edit_profile_user/:userId/:imgID",upload.fields([{name:'clinic'},{name:'certificate'}]),edit_profile)
+router.put("/edit_profile_user/:userId/:imgID",/*upload.fields([{name:'clinic'},{name:'certificate'}])*/edit_profile)
 
 router.post("/health_worker/send_otp",otp_send)
 router.post("/health_worker/verify_otp",otp_verify)

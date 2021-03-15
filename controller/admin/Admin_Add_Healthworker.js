@@ -4,7 +4,6 @@ const fs = require('fs')
 
 exports.Add_Health_Worker = async (req, res) => {
    var health = await HealthWorker.find({mobile:req.body.mobile}) 
-
    if(health.length === 0){
    var healthObj = new HealthWorker(req.body)
    healthObj.save(async(err,data)=>{
@@ -66,7 +65,7 @@ exports.findhealthworker = async (req, res) => {
 };
 
 exports.DeleteHealthworker = (req, res) => {
-    HealthWorker.remove({_id:req.params.healthworkerId},(err,resp)=>{
+    HealthWorker.remove({_id:req.body._id},(err,resp)=>{
         if(err){
             res.json(err)
         }
@@ -75,3 +74,26 @@ exports.DeleteHealthworker = (req, res) => {
         }
     })
 };
+
+exports.helthworker_status = (req,res) =>{
+    if(req.body.status == 1){
+        HealthWorker.updateOne({_id:req.body._id},{$set:{status:'Active'}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
+    else if(req.body.status == 0){
+        HealthWorker.updateOne({_id:req.body._id},{$set:{status:'Inactive'}},(err,resp)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json(resp)
+            }
+        })
+    }
+}

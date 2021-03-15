@@ -49,7 +49,7 @@ exports.create =(req,res)=>{
 
                     }).catch((err)=>{
                         res.json({code:400,msg:'otp not sent'})
-                    })
+                })
             }
         }
     })  
