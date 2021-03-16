@@ -16,10 +16,10 @@ exports.list_state = (req,res)=>{
     state.distinct('State')
     .exec((err,st)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'state list not found'})
         }
         else{
-            res.json({'state':st})
+            res.json({code:200,'state':st})
         }
     })
 }
@@ -29,10 +29,10 @@ exports.list_district =(req,res)=>{
     .select('District')
     .exec((err,dis)=>{
         if(err){
-            res.json(err)
+            res.json({code:400, msg:'district list not found'})
         }
         else{
-            res.json({'district':dis})
+            res.json({code:200,'district':dis})
         }
     })
 }

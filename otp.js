@@ -1,5 +1,5 @@
 function otp(){
- 
+
   this.send_otp = (str,OTP)=>{
     console.log(str)
     console.log(OTP)
