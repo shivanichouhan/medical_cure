@@ -14,7 +14,11 @@ const departmentSchema = new schema(
       disease:[{
         type:schema.Types.ObjectId,
         ref:'disease'
-      }]
+      }],
+      dep_images:{
+        type:String
+      }
+
    },
   { timestamps: true }
 )

@@ -1,7 +1,7 @@
 const dep = require('../../model/admin/department/departments')
 
 exports.depList =(req,res)=>{
-    dep.find({department_status:'Active'},{department_name:1})
+    dep.find({department_status:'Active'},{disease:0,updatedAt:0,__v:0})
     .exec((err,listDep)=>{
         if(err || !listDep){
             res.json({code:400,msg:'department list not found'})
