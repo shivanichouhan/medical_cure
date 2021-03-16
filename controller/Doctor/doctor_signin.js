@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 var otpGenerator = require('otp-generator')
 const otp = require("../../otp")
 const _ = require('lodash')
+
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
 }
@@ -221,3 +222,4 @@ exports.passupdate = async(req,res)=>{
         res.json({code:400,error:'password does not match'})
     }
 }
+

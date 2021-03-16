@@ -13,7 +13,6 @@ exports.depList =(req,res)=>{
 }
 
 exports.desList =(req,res)=>{
-    console.log('run')
     dep.findOne({department_name:req.body.department_name},{upsert:true})
     .populate('disease','disease_name')
     .exec((err,listDes)=>{
@@ -21,7 +20,7 @@ exports.desList =(req,res)=>{
             res.json({code:400,msg:'disease list not found'})
         }
         else{
-            res.json({code:200,msg:listDes })
+            res.json({code:200,msg:listDes})
         }
     })
 }

@@ -74,15 +74,16 @@ const EventSchema = new schema(
     },
     photo:{
       type: String
-    }, imgId: {
+    },
+   imgId: {
       type: String
-    }, mobile: {
+    },
+    mobile: {
       type: String
     },
     mobile_verfiy:{
       type:Number,
     }
-    
   })
 
 
