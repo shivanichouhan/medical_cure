@@ -27,3 +27,16 @@ exports.offers = async (req,res)=>{
             }
         })
     }
+
+    exports.list_offer =(req,res)=>{
+        add_offers.findOne()
+        .select('offer_img')
+        .exec((err,list)=>{
+            if(err || !list){
+                res.json({code:400,msg:'list not found'})
+            }else{
+                res.json(list)
+            }
+
+        })
+    }
