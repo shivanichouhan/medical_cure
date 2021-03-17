@@ -43,6 +43,7 @@ const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
 const doc_deg = require("./routes/Doctor/degree_list")
+const cureBlogList = require("./routes/Doctor/search_cureblog")
 //
 
 //admin routes 
@@ -65,6 +66,7 @@ const medicine = require("./routes/admin/pharmacy/medicine")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 const listPatient = require("./routes/admin/patient")
 const inspire = require("./routes/admin/inspire")
+const cureBlogs = require("./routes/admin/marketing/cure_blog")
 //
 
 mongoose.Promise = global.Promise
@@ -135,6 +137,7 @@ app.use('/api', department)
 app.use('/api', lab_test)
 app.use('/api', listPatient)
 app.use('/api', inspire) 
+app.use('/api', cureBlogs)
 //
 
 //doctor
@@ -147,6 +150,7 @@ app.use('/api',doctor_reg)
 app.use('/api', listDepartment)
 app.use('/api', doctor_reg)
 app.use('/api', doc_deg)
+app.use('/api', cureBlogList)
 //
 app.get("/admin_login", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/login.html'));
