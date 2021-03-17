@@ -44,78 +44,71 @@ exports.edit_profile = (file, folder) => {
     })
 }
 
-exports.doctor_reg = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.doctor_reg = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.licence_front = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.licence_front = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.licence_back = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.licence_back = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.doc_pass = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.doc_pass = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.iden_front = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.iden_front = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.iden_back = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `doctor/${uniqueFilename}`, tags: `clinic`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.iden_back = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `doctor/${uniqueFilename}`, tags: `clinic` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.emp_iden_front = (file,folder)=>{
-    
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `employee/${uniqueFilename}`, tags: `employee`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.emp_iden_front = (file, folder) => {
+
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `employee/${uniqueFilename}`, tags: `employee` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.emp_iden_back = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `employee/${uniqueFilename}`, tags: `employee`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
-    })
-}
+
 
 exports.patient = (file,folder)=>{
     return new Promise(resolve=>{
@@ -134,3 +127,42 @@ exports.dep_images = (file,folder)=>{
         }) 
     })
 }
+exports.emp_iden_back = (file, folder) => {
+
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `employee/${uniqueFilename}`, tags: `employee` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+
+exports.License_front_side = (file, folder) => {
+
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `Doctor/${uniqueFilename}`, tags: `medical` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+
+exports.License_back_side = (file, folder) => {
+
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `Doctor/${uniqueFilename}`, tags: `medical` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+
+exports.certificate_Img = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `Doctor/${uniqueFilename}`, tags: `medical` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+

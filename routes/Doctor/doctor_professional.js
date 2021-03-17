@@ -27,7 +27,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 const {doctor_professional} = require('../../controller/Doctor/doctor_professional');
-router.post("/Professional_details/:user_id",upload.fields([{name:'License_img_front_side'},{name:'License_img_back_side'}]),doctor_professional)
+router.put("/Professional_details/:user_id",upload.fields([{name:'License_img_front_side'},{name:'License_img_back_side'}]),doctor_professional)
 
 
 module.exports = router;

@@ -34,6 +34,7 @@ const dep_health = require('./routes/helth_worker/list_dep')
 //
 
 //Doctor
+
 const Doctor = require('./routes/Doctor/Registration')
 const Educational = require('./routes/Doctor/doctor_educational')
 const Professional = require('./routes/Doctor/doctor_professional')
@@ -45,6 +46,9 @@ const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
 const doc_deg = require("./routes/Doctor/degree_list")
 //
+const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
+const Phone_varify = require('./routes/Doctor/phone_varify')
+
 
 //admin routes 
 const adminReg = require("./routes/admin/admin_login")
@@ -66,6 +70,11 @@ const medicine = require("./routes/admin/pharmacy/medicine")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 const listPatient = require("./routes/admin/patient")
 //
+
+
+
+//Patient
+const patients = require("./routes/patient/patient_signin")
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -138,15 +147,16 @@ app.use('/api', listPatient)
 
 //doctor
 app.use('/api', Doctor)
+app.use('/api', Doctor_Certificate)
 app.use('/api', Educational)
 app.use('/api', Professional)
 app.use('/api', Identity)
 app.use('/api', Bank_Account)
-app.use('/api',doctor_reg)
 app.use('/api', listDepartment)
-app.use('/api', doctor_reg)
 app.use('/api', doc_deg)
 //
+app.use('/api', doctor_reg)
+app.use('/api',Phone_varify)
 app.get("/admin_login", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/login.html'));
 });
@@ -155,6 +165,25 @@ app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
 
 })
+
+//Patient 
+app.use('/api', patients)
+
+
+
+//
+app.use('/api', addsubCategory)
+app.use('/api', disease)
+app.use('/api', blogs)
+app.use('/api', cat_blog)
+app.use('/api', subcat_blog)
+app.use('/api', appoinment)
+app.use('/api', department)
+//
+
+
+//doctor middleware
+app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
 app.listen(port, () => {

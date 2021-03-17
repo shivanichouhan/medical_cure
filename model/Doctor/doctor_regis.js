@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 require('mongoose-double')(mongoose)
+
 var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
@@ -38,7 +39,7 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         certificate_Img: {
-            type: String
+            type:Array
         },
         passing_year_certificate: {
             type: String
@@ -71,10 +72,10 @@ const EventSchema = new mongoose.Schema(
             type: Date,
         },
         License_img_front_side: {
-            type: String
+            type: Array
         },
         License_img_back_side: {
-            type: String
+            type: Array
         },
         select_identity: {
             type: String
@@ -83,10 +84,10 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         PanCard_front_side_img: {
-            type: String
+            type: Array
         },
         PanCard_back_side_img: {
-            type: String
+            type: Array
         },
         select_bank: {
             type: String
@@ -119,23 +120,30 @@ const EventSchema = new mongoose.Schema(
         email: {
             type: String
         },
-        password:{
+        password: {
             type: String
         },
-        bearer_token:{
+        bearer_token: {
             type: String
-        },
-         profile_pic:{
+        }, profile_pic: {
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
+        }, user_id:
+            { type: String },
+        dumy_userName: { type: String },
+
+        certificate: {
+            type: Array
         },
-         user_id:{           
-             type: String 
-        },
-        dumy_userName:{
+        mobile_number: {
             type: String
+        },
+        otp: {
+            type: Number
+        },
+        otp_verify:{
+            type:Number
         }
-        
-    },{timestamps:true})
+    })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)
