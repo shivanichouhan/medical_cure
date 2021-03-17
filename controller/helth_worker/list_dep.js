@@ -14,8 +14,8 @@ exports.depList =(req,res)=>{
 
 exports.desList =(req,res)=>{
     console.log('run')
-    dep.findOne({department_name:req.body.department_name},{upsert:true})
-    .populate('disease','disease_name')
+    dep.findOne({_id:req.body.department_id},{upsert:true})
+    .populate('disease','disease_name icon ')
     .exec((err,listDes)=>{
         if(err || !listDes){
             res.json({code:400,msg:'disease list not found'})
