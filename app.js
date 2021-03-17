@@ -69,6 +69,7 @@ const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 const listPatient = require("./routes/admin/patient")
+const analytics = require("./routes/admin/analytics")
 //
 
 
@@ -143,6 +144,7 @@ app.use('/api', appoinment)
 app.use('/', department)
 app.use('/api', lab_test)
 app.use('/api', listPatient)
+app.use("/api",analytics)
 //
 
 //doctor
