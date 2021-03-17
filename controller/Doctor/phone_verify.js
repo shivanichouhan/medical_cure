@@ -45,7 +45,7 @@ exports.sent_Otp = (req, res) => {
 
 exports.number_verify = (req, res) => {
     const { mobile_number, otp } = req.body
-    console.log("fyufuugg")
+    console.log("")
     Doctor_num.findOne({ mobile_number: mobile_number })
         .then((resp) => {
             console.log(resp)

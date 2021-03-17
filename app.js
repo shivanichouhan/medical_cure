@@ -61,8 +61,10 @@ const appoinment = require("./routes/admin/appoinment/appoinments")
 const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
-//
 
+
+//Patient
+const patients = require("./routes/patient/patient_signin")
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -141,21 +143,13 @@ app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
 
 })
-/*app.use('/api', Doctor)
-app.use('/api', Educational)
-app.use('/api', Professional)
-app.use('/api', Identity)
-app.use('/api', Bank_Account)
-app.use('/api',doctor_reg)
-app.get("/admin_login", (req, res) => {
-  res.sendFile(path.join(__dirname + '/views/login.html'));
-});
 
-app.get("/deshboard", (req, res) => {
-  res.sendFile(path.join(__dirname + '/views/index.html'));
+//Patient 
+app.use('/api', patients)
 
-})*/
 
+
+//
 app.use('/api', addsubCategory)
 app.use('/api', disease)
 app.use('/api', blogs)
