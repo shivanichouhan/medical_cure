@@ -193,7 +193,6 @@ exports.normal_signin = async (req, res) => {
 
 exports.clinic_reg = async (req, res) => {
     var data = await User.findOne({mobile:req.body.mobile})
-    console.log(data)
     if(!data){
     var certificate = req.files.certificate
     var clinic = req.files.clinic
@@ -223,7 +222,7 @@ exports.clinic_reg = async (req, res) => {
     }
     var detail = _.extend(req.body, URL)
     console.log(detail)
-    
+
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {
         if (err) {
             res.json({code:400,msg:'health worker detail no add'})
@@ -259,7 +258,7 @@ exports.edit_profile = (req, res) => {
                 cloud.Clinic(path).then((resp) => {
                     fs.unlinkSync(path)
                     console.log(resp)
-                    User.updateOne({ 'clinic_img.imgId': req.params.imgID }, {$set:{"clinic_img.$.url":resp.url,"clinic_img.$.imgId":resp.id}})
+                    User.updateOne({ 'clinic_img.imgId': req.body.imgID }, {$set:{"clinic_img.$.url":resp.url,"clinic_img.$.imgId":resp.imgId}})
                         .then((resPatient) => {
                             res.json({ code:200, msg: 'user details update with clinic image' })
                         }).catch((error) => {
@@ -279,7 +278,7 @@ exports.edit_profile = (req, res) => {
                 cloud.Certificate(path).then((resp) => {
                     fs.unlinkSync(path)
                     console.log(resp)
-                    User.updateOne({ 'certificate_img.imgId': req.params.imgID }, { $set: { "certificate_img.$.url": resp.url, "certificate_img.$.imgId": resp.id } })
+                    User.updateOne({ 'certificate_img.imgId': req.body.imgID }, { $set: { "certificate_img.$.url": resp.url, "certificate_img.$.imgId": resp.imgId } })
                         .then((resPatient) => {
                             res.json({ code: 200, msg: 'user details update with certificate image' })
                         }).catch((error) => {

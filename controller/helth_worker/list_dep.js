@@ -21,7 +21,7 @@ exports.desList =(req,res)=>{
             res.json({code:400,msg:'disease list not found'})
         }
         else{
-            res.json({code:200,msg:listDes })
+            res.json({code:200,msg:listDes})
         }
     })
 }

@@ -14,3 +14,5 @@ router.post("/remove_department",remove_dep)
 router.put("/admin/manage_department_status/:depId",checkLogin,dep_status)
 
 module.exports = router;
+
+
