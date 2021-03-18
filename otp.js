@@ -22,16 +22,21 @@ function otp(){
      });
  
     req.end(function(resp){
-      if(resp.error){
-        reject(resp.error)
-        if (resp.body == 'ERR: NOT VALID SENDERID'){
-          reject(resp)
-        }
+      if(!resp){
+        reject({msg:'otp not sent'})
       }
       else{
-          resolve(resp)
-          console.log('resolve')
-        }
+        resolve({msg:'otp sent'})
+      }
+      // if (resp.body == 'ERR: NOT VALID SENDERID'){
+      //     reject(resp)
+      //     console.log('resolve')
+      //   }
+   
+      // else{
+      //     resolve(resp)
+      //     console.log('resolve')
+      //   }
       });
     })
   }

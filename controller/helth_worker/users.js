@@ -27,7 +27,7 @@ exports.clinic_otp = async(req,res)=>{
     otp.send_otp(str,OTP).then((resp)=>{
         
         User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
-            res.json({code:200 ,msg:'otp send successfully'})
+            res.json({code:200 ,msg:'otp send successfully',otp:OTP })
       
         }).catch((err)=>{
             res.json({code:400,msg:'otp not set in user'})    
@@ -45,7 +45,7 @@ exports.clinic_otp_verify = async(req,res)=>{
    var result = await User.findOne({mobile:req.body.mobile})
    if(result){
         if(result.otp == req.body.otp){
-                User.updateOne({mobile:req.body.mobile},{$set:{mobile_verfiy:1, otp:''}},
+                User.findOneAndUpdate({mobile:req.body.mobile},{$set:{mobile_verfiy:1, otp:''}},
                 (err,resp)=>{
                     if(err){
                         res.json({code:400, msg:'mobile no not verfiy'})
@@ -76,7 +76,9 @@ exports.otp_send =(req,res)=>{
         else{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         otp.send_otp(str,OTP).then((data)=>{
-        doc.updateOne({mobile:str},{$set:{otp:OTP}},(err,respdata)=>{
+            console.log('run')
+            // res.send(data)
+            User.updateOne({mobile:str},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
                 res.json({code:400,msg:'otp no is not add in doctor'})
             }
@@ -185,15 +187,13 @@ exports.normal_signin = async (req, res) => {
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
         console.log(token)
         const ss = await User.updateOne({ bearer_token: token })
-        res.cookie('token', token, { expire: new Date() + 9999 })
-        res.json({ code: 200, msg: user })
+        user.bearer_token = token
+        res.json({ code: 200,  msg: user })
         }
     }
 }
 
 exports.clinic_reg = async (req, res) => {
-    var data = await User.findOne({mobile:req.body.mobile})
-    if(!data){
     var certificate = req.files.certificate
     var clinic = req.files.clinic
 
@@ -231,11 +231,6 @@ exports.clinic_reg = async (req, res) => {
             res.json({code:200,msg:data})
         }
     })
-}
-else{
-    res.json({code:400,msg:'mobile no already exist'})
-}
-
 }
 
 exports.edit_profile = (req, res) => {
