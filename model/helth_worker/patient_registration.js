@@ -3,6 +3,9 @@ const schema = mongoose.Schema
 
 const patientSchema = new schema(
   {
+    patient_id:{
+      type:String
+    },  
     patient_name:{
         type:String
     },
