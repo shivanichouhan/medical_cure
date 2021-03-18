@@ -27,7 +27,7 @@ exports.clinic_otp = async(req,res)=>{
     otp.send_otp(str,OTP).then((resp)=>{
         
         User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
-            res.json({code:200 ,msg:'otp send successfully'})
+            res.json({code:200 ,msg:'otp send successfully',otp:OTP })
       
         }).catch((err)=>{
             res.json({code:400,msg:'otp not set in user'})    
