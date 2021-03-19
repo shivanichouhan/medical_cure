@@ -23,6 +23,7 @@ exports.isAdmin = (req, res, next) => {
 };
 
 exports.checkLogin =(req,res,next)=>{
+    console.log(req.method)
     var myToken = localStorage.getItem('token')
     console.log(myToken)
         jwt.verify(myToken,process.env.JWT_SECRET,(err,data)=>{

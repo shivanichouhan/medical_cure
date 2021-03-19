@@ -6,36 +6,37 @@ const otpGenerator = require('otp-generator')
 const fs = require('fs')
 
 exports.patient_list =(req,res)=>{
-    patient.find({$and:[{userId:req.params.userId},
-                 {$or:[{patient_name:req.body.patient_name},{mobile:req.body.mobile}]}]})
+    
+    patient.find({health_worker_id:req.params.userId})
     .exec((err,List)=>{
         if(err){
-            res.json(err)
+            res.json({code:400, msg:'patient list not found'})
         }
         else{
           
-            res.json(List)
+            res.json({code:200, msg:List})
         }
     })
 }
 
 exports.create =(req,res)=>{
-    patient.findOne({mobile:req.body.mobile})
-    .exec((err,resp)=>{
-        if(err){
-            res.json(err)
-            console.log(err)
-        }
-        else{
-            if(resp){
-                res.json({code:400,msg:'mobile no already exist'})
-            }
-            else{   
+    // patient.findOne({mobile:req.body.mobile})
+    // .exec((err,resp)=>{
+    //     if(err){
+    //         res.json(err)
+    //         console.log(err)
+    //     }
+    //     else{
+    //         if(resp){
+    //             // res.json({code:400,msg:'mobile no already exist'})
+    //             const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+    //         }
+    //         else{   
                     const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-                    res.send(resp)
                     otp.send_otp(req.body.mobile,OTP).then((resp)=>{
                         var patObj = new patient(req.body)
                         patObj.health_worker_id =req.params.userId
+                        patObj.patient_id =patObj._id
                         patObj.otp = OTP
                         patObj.save((err,data)=>{
                             if(err){
@@ -43,23 +44,23 @@ exports.create =(req,res)=>{
                                 console.log(err)
                             }
                             else{
-                                res.json({code:200,msg:'otp send successfully'})
+                                res.json({code:200,msg:'otp send successfully',Data:data})
                             }
                         })
 
                     }).catch((err)=>{
                         res.json({code:400,msg:'otp not sent'})
                 })
-            }
-        }
-    })  
+    //         }
+    //     }
+    // })  
 }
 
 exports.patient_verfiy =(req,res)=>{
-    patient.findOne({mobile:req.body.mobile})
+    patient.findOne({_id:req.params.patientId})
     .exec((err,resp)=>{
         if(err || !resp){
-            res.json({code:400,msg:'mobile no not come or wrong mobile no'})
+            res.json({code:400,msg:'wrong patient id'})
         }
         else{
             console.log(resp)
@@ -69,7 +70,7 @@ exports.patient_verfiy =(req,res)=>{
                               res.json({code:400,msg:'phone no is verify'})  
                         }
                         else{
-                             res.json({ code:200,'patient_id':resp._id })
+                             res.json({ code:200,msg:'otp verify success',patient_id:resp._id })
                         }
                     })
                 }
