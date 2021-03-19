@@ -212,6 +212,26 @@ exports.edit_profile = (req, res) => {
                     res.send(err)
                 })
             }
+            
+           else if(req.files.certificate){
+            console.log(req.files.certificate)
+            for (row of req.files.certificate) {
+                var p = row.path
+            }
+            const path = p
+            cloud.Certificate(path).then((resp) => {
+                fs.unlinkSync(path)
+                console.log(resp)
+                User.updateOne({ 'certificate_img.imgId': req.body.imgID }, { $set: { "certificate_img.$.url": resp.url, "certificate_img.$.imgId": resp.id } })
+                    .then((resPatient) => {
+                        res.json({ code: 200, msg: 'user details update with certificate image' })
+                    }).catch((error) => {
+                        res.json({code:400,msg:'certificate image not update'})
+                    })
+            }).catch((err) => {
+                res.send(err)
+            })
+        }
             else {
                 res.json({ code: 200, msg: 'user details update successfully' })
             }

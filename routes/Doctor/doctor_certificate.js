@@ -32,4 +32,5 @@ const{ doctor_certificate } = require("../../controller/Doctor/doctor_certificat
 
 router.put("/doctor_certificate/:user_id",upload.array('certificate'),doctor_certificate)
 
+
 module.exports = router;
