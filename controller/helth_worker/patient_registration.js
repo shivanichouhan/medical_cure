@@ -82,6 +82,7 @@ exports.patient_verfiy =(req,res)=>{
 }
 
 exports.patient_info =(req,res)=>{
+    console.log(req.file)
     if(req.file){
     cloud.patient(req.file.path).then((resp)=>{
         fs.unlinkSync(req.file.path)
