@@ -52,7 +52,7 @@ const employeeSchema = new schema(
          type:String
      },
      staff_right:{
-         type:String
+        type:String
      },
      status:{
         type:Number,

@@ -14,10 +14,10 @@ const multer = require('multer')
         storage:storage,
         limits:{fileSize:1024*1024},
         fileFilter:(req, file, cb)=>{
-            if(!file.mimetype.match(/jpe|jpeg|png|gif$i/)) {
-                cb(new Error('file is not supported'),false)
-                return
-            }
+            // if(!file.mimetype.match(/jpe|jpeg|png|gif$i/)) {
+            //     cb(new Error('file is not supported'),false)
+            //     return
+            // }
             cb(null ,true)
         },
 })

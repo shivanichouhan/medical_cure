@@ -40,6 +40,9 @@ const patientSchema = new schema(
     }],
     health_worker_id:{
         type:String
+    },
+    patient_status:{
+        type:String,
     }
   },
   { timestamps: true }

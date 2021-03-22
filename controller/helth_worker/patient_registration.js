@@ -6,7 +6,6 @@ const otpGenerator = require('otp-generator')
 const fs = require('fs')
 
 exports.patient_list =(req,res)=>{
-    
     patient.find({health_worker_id:req.params.userId})
     .exec((err,List)=>{
         if(err){
@@ -82,6 +81,7 @@ exports.patient_verfiy =(req,res)=>{
 }
 
 exports.patient_info =(req,res)=>{
+    
     if(req.file){
     cloud.patient(req.file.path).then((resp)=>{
         fs.unlinkSync(req.file.path)

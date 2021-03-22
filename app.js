@@ -67,6 +67,7 @@ const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 const listPatient = require("./routes/admin/patient")
 const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
+const cityAdd = require("./routes/admin/state_city/add_city")
 //
 
 mongoose.Promise = global.Promise
@@ -138,6 +139,7 @@ app.use('/api', lab_test)
 app.use('/api', listPatient)
 app.use('/api', inspire) 
 app.use('/api', cureBlogs)
+app.use('/api', cityAdd)
 //
 
 //doctor

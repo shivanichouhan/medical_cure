@@ -2,7 +2,7 @@ const docDeg = require("../../model/Doctor/certificate")
 const docPg = require("../../model/Doctor/postgraduate")
 const docSuper = require("../../model/Doctor/super_specilist")
 const specilization = require("../../model/admin/department/departments")
-const clg = require("../../model/Doctor/clg_name")
+const clg = require("../../model/admin/clg_name")
 const lic_auth = require("../../model/Doctor/medical_licence_auth")
 
 exports.licence_Auth_Add = (req,res)=>{
