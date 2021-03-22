@@ -7,7 +7,7 @@ exports.create_subcat_blog =(req,res)=>{
     var subCatObj = new blogSubCat(req.body)
     subCatObj.save((err,subCat)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'blog subcategory not add'})
         }
         else{
             console.log(subCat)
@@ -18,7 +18,7 @@ exports.create_subcat_blog =(req,res)=>{
                     }
                     else{
                         
-                        res.json(subCat)
+                        res.json({code:200,msg:subCat})
                     }
               })
         }
@@ -28,10 +28,10 @@ exports.create_subcat_blog =(req,res)=>{
 exports.edit_subcat_blog =(req,res)=>{
     blogSubCat.updateOne({_id:req.params.subcatId},req.body,(err,updtesub)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'blog subcategory not update'})
         }
         else{
-            res.json(updtesub)
+            res.json({code:200,msg:'blog subcategory update'})
         }
     })
 }
@@ -39,10 +39,10 @@ exports.edit_subcat_blog =(req,res)=>{
 exports.remove_subcat_blog =(req,res)=>{
         blogSubCat.remove({_id:req.params.subcatId},(err,removeSubCat)=>{
             if(err){
-                res.json(err)
+                res.json({code:400,msg:'blog subcategory not remove'})
             }
             else{
-                res.json(removeSubCat)
+                res.json({code:200,msg:'blog subcategory remove'})
             }
         })
 }

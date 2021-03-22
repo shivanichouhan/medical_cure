@@ -142,10 +142,10 @@ exports.log_social =(req,res)=>{
 }
 
 exports.otpSend = async (req,res)=>{
-    var str = req.body.forgetpass  
+    var str = req.body.type  
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
-        doc.findOne({Phone_Number:req.body.forgetpass}) 
+        doc.findOne({Phone_Number:str}) 
         .exec((err,data)=>{
         if(err || !data){
           res.json({code:400, error:'this number does not exist'})  
@@ -170,44 +170,87 @@ exports.otpSend = async (req,res)=>{
   }) 
 }
     else{
-        // res.json({msg:'email is coming'})
-        var Email = await doc.findOne({email:req.body.email})
+        console.log('email is coming')
+        var Email = await doc.findOne({email:str})
+        console.log(Email)
         if(!Email){
             res.json({code:400, msg:'this email id not exist'})
         }else{
-
+            const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+            console.log(OTP, typeof OTP)
+            doc.updateOne({email:str},{$set:{otp:OTP}},(err,respdata)=>{
+                if(err){
+                    res.json({code:400,msg:'otp not add in doctor'})
+                }
+                else{
+                    res.json({code:200,msg:"otp send successfully",otp:OTP})
+                }
+              }).catch((err)=>{
+                res.send(err)
+          })
         }
     }
 }
 
 exports.otpVerify =(req,res)=>{
-    doc.findOne({Phone_Number:req.body.Phone_Number})
-    .exec((err,resp)=>{
-        if(err || !resp){
-            res.json({ code:400,msg:'mobile not does not exist'})
-        }
-       else{
-            if(resp.otp === req.body.otp){
-                doc.findOneAndUpdate({Phone_Number:req.body.Phone_Number},{$set:{otp:" "}},(err,docUpdate)=>{
-                if(err){
-                        res.json(err)
-                    }
-                    else{
-                        res.json({code:200,doctor_id:docUpdate._id,msg:'otp verfiy successfully'})
-                    }   
-                })
+    var str = req.body.type  
+    var patt1 = /^[0-9]*$/;
+    if(str.match(patt1)){
+        doc.findOne({Phone_Number:str})
+        .exec((err,resp)=>{
+            if(err || !resp){
+                res.json({ code:400,msg:'mobile not does not exist'})
             }
-            else{
-                res.json({code:400 ,error:'wrong otp'})
+           else{
+                if(resp.otp === req.body.otp){
+                    doc.findOneAndUpdate({Phone_Number:str},{$set:{otp:" "}},(err,docUpdate)=>{
+                    if(err){
+                            res.json(err)
+                        }
+                        else{
+                            res.json({code:200,doctor_id:docUpdate._id,msg:'otp verfiy successfully'})
+                        }   
+                    })
+                }
+                else{
+                    res.json({code:400 ,error:'wrong otp'})
+                }
+           } 
+        })
+    }
+    else{
+        console.log('email coming')
+        doc.findOne({email:str})
+        .exec((err,resp)=>{
+            if(err || !resp){
+                res.json({ code:400,msg:'email not does not exist'})
             }
-       } 
-    })
+           else{
+               console.log(resp)
+                if(resp.otp === req.body.otp){
+                    doc.findOneAndUpdate({email:str},{$set:{otp:" "}},(err,docUpdate)=>{
+                    if(err){
+                            res.json(err)
+                        }
+                        else{
+                            res.json({code:200,doctor_id:docUpdate._id,msg:'otp verfiy successfully'})
+                        }   
+                    })
+                }
+                else{
+                    res.json({code:400 ,error:'wrong otp'})
+                }
+           } 
+        })
+    }
+
 }
 
 exports.passupdate = async(req,res)=>{
     console.log(req.body.password,req.body.confirmPass)
     if(req.body.password === req.body.confirmPass){
         const Password = await hashPassword(req.body.password)
+    
         doc.findByIdAndUpdate(req.body.doctor_id,{$set:{password:Password}},
         (err,passupdate)=>{
            if(err){

@@ -175,3 +175,12 @@ exports.cure_blogs = (file,folder)=>{
         }) 
     })
 }
+
+exports.specilist = (file,folder)=>{
+    return new Promise(resolve=>{
+        var uniqueFilename=Date.now()
+        cloudenary.uploader.upload(file,{public_id: `specialist/${uniqueFilename}`, tags: `specialist`},(err,result)=>{
+            resolve({url:result.url,imgId:result.asset_id})
+        }) 
+    })
+}

@@ -1,4 +1,4 @@
-const state = require("../../model/helth_worker/city_list")
+const state = require("../../model/admin/state_city/city_list")
 
 exports.district_add = (req,res)=>{
     var stateObj = new state(req.body)
