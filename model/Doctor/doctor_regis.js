@@ -139,7 +139,7 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         otp: {
-            type: Number
+            type: String
         },
         otp_verify:{
             type:Number
