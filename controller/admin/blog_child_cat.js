@@ -1,6 +1,20 @@
 const blog_child = require("../../model/admin/blog_child_cat")
 const blog_sub = require("../../model/admin/blog_sub_cat")
 
+exports.list_child_cat =(req,res)=>{
+    blog_sub.find({blog_sub_cat:req.body.blog_sub_cat})
+    .select('blog_sub_cat')
+    .populate('blog_child_cat','blog_child_cat')
+    .exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'child category not found'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.create_child_cat =(req,res)=>{
     var childObj = new blog_child(req.body)
     childObj.save((err,resp)=>{
@@ -33,5 +47,12 @@ exports.edit_child_cat =(req,res)=>{
 }
 
 exports.remove_child_cat =(req,res)=>{
-    
+    blog_child.remove({_id:req.params.childCat},(err,delCat)=>{
+        if(err){
+            res.json({code:400,msg:'child category not remove'})
+        }
+        else{
+            res.json({code:200,msg:'child category remove'})
+        }
+    })
 }

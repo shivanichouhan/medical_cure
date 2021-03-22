@@ -9,7 +9,7 @@ const blogsubcategorySchema = new schema(
         },
         blog_child_cat:[{
             type:schema.Types.ObjectId,
-            ref:"blog_child_cat"
+            ref:"blog_child_category"
         }],
         blogs:[{
             type:schema.Types.ObjectId,

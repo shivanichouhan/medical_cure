@@ -3,20 +3,13 @@ const blogCat = require("../../model/admin/blog_cat")
 
 exports.list_cat_blog =(req,res)=>{
     blogCat.find()
-    .populate({
-        path:'blog_subcategory',
-        model:'blog_sub_category'
-    , populate:{
-        path:'blogs',
-        model:'blog'
-    }
-    })
-    .exec((err,catList)=>{
+   .select('blog_cat_name')
+   .exec((err,catList)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'blog category list not found'})
         }
         else{
-            res.json(catList)
+            res.json({code:200,msg:catList})
         }
     })
 }

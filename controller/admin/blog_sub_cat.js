@@ -2,6 +2,20 @@ const e = require("express")
 const blogCat = require("../../model/admin/blog_cat")
 const blogSubCat = require("../../model/admin/blog_sub_cat")
 
+exports.list_subcat_blog =(req,res)=>{
+    blogCat.find({blog_cat_name:req.body.blog_cat_name})
+    .select('blog_cat_name')
+    .populate('blog_subcategory','blog_sub_cat')
+    .exec((err,resp)=>{
+        if(err || !resp){
+            res.json({code:400,msg:'blog subcategory list not found'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.create_subcat_blog =(req,res)=>{
     console.log(req.body)
     var subCatObj = new blogSubCat(req.body)

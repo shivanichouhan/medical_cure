@@ -176,18 +176,25 @@ exports.otpSend = async (req,res)=>{
         if(!Email){
             res.json({code:400, msg:'this email id not exist'})
         }else{
-            const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-            console.log(OTP, typeof OTP)
-            doc.updateOne({email:str},{$set:{otp:OTP}},(err,respdata)=>{
-                if(err){
-                    res.json({code:400,msg:'otp not add in doctor'})
-                }
-                else{
-                    res.json({code:200,msg:"otp send successfully",otp:OTP})
-                }
-              }).catch((err)=>{
-                res.send(err)
-          })
+            console.log(Email.gmailId)
+            if(Email.gmailId == undefined){
+                const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+                console.log(OTP, typeof OTP)
+                doc.updateOne({email:str},{$set:{otp:OTP}},(err,respdata)=>{
+                    if(err){
+                        res.json({code:400,msg:'otp not add in doctor'})
+                    }
+                    else{
+                        res.json({code:200,msg:"otp send successfully",otp:OTP})
+                    }
+                  }).catch((err)=>{
+                    res.send(err)
+              })
+            }
+            else{
+                res.json({code:400,error:'you are login gmail or facebook'})
+            }
+  
         }
     }
 }
