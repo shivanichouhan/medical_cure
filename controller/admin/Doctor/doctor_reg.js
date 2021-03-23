@@ -5,8 +5,11 @@ const path = require("path")
 // const s = require("../../../views")
 
 exports.reg_doctor = async(req,res)=>{
-     var doc = await docReg.find({Phone_Number:req.body.Phone_Number})   
-     if(doc.length === 0){
+    console.log('rnnnnfd')
+    console.log(req.body.Phone_Number)
+     var doc = await docReg.findOne({Phone_Number:req.body.Phone_Number})   
+     console.log(doc)
+     if(!doc){
      var docObj = new docReg(req.body)
      docObj.save(async(err,regDoc)=>{
          if(err){

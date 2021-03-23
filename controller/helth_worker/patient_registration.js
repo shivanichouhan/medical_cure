@@ -8,8 +8,7 @@ const fs = require('fs')
 exports.search_patient =(req,res)=>{
     console.log(req.params.userId)
     var filter = {$and:[{health_worker_id:req.params.userId},
-    {$or:[{mobile:req.body.search},{patient_name:req.body.search}]}]}
-     
+    {$and:[{$or:[{mob_verify:true},{mobile:req.body.search,patient_name:req.body.search}]}]}]}
     patient.find(filter)
     .exec((err,resp)=>{
         if(err){
