@@ -4,23 +4,15 @@ const blogCat = require("../../model/admin/blog_cat")
 const path = require("path")
 exports.list_cat_blog = (req, res) => {
     blogCat.find()
-        .populate({
-            path: 'blog_subcategory',
-            model: 'blog_sub_category'
-        })
-        .exec((err, catList) => {
-            if (err) {
-                res.json(err)
-            }
-            else {
-                console.log(catList)
-                // res.send(catList)
-                res.render(
-                    path.join(__dirname, '../../views/add_blog.ejs'),
-                    { data: catList }
-                )
-            }
-        })
+   .select('blog_cat_name')
+   .exec((err,catList)=>{
+        if(err){
+            res.json({code:400,msg:'blog category list not found'})
+        }
+        else{
+            res.json({code:200,msg:catList})
+        }
+    })
 }
 
 exports.create_cat_blog = (req, res) => {
