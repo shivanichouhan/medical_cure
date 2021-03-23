@@ -5,7 +5,7 @@ const patient_name = require("../../model/helth_worker/patient_registration")
 exports.greetings =async(req,res)=>{
     const {patient_id,desease_id,depart_name,helthwork_id}=req.body;
     const patients = await patient_name.findOne({_id:patient_id})
-    const depart_data = await desease_name.findOne({department_name:depart_name},{department_name:1,disease_name:1})
+    const depart_data = await desease_name.find({department_name:depart_name},{department_name:1,disease_name:1})
     let greet = '';
     const details = {}
     if(patients.gender == "Male"){
