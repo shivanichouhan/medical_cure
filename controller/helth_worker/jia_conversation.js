@@ -18,3 +18,21 @@ exports.greetings =async(req,res)=>{
     details.disease = depart_data
     res.json({code:200,msg:details})
 }
+
+
+exports.greetings1 = async(req,res)=>{
+    const {patient_id,desease_id,depart_name,helthwork_id}=req.body;
+    const patients = await patient_name.findOne({_id:patient_id})
+    let greet = '';
+    const details = {}
+    if(patients.gender == "Male"){
+        greet = "Mr"
+    }else {
+        greet =  Miss
+    }
+    const texts = `Alright ${greet}. ${patients.patient_name}, since how long has this problem troubled you?`
+    details.text = texts;
+    const dats = ["1Week","1Month","2Month","1Year"]
+    details.problem_time = dats
+    res.json({code:200,msg:details});
+}
