@@ -32,6 +32,7 @@ const courseHealth = require('./routes/helth_worker/courseList')
 const states = require('./routes/helth_worker/state');
 const dep_health = require('./routes/helth_worker/list_dep')
 //
+const conversation = require("./routes/helth_worker/jia_conversation")
 
 //Doctor
 
@@ -114,7 +115,7 @@ app.get("/demo", (req, res) => {
   res.send("good shivani")
 })
 
-//users middleware
+//helthworker middleware
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
@@ -129,6 +130,7 @@ app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
 app.use('/api', states);
 app.use('/api', dep_health)
+app.use("/api",conversation)
 //
 
 //admin middleware

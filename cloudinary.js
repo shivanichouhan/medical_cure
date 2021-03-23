@@ -188,18 +188,42 @@ exports.specilist = (file, folder) => {
 
 exports.videoUpload = (file, folder) => {
     return new Promise(resolve => {
+        console.log(file, "file path")
         var uniqueFilename = Date.now()
-        cloudenary.uploader.upload(file, {
-            public_id: `blog_videos/${uniqueFilename}`, chunk_size: 6000000,
-            eager: [
-                { width: 300, height: 300, crop: "pad", audio_codec: "none" },
-                { width: 160, height: 100, crop: "crop", gravity: "south", audio_codec: "none" }]
-        },
-            (err, result) => {
-                resolve({ url: result.secure_url})
-            })
-    })
-
-
+        cloudenary.uploader.upload(
+            file,
+            {
+                resource_type: 'video',
+                public_id: 'my_folder/my_sub_folder/' + uniqueFilename,
+                chunk_size: 6000000,
+                eager: [
+                    {
+                        width: 300,
+                        height: 300,
+                        crop: 'pad',
+                        audio_path_codec: 'none'
+                    },
+                    {
+                        width: 160,
+                        height: 100,
+                        crop: 'crop',
+                        gravity: 'south',
+                        audio_path_codec: 'none'
+                    }
+                ],
+                eager_async: true
+            },
+            function (err, video_image) {
+                resolve({ url: video_image.url })
+            });
+    });
 };
 
+exports.videoImages = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `video_thum/${uniqueFilename}`, tags: `specialist` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+};

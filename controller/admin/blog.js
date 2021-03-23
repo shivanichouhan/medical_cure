@@ -15,7 +15,7 @@ exports.list_blog = (req, res) => {
 }
 
 exports.create_blog = (req, res) => {
-    console.log(req.files, "bhhygigyy88u88888ih")
+    // console.log(req.files, "bhhygigyy88u88888ih")
     var blogObj = new blogModal(req.body)
     blogObj.save(async (err, resp) => {
         if (err) {
@@ -23,42 +23,58 @@ exports.create_blog = (req, res) => {
         }
         else {
             if (req.files.length > 0) {
-                var blog = req.files
-                const blogUpload = async (path) => await cloud.uploads(path)
-                const urlsBlog = []
-                for (const file of blog) {
-                    const { path } = file
-                    const newpathF = await blogUpload(path)
-                    urlsBlog.push(newpathF)
-                    fs.unlinkSync(path)
-                }
-                blogModal.findByIdAndUpdate({ _id: resp._id }, { $push: { blog_img: urlsBlog } })
-                    .exec((err, blogUpdte) => {
-                        if (err) {
-                            res.json(err)
+                return new Promise(async(resolve) => {
+                    const obj = {}
+                    if (await req.files.blog_img) {
+                        var blog = req.files
+                        const blogUpload = async (path) => await cloud.uploads(path)
+                        const urlsBlog = []
+                        for (const file of blog) {
+                            console.log(file, "jjiojoijmnn")
+                            const { path } = file
+                            const newpathF = await blogUpload(path)
+                            urlsBlog.push(newpathF)
+                            fs.unlinkSync(path)
                         }
-                        else {
-                            blogsubcat.updateOne({ blog_sub_cat: req.body.blog_sub_cat }, { $push: { blogs: blogUpdte._id } },
-                                (err, blogupdte) => {
-                                    if (err) {
-                                        res.json(err)
-                                    }
-                                    else {
-                                        res.json({ result: blogUpdte, blog: blogupdte })
-                                    }
-                                })
-                        }
-                    })
-            } else if (req.files.video_file) {
-                const video_path = req.files.video_file
-                const real_path = video_path[0]
-                const video_data = await videoUpload(real_path.path);
-                console.log(video_data, "hgguyguyguy")
-            } else if (req.files.video_image) {
-                const video_image = req.files.video_image
-                const thum_path = video_image[0];
-                
+                        obj.blog_img = urlsBlog
+                    }
+                    console.log(obj)
+                    if (req.files.video_file) {
+                        const video_path = req.files.video_file
+                        const real_path = video_path[0]
+                        const video_data = await cloud.videoUpload(real_path.path);
+                        console.log(video_data, "hgguyguyguy")
+                        obj.video_file = video_data.url
 
+                    } if (req.files.video_image) {
+                        const video_image = req.files.video_image
+                        const thum_path = video_image[0];
+                        const thumb = await cloud.videoImages(thum_path)
+                        console.log(thumb, "hgguyguyguy")
+                        obj.video_image = thumb.url
+                    }
+                    resolve(obj)
+                })
+                .then((resp) => {
+                    console.log(resp,"hhutyft77878989889989898989898")
+                    blogModal.findByIdAndUpdate({ _id: resp._id }, { $set: obj })
+                        .exec((err, blogUpdte) => {
+                            if (err) {
+                                res.json(err)
+                            }
+                            else {
+                                blogsubcat.updateOne({ blog_sub_cat: req.body.blog_sub_cat }, { $push: { blogs: blogUpdte._id } },
+                                    (err, blogupdte) => {
+                                        if (err) {
+                                            res.json(err)
+                                        }
+                                        else {
+                                            res.json({ result: blogUpdte, blog: blogupdte })
+                                        }
+                                    })
+                            }
+                        })
+                })
             }
             else {
                 blogsubcat.updateOne({ blog_sub_cat: req.body.blog_sub_cat }, { $push: { blogs: resp._id } },
