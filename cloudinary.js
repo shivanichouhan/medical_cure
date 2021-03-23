@@ -110,21 +110,21 @@ exports.emp_iden_front = (file, folder) => {
 
 
 
-exports.patient = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `patient/${uniqueFilename}`, tags: `patient`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.patient = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `patient/${uniqueFilename}`, tags: `patient` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.dep_images = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `depart/${uniqueFilename}`, tags: `depart`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.dep_images = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `depart/${uniqueFilename}`, tags: `depart` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 exports.emp_iden_back = (file, folder) => {
@@ -167,20 +167,39 @@ exports.certificate_Img = (file, folder) => {
 }
 
 
-exports.cure_blogs = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `cure_blog/${uniqueFilename}`, tags: `cure_blog`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.cure_blogs = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `cure_blog/${uniqueFilename}`, tags: `cure_blog` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
 }
 
-exports.specilist = (file,folder)=>{
-    return new Promise(resolve=>{
-        var uniqueFilename=Date.now()
-        cloudenary.uploader.upload(file,{public_id: `specialist/${uniqueFilename}`, tags: `specialist`},(err,result)=>{
-            resolve({url:result.url,imgId:result.asset_id})
-        }) 
+exports.specilist = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `specialist/${uniqueFilename}`, tags: `specialist` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
     })
-}
+};
+
+
+exports.videoUpload = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, {
+            public_id: `blog_videos/${uniqueFilename}`, chunk_size: 6000000,
+            eager: [
+                { width: 300, height: 300, crop: "pad", audio_codec: "none" },
+                { width: 160, height: 100, crop: "crop", gravity: "south", audio_codec: "none" }]
+        },
+            (err, result) => {
+                resolve({ url: result.secure_url})
+            })
+    })
+
+
+};
+
