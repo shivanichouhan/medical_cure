@@ -5,6 +5,22 @@ const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
 const fs = require('fs')
 
+exports.search_patient =(req,res)=>{
+    console.log(req.params.userId)
+    var filter = {$and:[{health_worker_id:req.params.userId},
+    {$or:[{mobile:req.body.search},{patient_name:req.body.search}]}]}
+     
+    patient.find(filter)
+    .exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'patient list not found'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.patient_list =(req,res)=>{
     patient.find({health_worker_id:req.params.userId})
     .exec((err,List)=>{
@@ -81,7 +97,6 @@ exports.patient_verfiy =(req,res)=>{
 }
 
 exports.patient_info =(req,res)=>{
-    
     if(req.file){
     cloud.patient(req.file.path).then((resp)=>{
         fs.unlinkSync(req.file.path)
