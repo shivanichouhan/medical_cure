@@ -22,7 +22,6 @@ const EventSchema = new mongoose.Schema(
         },
         passing_year: {
             type: Date,
-
         },
         PGCollege_or_University: {
             type: String
@@ -32,7 +31,6 @@ const EventSchema = new mongoose.Schema(
         },
         pass_year: {
             type: Date,
-
         },
         Certificate_University: {
             type: String

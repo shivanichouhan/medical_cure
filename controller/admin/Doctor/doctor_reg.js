@@ -62,15 +62,15 @@ exports.reg_doctor = async(req,res)=>{
                     identity_back_side_img:iden_back
                 }}).exec((err,resDoc)=>{
                     if(err){
-                        res.send(err)
+                        res.send({code:400,msg:'images not add in doctor'})
                     }
                     else{
-                        res.send({data:resDoc})
+                        res.send({code:200,data:resDoc})
                     }
                 })
              }
              else{
-                 res.send({data:regDoc})
+                 res.send({code:200,data:regDoc})
              }
          }
      })
@@ -95,7 +95,6 @@ exports.list_doctor =(req,res)=>{
         }
     })
 }
-
 
 exports.edit_doctor =(req,res)=>{
     docReg.updateOne({_id:req.params.doctorId},req.body)

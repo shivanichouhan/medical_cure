@@ -14,6 +14,7 @@ exports.list_patient = (req,res)=>{
 }
 
 exports.update_patient = (req,res)=>{
+   
     // console.log(req.body.child)
     Patient.findByIdAndUpdate(req.params.patientId,req.body)
     .exec((err,resp)=>{
@@ -22,7 +23,8 @@ exports.update_patient = (req,res)=>{
         }
         else{
             if(req.file){
-                cloud.patient(req.file.path).then((imgObj)=>{
+                console.log(req.file)
+                cloud.up(req.file.path).then((imgObj)=>{
                     fs.unlinkSync(req.file.path)
                     console.log(imgObj)
                     Patient.findByIdAndUpdate(resp._id,{$set:{patient_img:imgObj.url}})
