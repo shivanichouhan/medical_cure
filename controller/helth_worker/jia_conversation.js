@@ -7,12 +7,12 @@ const greeting_time = (today) => {
     console.log(curHr,"nnno")
     if (curHr <= 12) {
         return 'Good morning'
-    } else if (curHr <= 16) {
+    } else if (curHr <= 16 && curHr>=12) {
         return 'Good afternoon'
-    } else if (curHr <= 18) {
+    } else if (curHr <= 18 && curHr>=16 ) {
         return 'Good evening'
     }
-    else if (curHr <= 24) {
+    else if (curHr <= 24  && curHr>=18) {
         return 'Good night'
     }
 }
@@ -26,11 +26,11 @@ exports.greetings = async (req, res) => {
     if (patients.gender == "Male") {
         greet = "Mr"
     } else {
-        greet = Miss
+        greet = "Miss"
     }
     var today = new Date()
     const gree_time = greeting_time(today)
-    const texts = `${gree_time} ${greet} ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
+    const texts = `${gree_time} ${greet}. ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
     details.text = texts;
     details.disease = depart_data
     res.json({ code: 200, msg: details })
@@ -46,7 +46,7 @@ exports.greetings1 = async (req, res) => {
     if (patients.gender == "Male") {
         greet = "Mr"
     } else {
-        greet = Miss
+        greet = "Miss"
     }
     const texts = `Alright ${greet}. ${patients.patient_name}, since how long has this problem troubled you?`
     details.text = texts;
