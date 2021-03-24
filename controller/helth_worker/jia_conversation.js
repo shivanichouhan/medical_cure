@@ -29,6 +29,7 @@ exports.greetings = async (req, res) => {
         greet = "Miss"
     }
     var today = new Date()
+    console.log(today,"klkjhjhjk")
     const gree_time = greeting_time(today)
     const texts = `${gree_time} ${greet}. ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
     details.text = texts;
