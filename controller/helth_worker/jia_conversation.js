@@ -68,7 +68,8 @@ exports.greetings1 = async (req, res) => {
 }
 
 exports.greetings2 = async(req,res)=>{
-    const {patient_id,disease_id,helthwork_id}=req.body;
+    const {patient_id,disease_id,helthwork_id,week}=req.body;
+    console.log(req.body);
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
     console.log(depart_data)
     const details = {}
