@@ -2,19 +2,36 @@ const docReg = require("../../../model/Doctor/doctor_regis")
 const cloud = require("../../../cloudinary")
 const fs = require("fs") 
 const path = require("path")
+const bcrypt = require('bcryptjs')
 
-// const s = require("../../../views")
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10)
+}
 
-exports.doc_signup =(req,res)=>{
-    var docObj = new docReg(req.body)
-    docObj.save((err,resp)=>{
-        if(err){
-            res.json({code:400,msg:'doctor not register'})
-        }
-        else{
-            res.json({code:200,msg:resp})
-        }
-    })
+
+exports.doc_signup = async(req,res)=>{
+    console.log(req.body)
+    const { first_name,last_name,username,email,password} = req.body;
+
+    const hashedPassword = await hashPassword(password)
+    const data_check = await docReg.findOne({ email: email })
+    if (!data_check) {
+        const datas = new docReg({
+            first_name: first_name,
+            last_name: last_name,
+            username:username,
+            email:email,
+            password: hashedPassword
+        })
+        datas.save()
+            .then((resp) => {
+                res.json({ code: 200, msg: resp })
+            })
+
+    } else {
+        res.json({ code: 200, msg: "Email already exist" })
+    }
+
 }
 
 exports.reg_doctor = async(req,res)=>{

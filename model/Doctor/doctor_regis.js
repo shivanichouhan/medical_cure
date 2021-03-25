@@ -107,6 +107,9 @@ const EventSchema = new mongoose.Schema(
         otp: {
             type: String
         },
+        otp_verify:{
+            type:Number
+        },
         gmailId: {
             type: String
         },
