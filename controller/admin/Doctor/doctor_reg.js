@@ -2,11 +2,23 @@ const docReg = require("../../../model/Doctor/doctor_regis")
 const cloud = require("../../../cloudinary")
 const fs = require("fs") 
 const path = require("path")
+
 // const s = require("../../../views")
 
+exports.doc_signup =(req,res)=>{
+    var docObj = new docReg(req.body)
+    docObj.save((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'doctor not register'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.reg_doctor = async(req,res)=>{
-    console.log('rnnnnfd')
-    console.log(req.body.Phone_Number)
+     console.log(req.body.Phone_Number)
      var doc = await docReg.findOne({Phone_Number:req.body.Phone_Number})   
      console.log(doc)
      if(!doc){
@@ -83,15 +95,10 @@ exports.reg_doctor = async(req,res)=>{
 exports.list_doctor =(req,res)=>{
     docReg.find().exec((err,doctor_list)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'doctor list not found'})
         }
         else{
-            console.log(doctor_list)
-            res.render(
-                path.join(__dirname, '../../../views/doctors.ejs'),
-                { data: doctor_list }
-              )
-            // res.json({data:doctor_list})
+            res.json({code:200,msg:doctor_list})
         }
     })
 }

@@ -159,7 +159,8 @@ app.use('/api', doc_deg)
 app.use('/api', cureBlogList)
 //
 app.get("/admin_login", (req, res) => {
-  res.sendFile(path.join(__dirname + '/views/login.html'));
+  res.send('hello')
+  // res.sendFile(path.join(__dirname + '/views/login.html'));
 });
 
 app.get("/deshboard", (req, res) => {

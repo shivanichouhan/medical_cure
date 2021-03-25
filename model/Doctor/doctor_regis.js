@@ -110,6 +110,12 @@ const EventSchema = new mongoose.Schema(
         gmailId: {
             type: String
         },
+        first_name:{
+            type:String
+        },
+        last_name:{
+            type:String
+        },
         username: {
             type: String
         },
@@ -122,11 +128,11 @@ const EventSchema = new mongoose.Schema(
         bearer_token:{
             type: String
         },
-         profile_pic:{
+        profile_pic:{
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
         },
-         user_id:{           
+        user_id:{           
              type: String 
         },
         dumy_userName:{
