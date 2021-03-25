@@ -1,5 +1,7 @@
 const desease_name = require("../../model/admin/add_disease");
 const patient_name = require("../../model/helth_worker/patient_registration")
+var colors = require('colors');
+const chalk = require('chalk'); 
 
 
 const greeting_time = (today) => {
@@ -30,10 +32,19 @@ exports.greetings = async (req, res) => {
     }
     var today = new Date()
     console.log(today,"klkjhjhjk")
+    console.log('hello'.green); // outputs green text
+    console.log(colors.red.underline('i like cake and pies')) // outputs red underlined text
+
     const gree_time = greeting_time(today)
-    const texts = `${gree_time} ${greet}. ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
+    const mornings = chalk.blue(gree_time)
+    console.log(mornings)
+    const texts = `${mornings} ${greet}. ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
     details.text = texts;
-    details.disease = depart_data
+    const texts2 = `${greet}. ${patients.patient_name}, since how long has this problem troubled you?`
+    details.texts = texts2;
+    const dats = ["1Week", "1Month", "2Month", "1Year"]
+    details.problem_time = dats
+    // details.disease = depart_data
     res.json({ code: 200, msg: details })
 }
 
