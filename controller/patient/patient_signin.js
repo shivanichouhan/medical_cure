@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const otp = require("../../otp")
 var otpGenerator = require('otp-generator')
+const _ = require('lodash')
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -134,4 +135,90 @@ exports.facebook_Login =(req,res)=>{
             })
     }
 }
+
+exports.otpSend = async (req,res)=>{
+    var str = req.body.forgetpass  
+    var patt1 = /^[0-9]*$/;
+    if(str.match(patt1)){
+        //console.log("Sveltosh technology")
+
+        Pat.findOne({mobile_number:req.body.forgetpass}) 
+        .exec((err,data)=>{
+        if(err || !data){
+          res.json({code:400, error:'this number does not exist'})  
+        }
+        else{
+        const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+        console.log(OTP, typeof OTP)
+        
+        otp.send_otp(str,OTP).then((data)=>{
+            Pat.updateOne({mobile_number:str},{$set:{otp:OTP}},(err,respdata)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json({code:200,msg:"otp send successfully"})
+            }
+             })
+          }).catch((err)=>{
+            res.send(err)
+      })
+    }
+  }) 
+}
+    else{
+
+        var Email = await Pat.findOne({email:req.body.email})
+        if(!Email){
+            res.json({code:400, msg:'this email id not exist'})
+        }else{
+
+        }
+    }
+}
+
+exports.otpVerify =(req,res)=>{
+    Pat.findOne({mobile_number:req.body.mobile_number})
+    .exec((err,resp)=>{
+        if(err || !resp){
+            res.json({ code:400,msg:'mobile not does not exist'})
+        }
+       else{
+            if(resp.otp === req.body.otp){
+                Pat.findOneAndUpdate({mobile_number:req.body.mobile_number},{$set:{otp:" "}},(err,patUpdate)=>{
+                if(err){
+                        res.json(err)
+                    }
+                    else{
+                        res.json({code:200,patient_id:patUpdate._id,msg:'otp verfiy successfully'})
+                    }   
+                })
+            }
+            else{
+                res.json({code:400 ,error:'wrong otp'})
+            }
+       } 
+    })
+}
+
+exports.passwordupdate = async(req,res)=>{
+    console.log(req.body.password,req.body.confirmPass)
+    if(req.body.password === req.body.confirmPass){
+        const Password = await hashPassword(req.body.password)
+        Pat.findByIdAndUpdate(req.body.patient_id,{$set:{password:Password}},
+        (err,passupdate)=>{
+            console.log("shubham shukla")
+           if(err){
+               res.json({code:400, error:'password does not update'})
+           }
+           else{
+               res.json({code:200, msg:'password update successfully'})
+           }
+       })
+    }
+    else{
+        res.json({code:400,error:'password does not match'})
+    }
+}
+
 
