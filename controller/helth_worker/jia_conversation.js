@@ -66,3 +66,14 @@ exports.greetings1 = async (req, res) => {
     details.problem_time = dats
     res.json({ code: 200, msg: details });
 }
+
+exports.greetings2 = async(req,res)=>{
+    const {patient_id,disease_id,helthwork_id}=req.body;
+    const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+    console.log(depart_data)
+    const details = {}
+
+    const texts = `Thanks for your reply. When does this ${depart_data.disease_name} affect you the most?`
+    details.text = texts
+    res.json({code:200,msg:details})
+}
