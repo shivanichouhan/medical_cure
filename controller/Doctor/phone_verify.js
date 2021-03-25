@@ -25,19 +25,23 @@ exports.phone_varify = async (req, res) => {
 
 
 exports.sent_Otp = (req, res) => {
+    const user_ids = req.params.user_id
     Doctor_num.findOne({ mobile_number: req.body.mobile_number })
         .exec((err, data) => {
-            if (err || !data) {
-                res.json({ code: 400, error: 'this number does not exist' })
+            if (err || data) {
+                res.json({ code: 400, error: 'this number already exist' })
             }
             else {
                 const OTP = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false, alphabets: false });
                 otp.send_otp(req.body.mobile_number, OTP).then((data) => {
                     res.send(data)
-                    Doctor_num.updateOne({ mobile_number: req.body.mobile_number }, { $set: { otp: OTP } }, (err, respdata) => {
+                    Doctor_num.findByIdAndUpdate({ _id: user_ids }, { $set: { otp: OTP, mobile_number: req.body.mobile_number } }, (err, respdata) => {
+                        res.json({code:200,msg:respdata._id})
                     })
                 }).catch((err) => {
-                    res.send(err)
+                    res.json({code:400,msg:"something went wrong"})
+
+                    // res.send(err)
                 })
             }
         })
