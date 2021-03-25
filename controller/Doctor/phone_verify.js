@@ -35,7 +35,7 @@ exports.sent_Otp = (req, res) => {
                 const OTP = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false, alphabets: false });
                 otp.send_otp(req.body.mobile_number, OTP).then((data) => {
                     Doctor_num.findByIdAndUpdate({ _id: user_ids }, { $set: { otp: OTP, mobile_number: req.body.mobile_number } }, (err, respdata) => {
-                        res.json({code:200,msg:respdata._id})
+                        res.json({code:200,msg:{_id:respdata._id,otp:OTP}})
                     })
                 }).catch((err) => {
                     res.json({code:400,msg:"something went wrong"})
