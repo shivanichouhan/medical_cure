@@ -41,6 +41,9 @@ const patientSchema = new schema(
     health_worker_id:{
         type:String
     },
+    disease:{
+        type:String
+    },
     patient_status:{
         type:String,
     }

@@ -226,4 +226,5 @@ exports.videoImages = (file, folder) => {
             resolve({ url: result.url, imgId: result.asset_id })
         })
     })
-};
+}
+

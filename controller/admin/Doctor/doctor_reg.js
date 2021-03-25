@@ -5,9 +5,11 @@ const path = require("path")
 // const s = require("../../../views")
 
 exports.reg_doctor = async(req,res)=>{
-     var doc = await docReg.find({Phone_Number:req.body.Phone_Number})   
-     if(doc.length === 0){
-         req.body.status = 1
+    console.log('rnnnnfd')
+    console.log(req.body.Phone_Number)
+     var doc = await docReg.findOne({Phone_Number:req.body.Phone_Number})   
+     console.log(doc)
+     if(!doc){
      var docObj = new docReg(req.body)
      docObj.save(async(err,regDoc)=>{
          if(err){
@@ -60,15 +62,15 @@ exports.reg_doctor = async(req,res)=>{
                     identity_back_side_img:iden_back
                 }}).exec((err,resDoc)=>{
                     if(err){
-                        res.send(err)
+                        res.send({code:400,msg:'images not add in doctor'})
                     }
                     else{
-                        res.send({data:resDoc})
+                        res.send({code:200,data:resDoc})
                     }
                 })
              }
              else{
-                 res.send({data:regDoc})
+                 res.send({code:200,data:regDoc})
              }
          }
      })
@@ -93,7 +95,6 @@ exports.list_doctor =(req,res)=>{
         }
     })
 }
-
 
 exports.edit_doctor =(req,res)=>{
     docReg.updateOne({_id:req.params.doctorId},req.body)

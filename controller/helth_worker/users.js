@@ -63,10 +63,9 @@ exports.clinic_otp_verify = async(req,res)=>{
    }
 }
 
-exports.otp_send =(req,res)=>{
+exports.otp_send = async(req,res)=>{
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
-    
     if(str.match(patt1)){
         User.findOne({mobile:req.body.forgetpass}) 
         .exec((err,data)=>{
@@ -94,18 +93,47 @@ exports.otp_send =(req,res)=>{
     }
     else{
         console.log('email is coming')
+        console.log(str)
+        var Email = await User.findOne({email:str})
+        console.log(Email)
+        if(!Email){
+            res.json({code:400, msg:'this email id not exist'})
+        }else{
+            console.log(Email.gmailId)
+            if(Email.gmailId == undefined){
+                const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+                console.log(OTP, typeof OTP)
+                User.updateOne({email:str},{$set:{otp:OTP}},(err,respdata)=>{
+                    if(err){
+                        res.json({code:400,msg:'otp not add in healthworker'})
+                    }
+                    else{
+                        res.json({code:200,msg:"otp send successfully",otp:OTP})
+                    }
+                  }).catch((err)=>{
+                    res.send(err)
+              })
+            }
+            else{
+                res.json({code:400,error:'you are login gmail or facebook'})
+            }
+  
+        }
 }
 }
 
 exports.otp_verify =(req,res)=>{
-    User.findOne({mobile:req.body.mobile})
+    var str = req.body.type  
+    var patt1 = /^[0-9]*$/;
+    if(str.match(patt1)){
+    User.findOne({mobile:str})
     .exec((err,resp)=>{
         if(err){
             res.json(err)
         }
        else{
             if(resp.otp === req.body.otp){
-                User.findOneAndUpdate({mobile:req.body.mobile},{$set:{otp:" "}},(err,userUpdate)=>{
+                User.findOneAndUpdate({mobile:str},{$set:{otp:" "}},(err,userUpdate)=>{
                     if(err){
                         res.json(err)
                     }
@@ -119,6 +147,30 @@ exports.otp_verify =(req,res)=>{
             }
        } 
     })
+}
+else{
+    User.findOne({email:str})
+    .exec((err,resp)=>{
+        if(err){
+            res.json(err)
+        }
+       else{
+            if(resp.otp === req.body.otp){
+                User.findOneAndUpdate({email:str},{$set:{otp:" "}},(err,userUpdate)=>{
+                    if(err){
+                        res.json(err)
+                    }
+                    else{
+                        res.json({code:200,health_worker_id:userUpdate._id})
+                    }   
+                })
+            }
+            else{
+                res.json({code:400 ,error:'wrong otp'})
+            }
+       } 
+    })
+}
 }
 
 exports.updatePass= async(req,res)=>{
@@ -215,7 +267,8 @@ exports.clinic_reg = async (req, res) => {
         urlsS.push(newpathS)
         fs.unlinkSync(path)
     }
-
+    console.log(urlsS)
+  
     var URL = {
         certificate_img: urlsF,
         clinic_img: urlsS

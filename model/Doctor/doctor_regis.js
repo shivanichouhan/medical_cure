@@ -23,7 +23,6 @@ const EventSchema = new mongoose.Schema(
         },
         passing_year:{
             type: Date,
-
         },
         PGCollege_or_University:{
             type: String
@@ -33,7 +32,6 @@ const EventSchema = new mongoose.Schema(
         },
         pass_year:{
             type: Date,
-
         },
         Certificate_University: {
             type: String
@@ -42,7 +40,7 @@ const EventSchema = new mongoose.Schema(
             type:Array
         },
         passing_year_certificate: {
-            type: String
+            type: Array
         },
         Employment_status: {
             type: String
@@ -83,10 +81,10 @@ const EventSchema = new mongoose.Schema(
         PAN_Number: {
             type: String
         },
-        PanCard_front_side_img: {
+        identity_back_side_img: {
             type: Array
         },
-        PanCard_back_side_img: {
+        identity_front_side_img: {
             type: Array
         },
         select_bank: {
@@ -100,7 +98,6 @@ const EventSchema = new mongoose.Schema(
         },
         Phone_Number: {
             type: String,
-            default:""
         },
         Account_holder_name: {
             type: String

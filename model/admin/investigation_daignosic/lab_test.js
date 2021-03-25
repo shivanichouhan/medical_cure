@@ -3,25 +3,25 @@ const schema = mongoose.Schema
 
 const labSchema = new schema(
   {
-   name:{
+   lab_name:{
        type:String
    },
-   instruction:{
+   test_name:{
        type:String
    },
-   price:{
+   blood_group:{
        type:String
    },
-   about_test:{
+   test_for:{
        type:String
    },
-   pre_test_info:{
-       type:String
+   cost:{
+       type:Number
    },
-   package_items:{
-       type:String
-   }
-
+   test_status:{
+    type:String,
+    default:'Deactive'
+}
   }
 ,
   { timestamps: true }

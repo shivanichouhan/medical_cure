@@ -27,8 +27,12 @@ const labschema = new schema(
     status:{
         type:String,
         default:'Deactive'
-    }
-
+    },
+    test_lab:[{
+        type:schema.Types.ObjectId,
+        ref:'lab_test'
+    }],
+   
   }
 ,
   { timestamps: true }
