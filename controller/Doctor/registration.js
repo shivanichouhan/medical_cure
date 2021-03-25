@@ -2,13 +2,14 @@ const Register = require('../../model/Doctor/doctor_regis')
 const cloud = require("../../cloudinary")
 
 exports.doctor_reg = (req, res) => {
-    Register.updateOne({ _id: req.params.user_id }, { $set: req.body },
+    Register.findByIdAndUpdate({ _id: req.params.user_id }, { $set: req.body },
         ((err, resp) => {
             if (err) {
-                res.json({code:200,msg:"update ragister"})
+                res.json({code:400,msg:"not update ragister"})
             }
             else {
-                res.json({code:400,msg:"not update ragister"})            }
+                console.log(err)
+                res.json({code:200,msg:resp._id})            }
         }))
 }
 
