@@ -32,7 +32,7 @@ exports.sent_Otp = (req, res) => {
                 res.json({ code: 400, error: 'data not found' })
             }
             else {
-                if(data == true){
+                if(data.register == true){
                     res.json({ code: 400, error: 'doctor already register' })  
                 }
                 else{
