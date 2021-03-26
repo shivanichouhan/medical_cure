@@ -78,3 +78,19 @@ exports.greetings2 = async(req,res)=>{
     details.text = texts
     res.json({code:200,msg:details})
 }
+
+exports.greetings3 =async(req,res)=>{
+    const {patient_id,disease_id,helthwork_id,week ,depart_ment}=req.body;
+    const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+  if(depart_data){
+    const details = {}
+
+    const texts = `Can you describe your ${depart_data.disease_name} problem?`
+    details.text = texts
+    res.json({code:200,msg:details})
+  }else{
+    res.json({code:200,msg:"desease not defind"})
+
+  }
+    
+}

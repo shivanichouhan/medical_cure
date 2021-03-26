@@ -21,7 +21,8 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.clinic_otp = async(req,res)=>{
    var str = req.body.mobile
-   User.findOne({mobile:str}).exec((err,resp)=>{
+   
+   User.findOne({_id:req.params.userId}).exec((err,resp)=>{
        if(err){
            res.json({code:400,msg:'data not found'})
        }
