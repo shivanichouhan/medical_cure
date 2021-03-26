@@ -23,6 +23,10 @@ const EventSchema = new schema(
       type:String,
       default:""
     },
+    register:{
+      type:Number,
+      default:0
+    },
     status:{
       type:String,
       default:"Inactive"

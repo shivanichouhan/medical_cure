@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 var otpGenerator = require('otp-generator')
 const otp = require("../../otp")
 const _ = require('lodash')
+const cloud = require("../../cloudinary")
+const fs = require('fs')
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -11,6 +13,95 @@ async function hashPassword(password) {
 
 async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
+}
+
+exports.doctor_info =(req,res)=>{
+   doc.find({_id:req.params.docId},{
+    username:1,
+    profile_pic:1,
+    email:1,
+    dumy_userName:1,
+    mobile_number:1,
+    Address:1,
+    Gender:1,
+    register:1,
+    DOB:1
+   })
+  .exec((err,resp)=>{
+      if(err){
+          res.json({code:400,msg:'doctor info not find'})
+      }
+      else{
+          res.json({code:200,msg:resp})
+      }
+  })
+}
+
+exports.reg_from = async(req,res)=>{
+    console.log(req.body)
+    doc.findByIdAndUpdate(req.params.docId,{$set:req.body}).exec(async(err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'doctor details not save'})
+            console.log(err)
+        }
+        else{
+             if(req.files){
+            //    const doc_cer = req.files.certificate_Img
+               const lic_front = req.files.License_img_front_side
+               const lic_back = req.files.License_img_back_side
+            //    const doc_pass_cer = req.files.passing_year_certificate
+               const identity_front = req.files.identity_front_side_img
+               const identity_back = req.files.identity_back_side_img
+
+            //    const docreg = async (path)=> await cloud.doctor_reg(path)
+               const front_lic = async (path)=> await cloud.licence_front(path)
+               const back_lic = async (path)=> await cloud.licence_back(path)
+            //    const pass_certificate = async (path)=> await cloud.doc_pass(path)
+               const identiy_front = async (path)=> await cloud.iden_front(path)
+               const identiy_back = async (path)=> await cloud.iden_back(path)
+
+            //    const p1 =doc_cer[0].path
+               const p2 =lic_front[0].path
+               const p3 =lic_back[0].path
+            //    const p4 =doc_pass_cer[0].path
+               const p5 =identity_front[0].path
+               const p6 =identity_back[0].path
+               
+            //    const url_cer = await docreg(p1)
+               const lice_front = await front_lic(p2)
+               const lice_back = await back_lic(p3)
+            //    const url_pass = await pass_certificate(p4)
+               const iden_front = await identiy_front(p5)               
+               const iden_back = await identiy_back(p6)                              
+
+               console.log(lice_front,lice_back,iden_front,iden_back)
+            //    fs.unlinkSync(p1)
+               fs.unlinkSync(p2)
+               fs.unlinkSync(p3)
+            //    fs.unlinkSync(p4)
+               fs.unlinkSync(p5)
+               fs.unlinkSync(p6)
+
+               doc.findByIdAndUpdate(resp._id,{$push:{
+                   License_img_front_side:lice_front,
+                   License_img_back_side:lice_back,
+                   identity_front_side_img:iden_front,
+                   identity_back_side_img:iden_back,
+               },$set:{register:1}}).exec((err,resDoc)=>{
+                   if(err){
+                       res.send({code:400,msg:'images not add in doctor'})
+                       console.log(err)
+                   }
+                   else{
+                       res.send({code:200,msg:resDoc})
+                   }
+               })
+            }
+            else{
+                res.send({code:200,msg:regDoc})
+            }
+        }
+    })
 }
 
 exports.doctor_reg = async (req, res) => {
@@ -64,7 +155,7 @@ exports.doctorLogin = async (req, res) => {
             // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
             // res.cookie('token', token, { expire: new Date() + 9999 })
             console.log(user)
-            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
+            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id ,register:user.register} });
         }
         // res.json({ code: 200, msg: Doc })
     }

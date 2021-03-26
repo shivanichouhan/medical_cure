@@ -31,18 +31,22 @@ const Block_Worker = require('./routes/helth_worker/BlockWorker')
 const courseHealth = require('./routes/helth_worker/courseList')
 const states = require('./routes/helth_worker/state');
 const dep_health = require('./routes/helth_worker/list_dep')
-//
+const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
+const patient = require('./routes/helth_worker/patient_registration')
 const conversation = require("./routes/helth_worker/jia_conversation")
-
 //Doctor
-
-const Doctor = require('./routes/Doctor/Registration')
+// const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
+// const patient = require('./routes/helth_worker/patient_registration')
+// const doctor_reg = require("./routes/Doctor/doctor_signin")
+// const listDepartment = require("./routes/Doctor/area_of_interest")
+// const doc_deg = require("./routes/Doctor/degree_list")
+// const cureBlogList = require("./routes/Doctor/search_cureblog")
+// const
+// const Doctor = require('./routes/Doctor/Registration')
 const Educational = require('./routes/Doctor/doctor_educational')
 const Professional = require('./routes/Doctor/doctor_professional')
 const Identity = require('./routes/Doctor/doctor_identity')
 const Bank_Account = require('./routes/Doctor/doctor_bankaccount')
-const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
-const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
 const doc_deg = require("./routes/Doctor/degree_list")
@@ -161,8 +165,7 @@ app.use('/api', cityAdd)
 //
 
 //doctor
-app.use('/api', Doctor)
-app.use('/api', Doctor_Certificate)
+// app.use('/api', Doctor)
 app.use('/api', Educational)
 app.use('/api', Professional)
 app.use('/api', Identity)
