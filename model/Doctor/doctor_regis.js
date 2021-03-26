@@ -108,6 +108,9 @@ const EventSchema = new mongoose.Schema(
         otp: {
             type: String
         },
+        register:{
+            type:Boolean
+        },
         gmailId: {
             type: String
         },

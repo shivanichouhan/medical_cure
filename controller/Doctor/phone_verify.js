@@ -28,12 +28,16 @@ exports.sent_Otp = (req, res) => {
     const user_ids = req.params.user_id
     Doctor_num.findOne({ mobile_number: req.body.mobile_number })
         .exec((err, data) => {
-            if (err || data) {
-                res.json({ code: 400, error: 'this number already exist' })
+            if (err) {
+                res.json({ code: 400, error: 'data not found' })
             }
             else {
-                const OTP = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-                otp.send_otp(req.body.mobile_number, OTP).then((data) => {
+                if(data == true){
+                    res.json({ code: 400, error: 'doctor already register' })  
+                }
+                else{
+                    const OTP = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+                    otp.send_otp(req.body.mobile_number, OTP).then((data) => {
                     Doctor_num.findByIdAndUpdate({ _id: user_ids }, { $set: { otp: OTP, mobile_number: req.body.mobile_number } }, (err, respdata) => {
                         res.json({code:200,msg:{_id:respdata._id,otp:OTP}})
                     })
@@ -42,6 +46,8 @@ exports.sent_Otp = (req, res) => {
 
                     // res.send(err)
                 })
+                }
+                
             }
         })
 }
@@ -58,7 +64,7 @@ exports.number_verify = (req, res) => {
                         res.json(err)
                     }
                     else {
-                        res.json({ code: 200, Number_Verification_Successful_regis_id: doctorUpdate._id })
+                        res.json({ code: 200, doctor_id: doctorUpdate._id })
                     }
                 })
             }
