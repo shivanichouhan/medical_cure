@@ -5,6 +5,12 @@ var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
     {
+        first_name:{
+            type:String
+        },
+        last_name:{
+            type:String
+        },
         Gender: {
             type: String
         },
@@ -17,6 +23,9 @@ const EventSchema = new mongoose.Schema(
         UGCollege_University: {
             type: String
         },
+        ug_clg:{
+            type:String
+        },
         Course: {
             type: String
         },
@@ -25,6 +34,9 @@ const EventSchema = new mongoose.Schema(
         },
         PGCollege_or_University: {
             type: String
+        },
+        pg_clg:{
+            type:String
         },
         Courses: {
             type: String
@@ -47,9 +59,9 @@ const EventSchema = new mongoose.Schema(
         // passing_year_certificate: {
         //     type: Array
         // },
-        Employment_status: {
-            type: String
-        },
+        // Employment_status: {
+        //     type: String
+        // },
         Specialization: {
             type: String
         },

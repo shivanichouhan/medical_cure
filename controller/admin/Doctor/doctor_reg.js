@@ -8,7 +8,6 @@ async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
 }
 
-
 exports.doc_signup = async(req,res)=>{
     console.log(req.body)
     const { first_name,last_name,username,email,password} = req.body;
@@ -112,7 +111,7 @@ exports.reg_doctor = async(req,res)=>{
 }
 
 exports.list_doctor =(req,res)=>{
-    docReg.find().exec((err,doctor_list)=>{
+    docReg.find({register:1}).exec((err,doctor_list)=>{
         if(err){
             res.json({code:400,msg:'doctor list not found'})
         }
