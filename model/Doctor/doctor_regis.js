@@ -117,7 +117,8 @@ const EventSchema = new mongoose.Schema(
             type:Number
         },
         register:{
-            type:Boolean
+            type:Number,
+            default:0
         },
         gmailId: {
             type: String

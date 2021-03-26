@@ -26,7 +26,7 @@ exports.clinic_otp = async(req,res)=>{
            res.json({code:400,msg:'data not found'})
        }
        else{
-           if(resp.register == true){
+           if(resp.register == 1){
                 res.json({code:400,msg:'this user already register'})
            }
            else{
@@ -279,9 +279,9 @@ exports.clinic_reg = async (req, res) => {
     var URL = {
         certificate_img: urlsF,
         clinic_img: urlsS,
-        register:true
+        register:1
     }
-    
+
     var detail = _.extend(req.body, URL)
     console.log(detail)
 

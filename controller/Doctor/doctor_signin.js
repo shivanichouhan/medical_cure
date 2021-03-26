@@ -15,6 +15,28 @@ async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
+exports.doctor_info =(req,res)=>{
+   doc.find({_id:req.params.docId},{
+    username:1,
+    profile_pic:1,
+    email:1,
+    dumy_userName:1,
+    mobile_number:1,
+    Address:1,
+    Gender:1,
+    register:1,
+    DOB:1
+   })
+  .exec((err,resp)=>{
+      if(err){
+          res.json({code:400,msg:'doctor info not find'})
+      }
+      else{
+          res.json({code:200,msg:resp})
+      }
+  })
+}
+
 exports.reg_from = async(req,res)=>{
     console.log(req.body)
     doc.findByIdAndUpdate(req.params.docId,{$set:req.body}).exec(async(err,resp)=>{
@@ -61,16 +83,14 @@ exports.reg_from = async(req,res)=>{
                fs.unlinkSync(p6)
 
                doc.findByIdAndUpdate(resp._id,{$push:{
-                //    certificate_Img:url_cer,
                    License_img_front_side:lice_front,
                    License_img_back_side:lice_back,
-                //    passing_year_certificate:url_pass,
                    identity_front_side_img:iden_front,
                    identity_back_side_img:iden_back,
-                   register:true
-               }}).exec((err,resDoc)=>{
+               },$set:{register:1}}).exec((err,resDoc)=>{
                    if(err){
                        res.send({code:400,msg:'images not add in doctor'})
+                       console.log(err)
                    }
                    else{
                        res.send({code:200,msg:resDoc})
@@ -135,7 +155,7 @@ exports.doctorLogin = async (req, res) => {
             // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
             // res.cookie('token', token, { expire: new Date() + 9999 })
             console.log(user)
-            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id } });
+            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id ,register:user.register} });
         }
         // res.json({ code: 200, msg: Doc })
     }
