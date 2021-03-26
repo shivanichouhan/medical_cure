@@ -20,8 +20,8 @@ const EventSchema = new mongoose.Schema(
         Course: {
             type: String
         },
-        passing_year: {
-            type: Date,
+        u_pass_year: {
+            type: String,
         },
         PGCollege_or_University: {
             type: String
@@ -29,18 +29,24 @@ const EventSchema = new mongoose.Schema(
         Courses: {
             type: String
         },
-        pass_year: {
-            type: Date,
+        p_pass_year: {
+            type: String,
         },
         Certificate_University: {
             type: String
         },
-        certificate_Img: {
-            type: Array
+        certificate_course:{
+            type:String
         },
-        passing_year_certificate: {
-            type: Array
+        c_pass_year:{
+            type:String
         },
+        // certificate_Img: {
+        //     type: Array
+        // },
+        // passing_year_certificate: {
+        //     type: Array
+        // },
         Employment_status: {
             type: String
         },
@@ -77,7 +83,7 @@ const EventSchema = new mongoose.Schema(
         select_identity: {
             type: String
         },
-        PAN_Number: {
+        identity_Number: {
             type: String
         },
         identity_back_side_img: {
@@ -90,12 +96,12 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         Account_No: {
-            type: Number
+            type: String
         },
         IFSC_Code: {
             type: String
         },
-        Phone_Number: {
+        mobile_number: {
             type: String,
         },
         Account_holder_name: {
@@ -109,6 +115,9 @@ const EventSchema = new mongoose.Schema(
         },
         otp_verify:{
             type:Number
+        },
+        register:{
+            type:Boolean
         },
         gmailId: {
             type: String

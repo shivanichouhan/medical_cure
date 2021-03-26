@@ -23,6 +23,9 @@ const EventSchema = new schema(
       type:String,
       default:""
     },
+    register:{
+      type:Boolean
+    },
     status:{
       type:String,
       default:"Inactive"

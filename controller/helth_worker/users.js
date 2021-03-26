@@ -21,24 +21,31 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.clinic_otp = async(req,res)=>{
    var str = req.body.mobile
-   var data = await User.findOne({mobile:str})
-   if(!data){
-    const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-    otp.send_otp(str,OTP).then((resp)=>{
-        
-        User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
-            res.json({code:200 ,msg:'otp send successfully',otp:OTP })
-      
-        }).catch((err)=>{
-            res.json({code:400,msg:'otp not set in user'})    
-        })
-    }).catch((err)=>{
-        res.json({code:400,msg:'otp not sent'})
-    })
-   }
-   else{
-       res.json({code:400,msg:'mobile no already exist'})
-   }   
+   User.findOne({mobile:str}).exec((err,resp)=>{
+       if(err){
+           res.json({code:400,msg:'data not found'})
+       }
+       else{
+           if(resp.register == true){
+                res.json({code:400,msg:'this user already register'})
+           }
+           else{
+            const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+            otp.send_otp(str,OTP).then((resp)=>{
+                console.log(req.params.userId)
+                User.findByIdAndUpdate(req.params.userId,{$set:{otp:OTP,mobile:str}}).then((dataUser)=>{
+                    res.json({code:200 ,msg:'otp send successfully',otp:OTP })
+              
+                }).catch((err)=>{
+                    res.json({code:400,msg:'otp not set in user'})    
+                })
+            }).catch((err)=>{
+                res.json({code:400,msg:'otp not sent'})
+            })
+          }
+       }
+   })
+
 }
 
 exports.clinic_otp_verify = async(req,res)=>{
@@ -271,8 +278,10 @@ exports.clinic_reg = async (req, res) => {
   
     var URL = {
         certificate_img: urlsF,
-        clinic_img: urlsS
+        clinic_img: urlsS,
+        register:true
     }
+    
     var detail = _.extend(req.body, URL)
     console.log(detail)
 
