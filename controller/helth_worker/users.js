@@ -259,7 +259,7 @@ exports.clinic_reg = async (req, res) => {
         urlsF.push(newpathF)
         fs.unlinkSync(path)
     }
-
+    
     const urlsS = []
     for (const fileS of clinic) {
         const { path } = fileS

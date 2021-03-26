@@ -26,12 +26,13 @@ exports.phone_varify = async (req, res) => {
 
 exports.sent_Otp = (req, res) => {
     const user_ids = req.params.user_id
-    Doctor_num.findOne({ mobile_number: req.body.mobile_number })
+    Doctor_num.findOne({ _id: user_ids })
         .exec((err, data) => {
             if (err) {
                 res.json({ code: 400, error: 'data not found' })
             }
             else {
+                console.log(data)
                 if(data.register == true){
                     res.json({ code: 400, error: 'doctor already register' })  
                 }

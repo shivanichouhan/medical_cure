@@ -6,7 +6,7 @@ var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
     {
-        Gender:{
+        Gender: {
             type: String
         },
         DOB: {
@@ -18,26 +18,26 @@ const EventSchema = new mongoose.Schema(
         UGCollege_University: {
             type: String
         },
-        Course:{
+        Course: {
             type: String
         },
-        passing_year:{
+        passing_year: {
             type: Date,
         },
-        PGCollege_or_University:{
+        PGCollege_or_University: {
             type: String
         },
         Courses: {
             type: String
         },
-        pass_year:{
+        pass_year: {
             type: Date,
         },
         Certificate_University: {
             type: String
         },
         certificate_Img: {
-            type:Array
+            type: Array
         },
         passing_year_certificate: {
             type: Array
@@ -102,16 +102,25 @@ const EventSchema = new mongoose.Schema(
         Account_holder_name: {
             type: String
         },
-        status:{
-            type:Number,
+        status: {
+            type: Number,
         },
         otp: {
             type: String
         },
-        register:{
-            type:Boolean
+        register: {
+            type: Boolean, default: false
+        },
+        otp_verify: {
+            type: Number
         },
         gmailId: {
+            type: String
+        },
+        first_name: {
+            type: String
+        },
+        last_name: {
             type: String
         },
         username: {
@@ -125,24 +134,28 @@ const EventSchema = new mongoose.Schema(
         },
         bearer_token: {
             type: String
-        },profile_pic: {
+        },
+        profile_pic: {
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
-        },user_id:
+        }, user_id:
             { type: String },
-        dumy_userName:{ type: String },
+        dumy_userName: { type: String },
 
-        certificate:{
+        certificate: {
             type: Array
         },
         mobile_number: {
             type: String
         },
-        otp:{
+        user_id: {
             type: String
         },
-        otp_verify:{
-            type:Number
+        otp: {
+            type: String
+        },
+        otp_verify: {
+            type: Number
         }
     })
 

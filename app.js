@@ -175,7 +175,8 @@ app.use('/api', cureBlogList)
 app.use('/api', doctor_reg)
 app.use('/api',Phone_varify)
 app.get("/admin_login", (req, res) => {
-  res.sendFile(path.join(__dirname + '/views/login.html'));
+  res.send('hello')
+  // res.sendFile(path.join(__dirname + '/views/login.html'));
 });
 
 app.get("/deshboard", (req, res) => {

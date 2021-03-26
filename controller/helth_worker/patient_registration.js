@@ -21,7 +21,7 @@ exports.search_patient =(req,res)=>{
 }
 
 exports.patient_list =(req,res)=>{
-    patient.find({health_worker_id:req.params.userId})
+    patient.find({$and:[{health_worker_id:req.params.userId},{p_reg:true}]})
     .exec((err,List)=>{
         if(err){
             res.json({code:400, msg:'patient list not found'})
@@ -106,7 +106,8 @@ exports.patient_info =(req,res)=>{
         gender:req.body.gender,
         height:req.body.height,
         weight:req.body.weight,
-        patient_img:resp.url
+        patient_img:resp.url,
+        p_reg:true,
     }}).then((pat)=>{
             res.json({code:200,msg:'patient register successfully'})
         }).catch((error)=>{
@@ -120,4 +121,17 @@ exports.patient_info =(req,res)=>{
        res.json({code:400,msg:'patient image not come'})
    }
 
+}
+
+exports.doctor_reg = (req, res) => {
+    Register.findByIdAndUpdate({ _id: req.params.user_id }, { $set: req.body },
+        ((err, resp) => {
+            if (err) {
+                res.json({code:400,msg:"not update ragister"})
+            }
+            else {
+                console.log(err)
+                res.json({code:200,msg:resp._id})           
+             }
+        }))
 }

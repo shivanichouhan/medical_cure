@@ -2,11 +2,40 @@ const docReg = require("../../../model/Doctor/doctor_regis")
 const cloud = require("../../../cloudinary")
 const fs = require("fs") 
 const path = require("path")
-// const s = require("../../../views")
+const bcrypt = require('bcryptjs')
+
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10)
+}
+
+
+exports.doc_signup = async(req,res)=>{
+    console.log(req.body)
+    const { first_name,last_name,username,email,password} = req.body;
+
+    const hashedPassword = await hashPassword(password)
+    const data_check = await docReg.findOne({ email: email })
+    if (!data_check) {
+        const datas = new docReg({
+            first_name: first_name,
+            last_name: last_name,
+            username:username,
+            email:email,
+            password: hashedPassword
+        })
+        datas.save()
+            .then((resp) => {
+                res.json({ code: 200, msg: resp })
+            })
+
+    } else {
+        res.json({ code: 200, msg: "Email already exist" })
+    }
+
+}
 
 exports.reg_doctor = async(req,res)=>{
-    console.log('rnnnnfd')
-    console.log(req.body.Phone_Number)
+     console.log(req.body.Phone_Number)
      var doc = await docReg.findOne({Phone_Number:req.body.Phone_Number})   
      console.log(doc)
      if(!doc){
@@ -83,15 +112,10 @@ exports.reg_doctor = async(req,res)=>{
 exports.list_doctor =(req,res)=>{
     docReg.find({otp_verify:1}).exec((err,doctor_list)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'doctor list not found'})
         }
         else{
-            console.log(doctor_list)
-            res.render(
-                path.join(__dirname, '../../../views/doctors.ejs'),
-                { data: doctor_list }
-              )
-            // res.json({data:doctor_list})
+            res.json({code:200,msg:doctor_list})
         }
     })
 }
