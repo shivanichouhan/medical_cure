@@ -10,15 +10,15 @@ async function hashPassword(password) {
 
 exports.doc_signup = async(req,res)=>{
     console.log(req.body)
-    const { first_name,last_name,username,email,password} = req.body;
+    const { first_name,Specialization,mobile_number,email,password} = req.body;
 
     const hashedPassword = await hashPassword(password)
     const data_check = await docReg.findOne({ email: email })
     if (!data_check) {
         const datas = new docReg({
             first_name: first_name,
-            last_name: last_name,
-            username:username,
+            Specialization: Specialization,
+            mobile_number:mobile_number,
             email:email,
             password: hashedPassword
         })
