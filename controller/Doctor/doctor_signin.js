@@ -39,10 +39,11 @@ exports.doctor_info =(req,res)=>{
 
 exports.reg_from = async(req,res)=>{
     console.log(req.body)
+    console.log(req.files)
     doc.findByIdAndUpdate(req.params.docId,{$set:req.body}).exec(async(err,resp)=>{
         if(err){
             res.json({code:400,msg:'doctor details not save'})
-            console.log(err)
+            console.log(err,'doc_detail')
         }
         else{
              if(req.files){
@@ -90,7 +91,7 @@ exports.reg_from = async(req,res)=>{
                },$set:{register:1}}).exec((err,resDoc)=>{
                    if(err){
                        res.send({code:400,msg:'images not add in doctor'})
-                       console.log(err)
+                       console.log(err,'doc_img')
                    }
                    else{
                        res.send({code:200,msg:resDoc})

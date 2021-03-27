@@ -73,6 +73,9 @@ const EventSchema = new schema(
     ifsc_code: {
       type: String
     },
+    phone:{
+      type:String
+    },
     bearer_token: {
       type: String
     },

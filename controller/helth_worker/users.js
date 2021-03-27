@@ -21,7 +21,7 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.clinic_otp = async(req,res)=>{
    var str = req.body.mobile
-   User.findOne({mobile:str}).exec((err,resp)=>{
+   User.findOne({_id:req.params.userId}).exec((err,resp)=>{
        if(err){
            res.json({code:400,msg:'data not found'})
        }
@@ -256,26 +256,28 @@ exports.clinic_reg = async (req, res) => {
     var certificate = req.files.certificate
     var clinic = req.files.clinic
 
-    const uploaderF = async (path) => await cloud.Certificate(path, 'Certificates')
-    const uploaderS = async (path) => await cloud.Clinic(path, 'Clinics')
-
     const urlsF = []
+    if(certificate){
+    const uploaderF = async (path) => await cloud.Certificate(path, 'Certificates')
     for (const fileF of certificate) {
         const { path } = fileF
         const newpathF = await uploaderF(path)
         urlsF.push(newpathF)
         fs.unlinkSync(path)
     }
-    
+  }
     const urlsS = []
-    for (const fileS of clinic) {
-        const { path } = fileS
-        const newpathS = await uploaderS(path)
-        urlsS.push(newpathS)
-        fs.unlinkSync(path)
+    if(clinic){
+     const uploaderS = async (path) => await cloud.Clinic(path, 'Clinics') 
+     for (const fileS of clinic) {
+            const { path } = fileS
+            const newpathS = await uploaderS(path)
+            urlsS.push(newpathS)
+            fs.unlinkSync(path)
+        }
     }
-    console.log(urlsS)
-  
+    console.log(urlsF,urlsS)
+   
     var URL = {
         certificate_img: urlsF,
         clinic_img: urlsS,
