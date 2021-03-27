@@ -54,17 +54,29 @@ const EventSchema = new mongoose.Schema(
         c_pass_year:{
             type:String
         },
+        super_clg:{
+            type:String
+        },
+        super_course:{
+            type:String
+        },
+        super_pass_year:{
+            type:String
+        },
         // certificate_Img: {
         //     type: Array
         // },
         // passing_year_certificate: {
         //     type: Array
         // },
-        // Employment_status: {
-        //     type: String
-        // },
+        Employment_status: {
+            type: String
+        },
         Specialization: {
             type: String
+        },
+        area_of_interest:{
+            type:String
         },
         Experience: {
             type: String
@@ -85,7 +97,10 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         issued_date: {
-            type: Date,
+            type: String,
+        },
+        issue_auth:{
+            type:String
         },
         License_img_front_side: {
             type: Array
@@ -113,6 +128,9 @@ const EventSchema = new mongoose.Schema(
         },
         IFSC_Code: {
             type: String
+        },
+        phone_number:{
+            type:String
         },
         mobile_number: {
             type: String,
