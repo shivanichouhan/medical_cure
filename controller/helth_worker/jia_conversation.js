@@ -2,6 +2,7 @@ const desease_name = require("../../model/admin/add_disease");
 const patient_name = require("../../model/helth_worker/patient_registration")
 var colors = require('colors');
 const chalk = require('chalk'); 
+const Doctor_data = require("../../model/Doctor/doctor_regis")
 
 
 const greeting_time = (today) => {
@@ -113,10 +114,23 @@ exports.greetings4 =async(req,res)=>{
 exports.greetings5 =async(req,res)=>{
     const {text_msg,disease_id,patient_id,department}=req.body;
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
-
     const details = {}
 
     const text_ms = `Congratulations! We have found the best ${depart_data.disease_name} doctor for you! `
     details.text = text_ms
     res.json({code:200,msg:details})
 }
+
+exports.doctor_sagastion = async(req,res)=>{
+    const {text_msg,disease_id,patient_id,department_name}=req.body;
+    const doctor_find =await Doctor_data.findOne({Specialization:department_name});
+
+    const text_data = `Dr. ${doctor_find.first_name} shall take up your case. Book your consultation now.`
+    const details ={}
+    details.text = text_data;
+    details.doctor_detail = doctor_find
+    res.json({code:200,msg:details})
+    
+}
+
+// http://148.72.214.135

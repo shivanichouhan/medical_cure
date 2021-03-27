@@ -178,6 +178,13 @@ const EventSchema = new mongoose.Schema(
         },
         otp_verify: {
             type: Number
+        },fees:{
+            type:Number,
+            default:0
+
+        },rating:{
+            type:Number,
+            default:0
         }
     })
 
