@@ -10,6 +10,6 @@ router.post("/helthworker/greetings2", greetings2)
 router.post("/helthworker/greetings3", greetings3);
 router.post("/helthworker/greetings4", greetings4);
 router.post("/helthworker/greetings5", greetings5)
-router.post("/helthworker/doctor_sagastion",doctor_sagastion)
+router.post("/helthworker/doctor_suggestion",doctor_sagastion)
 
 module.exports = router;
