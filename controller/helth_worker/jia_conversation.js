@@ -108,5 +108,15 @@ exports.greetings4 =async(req,res)=>{
     const texts = `Thank you. ${greet} ${patients.patient_name}.We are finding the most suitable doctor for you. `
     details.text = texts
     res.json({code:200,msg:details})
+}
 
+exports.greetings5 =async(req,res)=>{
+    const {text_msg,disease_id,patient_id,department}=req.body;
+    const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+
+    const details = {}
+
+    const text_ms = `Congratulations! We have found the best ${depart_data.disease_name} doctor for you! `
+    details.text = text_ms
+    res.json({code:200,msg:details})
 }
