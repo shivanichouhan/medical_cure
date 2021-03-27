@@ -11,21 +11,20 @@ cloudenary.config({
 
 exports.Contact_data = (req, res) => {
     const {
-        image,
         Description,
         Contact_No,
+        name,
         Emailid,
-        Website } = req.body
+        subject } = req.body
 
     const data = new Contact({
-        image: image,
         Description: Description,
         Contact_No: Contact_No,
         Emailid: Emailid,
-        Website: Website,
-        image: image.secure_url
+        subject: subject,
+        name: name
+
     })
-    data.p_id = data._id
     data.save()
         .then((resp) => {
             res.json({ code: 200, msg: "data save" })

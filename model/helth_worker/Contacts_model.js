@@ -8,23 +8,24 @@ const EventSchema = new mongoose.Schema(
     {
         image: {
             type: String,
-            default:" "
+            default: " "
         },
+        name: { type: String },
         Description: {
             type: String,
-            default:" "
+            default: " "
         },
         Contact_No: {
             type: Number,
-            default:" "
+            default: " "
         },
         Emailid: {
             type: String,
-            default:" "
+            default: " "
         },
-        Website: {
+        subject: {
             type: String,
-            default:" "
+            default: " "
         }
 
     })
