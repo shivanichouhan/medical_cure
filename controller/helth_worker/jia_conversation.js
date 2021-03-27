@@ -92,5 +92,21 @@ exports.greetings3 =async(req,res)=>{
     res.json({code:200,msg:"desease not defind"})
 
   }
-    
+}
+
+exports.greetings4 =async(req,res)=>{
+    const {text_msg,disease_id,patient_id,department}=req.body;
+    let greet = '';
+    const patients = await patient_name.findOne({ _id: patient_id })
+
+    const details = {}
+    if (patients.gender == "Male") {
+        greet = "Mr."
+    } else {
+        greet = "Miss."
+    }
+    const texts = `Thank you. ${greet} ${patients.patient_name}.We are finding the most suitable doctor for you. `
+    details.text = texts
+    res.json({code:200,msg:details})
+
 }
