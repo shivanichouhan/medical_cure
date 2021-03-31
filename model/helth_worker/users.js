@@ -24,8 +24,8 @@ const EventSchema = new schema(
       default:""
     },
     register:{
-      type:Number,
-      default:0
+      type:String,
+      default:"0"
     },
     status:{
       type:String,

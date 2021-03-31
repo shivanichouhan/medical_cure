@@ -81,6 +81,7 @@ const analytics = require("./routes/admin/analytics")
 const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
 const cityAdd = require("./routes/admin/state_city/add_city")
+const Prescription = require("./routes/Doctor/prescription")
 //
 
 
@@ -162,6 +163,7 @@ app.use("/api",analytics)
 app.use('/api', inspire) 
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
+app.use('/api', Prescription)
 //
 
 //doctor

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { addClg,listClg,editClg,removeClg } = require("../../controller/admin/add_clg")
+const {  } = require("")
 
 router.get("/admin/list_collage",listClg)
 router.post("/admin/add_collage",addClg)
