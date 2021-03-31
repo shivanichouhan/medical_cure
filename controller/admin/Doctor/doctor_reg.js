@@ -34,13 +34,13 @@ exports.doc_signup = async(req,res)=>{
 }
 
 exports.reg_doctor = async(req,res)=>{
-      docReg.findOne({mobile_number:req.body.phone_number})
+      console.log(req.body)
+      docReg.findOne({phone_number:req.body.phone_number})
      .exec((err,resp)=>{
          if(err){
              res.send({code:400,msg:'data not found'})
          }
          else{
-             console.log(resp)
              if(!resp){
                  var docObj = new docReg(req.body)
                  docObj.save(async(err,regDoc)=>{
