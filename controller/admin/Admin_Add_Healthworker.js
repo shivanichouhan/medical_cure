@@ -9,7 +9,7 @@ exports.Add_Health_Worker = async (req, res) => {
            res.send({code:400,msg:'data not found'})
        }
        else{
-           if(resp.register == 1){
+           if(resp.register == "1"){
             res.send({code:400,msg:'data not found'})
            }
            else{
@@ -41,7 +41,7 @@ exports.Add_Health_Worker = async (req, res) => {
                          urlsS.push(newpathS)
                          fs.unlinkSync(path)
                      }
-                     HealthWorker.findByIdAndUpdate(data._id,{$set:{certificate_img: urlsF,register:1,clinic_img: urlsS}})
+                     HealthWorker.findByIdAndUpdate(data._id,{$set:{certificate_img: urlsF,register:"1",clinic_img: urlsS}})
                       .exec((err,healthWorker)=>{
                           if(err){
                               res.json({code:400,msg:'images not add in healthworker'})

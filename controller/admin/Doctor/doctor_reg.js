@@ -40,7 +40,7 @@ exports.reg_doctor = async(req,res)=>{
              res.send({code:400,msg:'data not found'})
          }
          else{
-             if(resp.register == 1){
+             if(resp.register == "1"){
                 res.send({code:400,msg:'doctor already register'})
              }
              else{
@@ -91,7 +91,7 @@ exports.reg_doctor = async(req,res)=>{
                                License_img_back_side:lice_back,
                                identity_front_side_img:iden_front,
                                identity_back_side_img:iden_back
-                           },$set:{register:1}}).exec((err,resDoc)=>{
+                           },$set:{register:"1"}}).exec((err,resDoc)=>{
                                if(err){
                                    res.send({code:400,msg:'images not add in doctor'})
                                }

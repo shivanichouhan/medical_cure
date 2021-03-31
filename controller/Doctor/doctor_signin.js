@@ -164,6 +164,7 @@ exports.doctorLogin = async (req, res) => {
 }
 
 exports.log_social =(req,res)=>{
+    console.log(req.body)
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     const { email, gmailId, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
