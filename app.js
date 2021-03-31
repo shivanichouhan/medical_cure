@@ -50,6 +50,7 @@ const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
 const doc_deg = require("./routes/Doctor/degree_list")
 const cureBlogList = require("./routes/Doctor/search_cureblog")
+const Prescription = require("./routes/Doctor/prescription")
 //
 
 //admin routes 
@@ -76,7 +77,7 @@ const listPatient = require("./routes/admin/patient")
 const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
 const cityAdd = require("./routes/admin/state_city/add_city")
-const Prescription = require("./routes/Doctor/prescription")
+const Comission = require("./routes/admin/comission")
 //
 
 mongoose.Promise = global.Promise
@@ -151,7 +152,7 @@ app.use('/api', listPatient)
 app.use('/api', inspire) 
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
-app.use('/api', Prescription)
+app.use('/api', Comission)
 //
 
 //doctor
@@ -164,6 +165,7 @@ app.use('/api', doctor_reg)
 app.use('/api', listDepartment)
 app.use('/api', doc_deg)
 app.use('/api', cureBlogList)
+app.use('/api', Prescription)
 //
 app.get("/admin_login", (req, res) => {
   res.send('hello')
