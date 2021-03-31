@@ -34,7 +34,7 @@ exports.doc_signup = async(req,res)=>{
 }
 
 exports.reg_doctor = async(req,res)=>{
-     docReg.findOne({mobile_number:req.body.phone_number})
+      docReg.findOne({mobile_number:req.body.phone_number})
      .exec((err,resp)=>{
          if(err){
              res.send({code:400,msg:'data not found'})
@@ -42,45 +42,51 @@ exports.reg_doctor = async(req,res)=>{
          else{
              console.log(resp)
              if(!resp){
+                 var docObj = new docReg(req.body)
                  docObj.save(async(err,regDoc)=>{
                     if(err){
                         res.json({code:400,msg:'doctor details not save'})
                     }
                     else{
-                        if(req.files){
-                        //    const doc_cer = req.files.certificate_Img
+                        if(Object.entries(req.files).length != 0){
+
+                            var Certificate = []
+                            if(req.files.certificate_Img){
+                              const doc_cer = req.files.certificate_Img
+                              const p1 =doc_cer[0].path
+                              const docreg = async (path)=> await cloud.doctor_reg(path)
+                              const url_cer = await docreg(p1)
+                              Certificate.push(url_cer)
+                              fs.unlinkSync(p1)
+                            }
+                       
                            const lic_front = req.files.License_img_front_side
                            const lic_back = req.files.License_img_back_side
-                        //    const doc_pass_cer = req.files.passing_year_certificate
                            const identity_front = req.files.identity_front_side_img
                            const identity_back = req.files.identity_back_side_img
            
-                        //    const docreg = async (path)=> await cloud.doctor_reg(path)
+                       
                            const front_lic = async (path)=> await cloud.licence_front(path)
                            const back_lic = async (path)=> await cloud.licence_back(path)
-                        //    const pass_certificate = async (path)=> await cloud.doc_pass(path)
                            const identiy_front = async (path)=> await cloud.iden_front(path)
                            const identiy_back = async (path)=> await cloud.iden_back(path)
            
-                        //    const p1 =doc_cer[0].path
+                       
                            const p2 =lic_front[0].path
                            const p3 =lic_back[0].path
-                        //    const p4 =doc_pass_cer[0].path
                            const p5 =identity_front[0].path
                            const p6 =identity_back[0].path
                            
-                        //    const url_cer = await docreg(p1)
+                     
                            const lice_front = await front_lic(p2)
                            const lice_back = await back_lic(p3)
-                        //    const url_pass = await pass_certificate(p4)
                            const iden_front = await identiy_front(p5)               
                            const iden_back = await identiy_back(p6)                              
            
-                           console.log(lice_front,lice_back,iden_front,iden_back)
-                        //    fs.unlinkSync(p1)
+                           console.log(Certificate,lice_front,lice_back,iden_front,iden_back)
+                       
                            fs.unlinkSync(p2)
                            fs.unlinkSync(p3)
-                        //    fs.unlinkSync(p4)
                            fs.unlinkSync(p5)
                            fs.unlinkSync(p6)
            
@@ -88,7 +94,8 @@ exports.reg_doctor = async(req,res)=>{
                                License_img_front_side:lice_front,
                                License_img_back_side:lice_back,
                                identity_front_side_img:iden_front,
-                               identity_back_side_img:iden_back
+                               identity_back_side_img:iden_back,
+                               certificate_Img:Certificate
                            },$set:{register:"1"}}).exec((err,resDoc)=>{
                                if(err){
                                    res.send({code:400,msg:'images not add in doctor'})
@@ -99,6 +106,7 @@ exports.reg_doctor = async(req,res)=>{
                            })
                         }
                         else{
+                            console.log('file not come')
                             res.send({code:200,data:regDoc})
                         }
                     }

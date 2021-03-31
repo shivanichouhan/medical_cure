@@ -1,6 +1,37 @@
 const HealthWorker = require('../../model/helth_worker/users');
 const cloud = require("../../cloudinary")
 const fs = require('fs')
+const bcrypt = require('bcryptjs')
+
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10)
+}
+
+exports.health_signup = async(req,res)=>{
+    console.log(req.body)
+    const { first_name,mobile,email,password,course } = req.body;
+
+    const hashedPassword = await hashPassword(password)
+    const data_check = await HealthWorker.findOne({$or:[{email: email},{mobie: mobile}]})
+    
+    if (!data_check) {
+        const datas = new HealthWorker({
+            first_name: first_name,
+            mobile:mobile,
+            email:email,
+            password: hashedPassword,
+            health_worker_course:course
+        })
+        datas.save()
+            .then((resp) => {
+                res.json({ code: 200, msg: resp })
+            }).catch((err)=>{
+                res.json({code:400,msg:'health worker not signup'})
+            })
+    } else {
+        res.json({ code: 200, msg: "Email or Mobile already exist" })
+    }
+}
 
 exports.Add_Health_Worker = async (req, res) => {
    HealthWorker.find({mobile:req.body.mobile})

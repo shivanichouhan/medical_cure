@@ -62,12 +62,9 @@ const EventSchema = new mongoose.Schema(
         super_pass_year:{
             type:String
         },
-        // certificate_Img: {
-        //     type: Array
-        // },
-        // passing_year_certificate: {
-        //     type: Array
-        // },
+        certificate_Img: {
+            type: Array
+        },
         Employment_status: {
             type: String
         },
@@ -145,6 +142,9 @@ const EventSchema = new mongoose.Schema(
         },
         otp_verify:{
             type:Number
+        },
+        present_place:{
+            type:String
         },
         register:{
             type:Number,
