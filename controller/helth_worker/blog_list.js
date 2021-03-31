@@ -7,7 +7,7 @@ exports.list_blog =(req,res)=>{
             res.json(err)
         }
         else{
-            res.json({data:catList})
+            res.json({msg:catList})
         }
     })
 }
