@@ -17,7 +17,7 @@ exports.med_add = async(req,res)=>{
     var medObj = new medicine(req.body)
     medObj.save(async(err,resp)=>{
         if(err){
-            res.json(err)
+            res.json({code:400,msg:'medicine data not add'})
         }
         else{
         if(req.files.length>0){
@@ -32,15 +32,15 @@ exports.med_add = async(req,res)=>{
                   medicine.findByIdAndUpdate({_id:resp._id},{$push:{med_img:urlsF}})
                  .exec((err,medUpdte)=>{
                       if(err){
-                          res.json(err)
+                          res.json({code:400,msg:'medicine img not add'})
                       }
                       else{
-                          res.json({data:medUpdte})
+                          res.json({code:200,msg:'medicine add with image'})
                       }
                   })
                 }
               else{
-                  res.json(med)
+                res.json({code:200,msg:'medicine add successfully'})
              }
         }
     })

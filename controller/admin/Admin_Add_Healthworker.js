@@ -8,28 +8,33 @@ async function hashPassword(password) {
 }
 
 exports.health_signup = async(req,res)=>{
-    console.log(req.body)
-    const { first_name,mobile,email,password,course } = req.body;
 
+    const { first_name,mobile,email,password,course } = req.body;
     const hashedPassword = await hashPassword(password)
-    const data_check = await HealthWorker.findOne({$or:[{email: email},{mobie: mobile}]})
-    
+    const data_check = await HealthWorker.findOne({email: email})
     if (!data_check) {
-        const datas = new HealthWorker({
-            first_name: first_name,
-            mobile:mobile,
-            email:email,
-            password: hashedPassword,
-            health_worker_course:course
-        })
-        datas.save()
-            .then((resp) => {
-                res.json({ code: 200, msg: resp })
-            }).catch((err)=>{
-                res.json({code:400,msg:'health worker not signup'})
+        const data_mob = await HealthWorker.findOne({mobile: mobile})
+        if(!data_mob){
+            const datas = new HealthWorker({
+                first_name: first_name,
+                mobile:mobile,
+                email:email,
+                password: hashedPassword,
+                health_worker_course:course
             })
+            datas.save()
+                .then((resp) => {
+                    res.json({ code: 200, msg: resp })
+                }).catch((err)=>{
+                    res.json({code:400,msg:'health worker not signup'})
+                })
+        }
+    else{
+        res.json({ code: 400, msg: "Mobile already exist" })  
+      }
+        
     } else {
-        res.json({ code: 200, msg: "Email or Mobile already exist" })
+        res.json({ code: 400, msg: "Email already exist" })
     }
 }
 
