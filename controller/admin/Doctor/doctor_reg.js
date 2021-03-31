@@ -40,11 +40,9 @@ exports.reg_doctor = async(req,res)=>{
              res.send({code:400,msg:'data not found'})
          }
          else{
-             if(resp.register == "1"){
-                res.send({code:400,msg:'doctor already register'})
-             }
-             else{
-                docObj.save(async(err,regDoc)=>{
+             console.log(resp)
+             if(!resp){
+                 docObj.save(async(err,regDoc)=>{
                     if(err){
                         res.json({code:400,msg:'doctor details not save'})
                     }
@@ -105,6 +103,9 @@ exports.reg_doctor = async(req,res)=>{
                         }
                     }
                 })
+             }
+             else{
+                res.send({code:400,msg:'doctor already register'})
              }
          }
      })   
