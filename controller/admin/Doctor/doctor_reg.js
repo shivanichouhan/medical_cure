@@ -34,7 +34,7 @@ exports.doc_signup = async(req,res)=>{
 }
 
 exports.reg_doctor = async(req,res)=>{
-     docReg.findOne({mobile_number:req.body.mobile_number})
+     docReg.findOne({mobile_number:req.body.phone_number})
      .exec((err,resp)=>{
          if(err){
              res.send({code:400,msg:'data not found'})
