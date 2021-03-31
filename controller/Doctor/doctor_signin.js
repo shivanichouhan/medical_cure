@@ -38,7 +38,7 @@ exports.doctor_info =(req,res)=>{
 }
 
 exports.reg_from = async(req,res)=>{
-    var data = _.extend(req.body,{register:1})
+    var data = _.extend(req.body,{register:"1"})
     console.log(data)
     doc.findByIdAndUpdate(req.params.docId,{$set:data}).exec(async(err,resp)=>{
         if(err){
@@ -88,7 +88,7 @@ exports.reg_from = async(req,res)=>{
                    License_img_back_side:lice_back,
                    identity_front_side_img:iden_front,
                    identity_back_side_img:iden_back,
-               },$set:{register:1}}).exec((err,resDoc)=>{
+               },$set:{register:"1"}}).exec((err,resDoc)=>{
                    if(err){
                        res.send({code:400,msg:'images not add in doctor'})
                        console.log(err,'doc_img')
@@ -164,6 +164,7 @@ exports.doctorLogin = async (req, res) => {
 }
 
 exports.log_social =(req,res)=>{
+    console.log(req.body)
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     const { email, gmailId, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
