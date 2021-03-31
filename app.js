@@ -192,7 +192,10 @@ app.get("/deshboard", (req, res) => {
 //Patient 
 app.use('/api', patients)
 
-
+app.post("/data_resp",(req,res)=>{
+  console.log(req.body)
+  res.send("good shivani")
+})
 
 //
 app.use('/api', addsubCategory)
