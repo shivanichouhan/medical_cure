@@ -213,7 +213,7 @@ app.use('/api', department)
 
 
 console.log("conect user")
-io.on('connection', function (socket) {
+io.on('connect user', function (socket) {
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
       console.log("Connected user ", user);
