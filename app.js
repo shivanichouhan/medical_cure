@@ -210,7 +210,7 @@ app.use('/api', department)
 //
 
 
-var socket = io.connect();
+// var socket = io.connect();
 console.log("shivani socket connected")
 io.on('connection', function (socket) {
   console.log("shivani socket is connected")
@@ -226,21 +226,14 @@ io.on('connection', function (socket) {
     console.log("Typing.... ");
     io.emit('on typing', typing);
   });
+  socket.on("accept_petient",async function(datas){
+    if(datas.type == "1"){
+      socket.join(datas.p_id);
+      socket.join(datas.d_id);
+    }
+  })
 
   socket.on('chat message', async function (msg) {
-    const msgs = msg["message"]
-    const uid = msg["myId"]
-    const reciever_id = msg["matchUserId"]
-    const rooms = msg["room_id"]
-    console.log(msg)
-    const datass = new chat_msg({
-      sender_id: uid,
-      reciever_id: reciever_id,
-      msg: msgs,
-      rooms_name: rooms
-    })
-    const jkhjj = await datass.save()
-    console.log(jkhjj)
     console.log("Message " + msg['message']);
     io.emit('chat message', msg);
     //   io.emit('chat message', msg);
