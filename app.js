@@ -9,11 +9,13 @@ const cors = require('cors')
 const morgan = require('morgan')
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http);
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
-app.set( "views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "views"));
 
-if(typeof localStorage === "undefined" || localStorage === null){
+if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./scratch');
 }
@@ -135,7 +137,7 @@ app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
 app.use('/api', states);
 app.use('/api', dep_health)
-app.use("/api",conversation)
+app.use("/api", conversation)
 //
 
 //admin middleware
@@ -159,8 +161,8 @@ app.use('/api', department)
 app.use('/api', labs)
 app.use('/api', lab_test)
 app.use('/api', listPatient)
-app.use("/api",analytics)
-app.use('/api', inspire) 
+app.use("/api", analytics)
+app.use('/api', inspire)
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
 app.use('/api', Prescription)
@@ -178,7 +180,7 @@ app.use('/api', doc_deg)
 app.use('/api', cureBlogList)
 //
 app.use('/api', doctor_reg)
-app.use('/api',Phone_varify)
+app.use('/api', Phone_varify)
 app.get("/admin_login", (req, res) => {
   res.send('hello')
   // res.sendFile(path.join(__dirname + '/views/login.html'));
@@ -192,7 +194,7 @@ app.get("/deshboard", (req, res) => {
 //Patient 
 app.use('/api', patients)
 
-app.post("/data_resp",(req,res)=>{
+app.post("/data_resp", (req, res) => {
   console.log(req.body)
   res.send("good shivani")
 })
@@ -206,6 +208,16 @@ app.use('/api', subcat_blog)
 app.use('/api', appoinment)
 app.use('/api', department)
 //
+
+
+
+io.on('connection', function (socket) {
+  console.log('User Conncetion');
+  socket.on('connect user', async function (user) {
+    io.emit('connect user', user);
+  })
+})
+
 
 
 //doctor middleware
