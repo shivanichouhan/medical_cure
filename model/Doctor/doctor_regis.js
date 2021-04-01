@@ -198,11 +198,11 @@ const EventSchema = new mongoose.Schema(
             type: Number
         },fees:{
             type:Number,
-            default:0
+            default:200
 
         },rating:{
             type:Number,
-            default:0
+            default:4
         }
     })
 

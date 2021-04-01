@@ -11,3 +11,17 @@ exports.list_blog =(req,res)=>{
         }
     })
 }
+
+exports.pertucularBlog = (req,res)=>{
+    const blogId =req.params.blog_id
+    Blog.findOne({_id:blogId})
+    .exec((err,catList)=>{
+        if(err){
+            res.json(err)
+        }
+        else{
+            res.json({msg:catList})
+        }
+    })
+
+}
