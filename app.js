@@ -210,40 +210,40 @@ app.use('/api', department)
 //
 
 
-
-
-console.log("conect user")
-io.on('connect user', function (socket) {
+var socket = io.connect();
+console.log("shivani socket connected")
+io.on('connection', function (socket) {
+  console.log("shivani socket is connected")
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
-      console.log("Connected user ", user);
-      io.emit('connect user', user);
+    io.emit('connect user', user);
+
   });
   socket.on("reconnect", () => {
-      io.emit('user-reconnected', username);
+    io.emit('user-reconnected', username);
   });
   socket.on('on typing', function (typing) {
-      console.log("Typing.... ");
-      io.emit('on typing', typing);
+    console.log("Typing.... ");
+    io.emit('on typing', typing);
   });
 
   socket.on('chat message', async function (msg) {
-      const msgs = msg["message"]
-      const uid = msg["myId"]
-      const reciever_id = msg["matchUserId"]
-      const rooms = msg["room_id"]
-      console.log(msg)
-      const datass = new chat_msg({
-          sender_id: uid,
-          reciever_id: reciever_id,
-          msg: msgs,
-          rooms_name: rooms
-      })
-      const jkhjj = await datass.save()
-      console.log(jkhjj)
-      console.log("Message " + msg['message']);
-      io.emit('chat message', msg);
-      //   io.emit('chat message', msg);
+    const msgs = msg["message"]
+    const uid = msg["myId"]
+    const reciever_id = msg["matchUserId"]
+    const rooms = msg["room_id"]
+    console.log(msg)
+    const datass = new chat_msg({
+      sender_id: uid,
+      reciever_id: reciever_id,
+      msg: msgs,
+      rooms_name: rooms
+    })
+    const jkhjj = await datass.save()
+    console.log(jkhjj)
+    console.log("Message " + msg['message']);
+    io.emit('chat message', msg);
+    //   io.emit('chat message', msg);
 
   });
 });
