@@ -224,7 +224,7 @@ io.on('connection', function (socket) {
 app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
-app.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
