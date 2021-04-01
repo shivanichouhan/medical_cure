@@ -135,3 +135,18 @@ exports.doctor_reg = (req, res) => {
              }
         }))
 }
+
+
+exports.status_patient = (req, res) => {
+        patient.find({status: "ongoing"})
+        .exec((err,List)=>{
+            if(err){
+                res.json({code:400, msg:'patient list not found'})
+            }
+            else{
+              
+                res.json({code:200, msg:List})
+            }
+        })
+    }
+

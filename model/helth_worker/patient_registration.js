@@ -49,6 +49,10 @@ const patientSchema = new schema(
     },
     patient_status:{
         type:String,
+    },
+    status: {
+        type: String,
+        default: 'ongoing'
     }
   },
   { timestamps: true }
