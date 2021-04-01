@@ -211,13 +211,65 @@ app.use('/api', department)
 
 
 
+
+
 io.on('connection', function (socket) {
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
-    console.log(user)
-    io.emit('connect user', user);
-  })
-})
+      console.log("Connected user ", user);
+      const room_id = user.room_id;
+
+      const check_data = await matchs.findOne({ _id: room_id })
+      console.log(`User joined chat ${room_id}`);
+
+    
+      const sender_users = user.sender_user
+      var clients = user.match_uid;
+      //   console.log(clients)
+      if (user.sender_user == check_data.liked_by) {
+          socket.join(room_id);
+          io.emit('connect user', user);
+      } else if (user.sender_user == check_data.liked_to) {
+          socket.join(room_id);
+          io.emit('connect user', user);
+          chat_msg.find({ $and: [{ sender_id: sender_users }, { reciever_id: clients }] })
+              .sort({ createdAt: 1 })
+              .then(messages => {
+                  const data_arr = []
+                  io.emit("load all messages", messages);
+              });
+      } else {
+          io.emit(' not connect user');
+      }
+  });
+  socket.on("reconnect", () => {
+      io.emit('user-reconnected', username);
+  });
+  socket.on('on typing', function (typing) {
+      console.log("Typing.... ");
+      io.emit('on typing', typing);
+  });
+
+  socket.on('chat message', async function (msg) {
+      const msgs = msg["message"]
+      const uid = msg["myId"]
+      const reciever_id = msg["matchUserId"]
+      const rooms = msg["room_id"]
+      console.log(msg)
+      const datass = new chat_msg({
+          sender_id: uid,
+          reciever_id: reciever_id,
+          msg: msgs,
+          rooms_name: rooms
+      })
+      const jkhjj = await datass.save()
+      console.log(jkhjj)
+      console.log("Message " + msg['message']);
+      io.emit('chat message', msg);
+      //   io.emit('chat message', msg);
+
+  });
+});
 
 
 
