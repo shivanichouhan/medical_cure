@@ -281,7 +281,7 @@ exports.clinic_reg = async (req, res) => {
     var URL = {
         certificate_img: urlsF,
         clinic_img: urlsS,
-        register:1
+        register:"1"
     }
 
     var detail = _.extend(req.body, URL)
