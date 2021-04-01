@@ -300,15 +300,10 @@ exports.clinic_reg = async (req, res) => {
 exports.edit_profile = (req, res) => {
  User.updateOne({ _id: req.params.userId }, req.body, (err, updteUser) => {
      if (err) {
-            res.json(err)
+            res.json({code:400,msg:'health worker details not update'})
     }
      else{
-        Up(req,res,function(err){
-         if(err){
-                 res.send({code:400,msg:'file formart not support'})
-             }
-          else{
-            if(req.files.clinic){
+          if(req.files.clinic){
                 console.log(req.files.clinic)
                 for (row of req.files.clinic) {
                     var p = row.path
@@ -324,7 +319,7 @@ exports.edit_profile = (req, res) => {
                             res.json({code:400,msg:'clinic image not update'})
                         })
                 }).catch((err) => {
-                    res.send(err)
+                    res.send({code:400,msg:'image url not create'})
                 })
             }
            
@@ -334,6 +329,7 @@ exports.edit_profile = (req, res) => {
                     var p = row.path
                 }
                 const path = p
+               
                 cloud.Certificate(path).then((resp) => {
                     fs.unlinkSync(path)
                     console.log(resp)
@@ -344,14 +340,13 @@ exports.edit_profile = (req, res) => {
                             res.json({code:400,msg:'certificate image not update'})
                         })
                 }).catch((err) => {
-                    res.send(err)
+                    res.send({code:400,msg:'image url not create'})
                 })
             }
             else {
                    res.json({ code: 200, msg: 'user details update successfully' })
             }   
-        }
-    })
+
     }
  })
 }

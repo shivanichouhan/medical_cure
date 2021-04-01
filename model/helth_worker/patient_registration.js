@@ -6,6 +6,9 @@ const patientSchema = new schema(
     patient_id:{
       type:String
     },  
+    health_worker_name:{
+        type:String
+    },
     patient_name:{
         type:String
     },

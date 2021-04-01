@@ -1,4 +1,5 @@
 const patient = require("../../model/helth_worker/patient_registration")
+const health = require("../../model/helth_worker/users")
 const _ = require("lodash")
 const cloud = require("../../cloudinary")
 const otp = require("../../otp")
@@ -33,25 +34,16 @@ exports.patient_list =(req,res)=>{
     })
 }
 
-exports.create =(req,res)=>{
-    // patient.findOne({mobile:req.body.mobile})
-    // .exec((err,resp)=>{
-    //     if(err){
-    //         res.json(err)
-    //         console.log(err)
-    //     }
-    //     else{
-    //         if(resp){
-    //             // res.json({code:400,msg:'mobile no already exist'})
-    //             const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-    //         }
-    //         else{   
-                    const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+exports.create = async(req,res)=>{
+               var Health = await health.findOne({_id:req.params.userId}) 
+               if(Health){
+                const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
                     otp.send_otp(req.body.mobile,OTP).then((resp)=>{
                         var patObj = new patient(req.body)
                         patObj.health_worker_id =req.params.userId
                         patObj.patient_id =patObj._id
-                        patObj.otp = OTP
+                        patObj.otp = OTP,
+                        patObj.health_worker_name = Health.username
                         patObj.save((err,data)=>{
                             if(err){
                                 res.json({code:400,msg:'patient detail not save'})
@@ -65,9 +57,10 @@ exports.create =(req,res)=>{
                     }).catch((err)=>{
                         res.json({code:400,msg:'otp not sent'})
                 })
-    //         }
-    //     }
-    // })  
+            }
+            else{
+                res.json({code:400,msg:'health worker data not found'})
+            }
 }
 
 exports.patient_verfiy =(req,res)=>{
