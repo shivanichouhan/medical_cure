@@ -42,6 +42,10 @@ const patient = require('./routes/helth_worker/patient_registration')
 const doctor_reg = require("./routes/Doctor/doctor_signin")
 const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
 const Phone_varify = require('./routes/Doctor/phone_varify')
+const Review = require('./routes/Doctor/Reviews')
+
+
+
 
 
 //admin routes 
@@ -61,6 +65,7 @@ const appoinment = require("./routes/admin/appoinment/appoinments")
 const department = require("./routes/admin/department/departments")
 const employee = require("./routes/admin/employee/emp_reg")
 const medicine = require("./routes/admin/pharmacy/medicine")
+const contact_us = require('./routes/admin/contact_us')
 
 
 //Patient
@@ -116,6 +121,7 @@ app.use('/api', addCategory)
 app.use('/api', blog)
 app.use('/api', employee)
 app.use('/api', medicine)
+app.use('/api',contact_us)
 //
 
 app.use('/api', product)
@@ -135,14 +141,19 @@ app.use('/api', Identity)
 app.use('/api', Bank_Account)
 app.use('/api', doctor_reg)
 app.use('/api',Phone_varify)
+app.use('/api',Review)
+
+
+
+
 app.get("/admin_login", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/login.html'));
 });
-
 app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
-
 })
+
+
 
 //Patient 
 app.use('/api', patients)
