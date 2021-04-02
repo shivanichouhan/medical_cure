@@ -13,14 +13,18 @@ const payment_capture = 1
 const amount =req.body.amount
 
 const info={
-    amount:(amount*100).toString(),
+    amount:amount.toString(),
     currency,
     receipt:shortid.generate(),
     payment_capture,
 }
 try{
     const response = await razorpay.orders.create(info)
-    console.log(response)
+    const data = {}
+    data.amount = response.amount
+    data.id = response.id,
+    data.currency = response.currency
+    res.send({code:200,msg:data})
 }catch(error){
     console.log(error)
 }
