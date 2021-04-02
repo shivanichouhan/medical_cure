@@ -13,5 +13,5 @@ router.post("/helthworker/greetings5", greetings5)
 router.post("/helthworker/doctor_suggestion",doctor_sagastion)
 router.post("/helthworker/anathorDoctor_suggestion",anathor_doctor)
 router.post("/helthworker/sendMsg_to_doctor",sendMsg_to_doctor)
-router.get("/helthworker/booked_patient",booked_patient)
+router.post("/helthworker/booked_patient",booked_patient)
 module.exports = router;
