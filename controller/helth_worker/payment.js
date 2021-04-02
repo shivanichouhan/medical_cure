@@ -22,7 +22,7 @@ try{
     const response = await razorpay.orders.create(info)
     const data = {}
     data.amount = response.amount
-    data.id = response.id,
+    data.order_id = response.id,
     data.currency = response.currency
     res.send({code:200,msg:data})
 }catch(error){
