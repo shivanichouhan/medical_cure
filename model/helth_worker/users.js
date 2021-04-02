@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
-
 const EventSchema = new schema(
   {
     gmailId: {
@@ -34,10 +33,10 @@ const EventSchema = new schema(
     health_worker_course:{
       type:String
     },
-    certificate_img: {
+    certificate_img:{
       type: Array
     },
-    experience: {
+    experience:{
       type: String
     },
     state: {

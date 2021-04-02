@@ -6,6 +6,9 @@ const patientSchema = new schema(
     patient_id:{
       type:String
     },  
+    health_worker_name:{
+        type:String
+    },
     patient_name:{
         type:String
     },
@@ -42,6 +45,9 @@ const patientSchema = new schema(
         type:String
     },
     disease:{
+        type:String
+    },
+    location:{
         type:String
     },
     p_reg:{

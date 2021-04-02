@@ -21,6 +21,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 }
 
 //user routes
+const payment =require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
@@ -53,6 +54,7 @@ const doctor_reg = require("./routes/Doctor/doctor_signin")
 const listDepartment = require("./routes/Doctor/area_of_interest")
 const doc_deg = require("./routes/Doctor/degree_list")
 const cureBlogList = require("./routes/Doctor/search_cureblog")
+const Prescription = require("./routes/Doctor/prescription")
 //
 const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
 const Phone_varify = require('./routes/Doctor/phone_varify')
@@ -87,7 +89,7 @@ const analytics = require("./routes/admin/analytics")
 const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
 const cityAdd = require("./routes/admin/state_city/add_city")
-const Prescription = require("./routes/Doctor/prescription")
+const Comission = require("./routes/admin/comission")
 //
 
 const contact_us = require('./routes/admin/contact_us')
@@ -143,6 +145,7 @@ app.use('/api', Block_Worker)
 app.use('/api', states);
 app.use('/api', dep_health)
 app.use("/api", conversation)
+app.use('/api', payment)
 //
 
 //admin middleware
@@ -172,6 +175,7 @@ app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
 app.use('/api', Prescription)
 app.use('/api',contact_us)
+app.use('/api', Comission)
 //
 
 //doctor
@@ -184,6 +188,7 @@ app.use('/api', doctor_reg)
 app.use('/api', listDepartment)
 app.use('/api', doc_deg)
 app.use('/api', cureBlogList)
+app.use('/api', Prescription)
 //
 app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)

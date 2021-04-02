@@ -1,4 +1,5 @@
 const patient = require("../../model/helth_worker/patient_registration")
+const health = require("../../model/helth_worker/users")
 const _ = require("lodash")
 const cloud = require("../../cloudinary")
 const otp = require("../../otp")
@@ -8,7 +9,31 @@ const helth_workers =require("../../model/helth_worker/users")
 const fs = require('fs')
 const { response } = require("express")
 
-exports.search_patient = (req, res) => {
+exports.appoinment_status =(req,res)=>{
+    patient.aggregate([
+        {"$match":{ health_worker_id:req.params.userId }},
+        {"$group":{
+            _id:"$status",
+            list:{$push:{
+                patient_name:"$patient_name",
+                patient_img:"$patient_img",
+                health_worker_name:"$health_worker_name",
+                disease:"$disease",
+                location:"$location"   
+          }},
+       }
+     }
+  ]).exec((err,resp)=>{
+      if(err){
+          res.json({code:400,msg:'patient appoinment status not found'})
+      }
+      else{
+          res.json({code:200,msg:resp})
+      }
+  })
+}
+
+exports.search_patient =(req,res)=>{
     console.log(req.params.userId)
     var filter = {
         $and: [{ health_worker_id: req.params.userId },
@@ -38,41 +63,34 @@ exports.patient_list = (req, res) => {
         })
 }
 
-exports.create = (req, res) => {
-    // patient.findOne({mobile:req.body.mobile})
-    // .exec((err,resp)=>{
-    //     if(err){
-    //         res.json(err)
-    //         console.log(err)
-    //     }
-    //     else{
-    //         if(resp){
-    //             // res.json({code:400,msg:'mobile no already exist'})
-    //             const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-    //         }
-    //         else{   
-    const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-    otp.send_otp(req.body.mobile, OTP).then((resp) => {
-        var patObj = new patient(req.body)
-        patObj.health_worker_id = req.params.userId
-        patObj.patient_id = patObj._id
-        patObj.otp = OTP
-        patObj.save((err, data) => {
-            if (err) {
-                res.json({ code: 400, msg: 'patient detail not save' })
-                console.log(err)
-            }
-            else {
-                res.json({ code: 200, msg: 'otp send successfully', Data: data })
-            }
-        })
+exports.create = async(req,res)=>{
+               var Health = await health.findOne({_id:req.params.userId}) 
+               if(Health){
+                const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+                    otp.send_otp(req.body.mobile,OTP).then((resp)=>{
+                        var patObj = new patient(req.body)
+                        patObj.health_worker_id =req.params.userId
+                        patObj.patient_id =patObj._id
+                        patObj.otp = OTP,
+                        patObj.health_worker_name = Health.username
+                        patObj.location = Health.city
+                        patObj.save((err,data)=>{
+                            if(err){
+                                res.json({code:400,msg:'patient detail not save'})
+                                console.log(err)
+                            }
+                            else{
+                                res.json({code:200,msg:'otp send successfully',Data:data})
+                            }
+                        })
 
-    }).catch((err) => {
-        res.json({ code: 400, msg: 'otp not sent' })
-    })
-    //         }
-    //     }
-    // })  
+                    }).catch((err)=>{
+                        res.json({code:400,msg:'otp not sent'})
+                })
+            }
+            else{
+                res.json({code:400,msg:'health worker data not found'})
+            }
 }
 
 exports.patient_verfiy = (req, res) => {
