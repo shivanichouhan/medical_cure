@@ -155,7 +155,6 @@ exports.status_patient = (req, res) => {
             else {
                 await Promise.all(List.map(async(items) => {
                     const obj = {}
-                    
                     const helth_workerdata = await helth_workers.findOne({_id:items.health_worker_id})
                     obj.helthwork_username = helth_workerdata.username;
                     obj.health_worker_id = helth_workerdata._id
@@ -169,7 +168,6 @@ exports.status_patient = (req, res) => {
                     obj.address = " "
                     obj.doctor_id = doctor_id
                     arr.push(obj)
-
                 })).then((response)=>{
 
                 })

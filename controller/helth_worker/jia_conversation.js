@@ -126,7 +126,7 @@ exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id, department_name } = req.body;
     const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
     const details = {}
-    if (!doctor_find) {
+    if (doctor_find) {
         const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
         details.doctor_detail = doctor_find
         details.text = text_data;
