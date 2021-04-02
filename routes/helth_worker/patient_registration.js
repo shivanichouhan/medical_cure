@@ -9,6 +9,6 @@ router.post("/patient_search/:userId",search_patient)
 router.post("/patient_registration/:userId",create)
 router.post("/patient_mobile_verfiy/:patientId",patient_verfiy)
 router.put("/patient_details_reg/:patientId",upload.single('patient_img'),patient_info)
-router.get("/patient/patient_status",status_patient)
+router.post("/patient/patient_status",status_patient)
 
 module.exports = router;

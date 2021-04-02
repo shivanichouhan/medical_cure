@@ -138,6 +138,7 @@ exports.doctor_reg = (req, res) => {
 
 
 exports.status_patient = (req, res) => {
+    const {doctor_id}=req.body
         patient.find({status: "ongoing"})
         .exec((err,List)=>{
             if(err){

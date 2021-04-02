@@ -155,15 +155,16 @@ exports.anathor_doctor = async (req, res) => {
 }
 
 exports.sendMsg_to_doctor = async (req, res) => {
-    const { doctor_id, patient_id } = req.body;
-    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id,status:"booked" } })
+    const { doctor_id, patient_id,helthworker } = req.body;
+    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
     res.json({ code: 200, msg: "send msg success" })
 }
 
 
-exports.booked_patient = async(req,res)=>{
-    const {doctor_id}=req.body;
-
+exports.booked_patient = async (req, res) => {
+    const { doctor_id } = req.body;
+    const book_resp = await patient_data.find({ $and: [{ doctor_id: doctor_id, status: "booked" }] })
+    res.json({ code: 200, msg: book_resp })
 }
 
 
