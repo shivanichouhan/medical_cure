@@ -18,6 +18,7 @@ if(typeof localStorage === "undefined" || localStorage === null){
 }
 
 //user routes
+const payment =require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
@@ -126,6 +127,7 @@ app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
 app.use('/api', states);
 app.use('/api', dep_health)
+app.use('/api', payment)
 //
 
 //admin middleware

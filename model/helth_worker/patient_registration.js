@@ -47,6 +47,9 @@ const patientSchema = new schema(
     disease:{
         type:String
     },
+    location:{
+        type:String
+    },
     p_reg:{
         type:Boolean
     },

@@ -8,8 +8,8 @@ const _ = require('lodash')
 const Async = require('async')
 const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
-var Up = require("../../handler/multer")
-Up = Up.fields([{name:'clinic'},{name:'certificate'}])
+// var Up = require("../../handler/multer")
+// Up = Up.fields([{name:'clinic'},{name:'certificate'}])
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -469,3 +469,4 @@ exports.clinic_info = (req, res) => {
             }
         })
 }
+

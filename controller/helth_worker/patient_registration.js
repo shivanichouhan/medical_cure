@@ -6,6 +6,30 @@ const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
 const fs = require('fs')
 
+exports.appoinment_status =(req,res)=>{
+    patient.aggregate([
+        {"$match":{ health_worker_id:req.params.userId }},
+        {"$group":{
+            _id:"$status",
+            list:{$push:{
+                patient_name:"$patient_name",
+                patient_img:"$patient_img",
+                health_worker_name:"$health_worker_name",
+                disease:"$disease",
+                location:"$location"   
+          }},
+       }
+     }
+  ]).exec((err,resp)=>{
+      if(err){
+          res.json({code:400,msg:'patient appoinment status not found'})
+      }
+      else{
+          res.json({code:200,msg:resp})
+      }
+  })
+}
+
 exports.search_patient =(req,res)=>{
     console.log(req.params.userId)
     var filter = {$and:[{health_worker_id:req.params.userId},
@@ -44,6 +68,7 @@ exports.create = async(req,res)=>{
                         patObj.patient_id =patObj._id
                         patObj.otp = OTP,
                         patObj.health_worker_name = Health.username
+                        patObj.location = Health.city
                         patObj.save((err,data)=>{
                             if(err){
                                 res.json({code:400,msg:'patient detail not save'})
