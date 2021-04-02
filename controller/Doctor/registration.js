@@ -71,12 +71,12 @@ exports.edit_regis_list = (req, res) => {
 }
 
 
-exports.remove_doctor =(req,res)=>{
-    Register.remove({_id:req.params.user_id},(err,del_doc)=>{
-        if(err){
+exports.remove_doctor = (req, res) => {
+    Register.remove({ _id: req.params.user_id }, (err, del_doc) => {
+        if (err) {
             res.json(err)
         }
-        else{
+        else {
             res.json(del_doc)
         }
     })

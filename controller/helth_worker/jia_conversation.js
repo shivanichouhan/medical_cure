@@ -21,10 +21,10 @@ const greeting_time = (today) => {
 }
 
 exports.greetings = async (req, res) => {
-    const { patient_id, desease_id, depart_name, helthwork_id } = req.body;
+    const { patient_id,disease_name, desease_id, depart_name, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
     const depart_data = await desease_name.find({ department_name: depart_name }, { department_name: 1, disease_name: 1 })
-    const update_desease = await patient_data.updateOne({_id:patient_id},{disease:desease_id})
+    const update_desease = await patient_data.updateOne({_id:patient_id},{disease:disease_name})
     let greet = '';
     const details = {}
     if (patients.gender == "Male") {
@@ -125,13 +125,23 @@ exports.greetings5 =async(req,res)=>{
 exports.doctor_sagastion = async(req,res)=>{
     const {text_msg,disease_id,patient_id,department_name}=req.body;
     const doctor_find =await Doctor_data.findOne({Specialization:department_name});
-
-    const text_data = `Dr. ${doctor_find.first_name} shall take up your case. Book your consultation now.`
     const details ={}
-    details.text = text_data;
-    details.doctor_detail = doctor_find
+    if(doctor_find){
+        const text_data = `Dr. ${doctor_find.first_name} shall take up your case. Book your consultation now.`
+        details.doctor_detail = doctor_find
+        details.text = text_data;
+    }else{
+        details.text = "now There is "
+        details.doctor_detail = {}
+
+    }
     res.json({code:200,msg:details})
     
+}
+
+exports.sendMsg_to_doctor = async(req,res)=>{
+    const {doctor_id,patient_id} =req.body;
+
 }
 
 

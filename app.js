@@ -56,6 +56,10 @@ const cureBlogList = require("./routes/Doctor/search_cureblog")
 //
 const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
 const Phone_varify = require('./routes/Doctor/phone_varify')
+const Review = require('./routes/Doctor/Reviews')
+
+
+
 
 
 //admin routes 
@@ -86,6 +90,7 @@ const cityAdd = require("./routes/admin/state_city/add_city")
 const Prescription = require("./routes/Doctor/prescription")
 //
 
+const contact_us = require('./routes/admin/contact_us')
 
 
 //Patient
@@ -166,6 +171,7 @@ app.use('/api', inspire)
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
 app.use('/api', Prescription)
+app.use('/api',contact_us)
 //
 
 //doctor
@@ -181,15 +187,21 @@ app.use('/api', cureBlogList)
 //
 app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)
+app.use('/api',Phone_varify)
+app.use('/api',Review)
+
+
+
+
 app.get("/admin_login", (req, res) => {
   res.send('hello')
   // res.sendFile(path.join(__dirname + '/views/login.html'));
 });
-
 app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
-
 })
+
+
 
 //Patient 
 app.use('/api', patients)

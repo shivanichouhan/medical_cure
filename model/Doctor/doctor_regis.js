@@ -141,9 +141,6 @@ const EventSchema = new mongoose.Schema(
         otp: {
             type: String
         },
-        register: {
-            type: Boolean, default: false
-        },
         otp_verify: {
             type: Number
         },
