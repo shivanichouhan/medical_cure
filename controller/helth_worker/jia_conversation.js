@@ -126,7 +126,7 @@ exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id, department_name } = req.body;
     const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
     const details = {}
-    if (doctor_find) {
+    if (!doctor_find) {
         const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
         details.doctor_detail = doctor_find
         details.text = text_data;
@@ -148,14 +148,21 @@ exports.anathor_doctor = async (req, res) => {
             details.doctor_detail = doctor_find
             details.text = text_data;
         }
-    }else{
-        details.text = "Thank You for using app.";  
+    } else {
+        details.text = "Thank You for using app.";
     }
     res.json({ code: 200, msg: details })
 }
 
 exports.sendMsg_to_doctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
+    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id,status:"booked" } })
+    res.json({ code: 200, msg: "send msg success" })
+}
+
+
+exports.booked_patient = async(req,res)=>{
+    const {doctor_id}=req.body;
 
 }
 
