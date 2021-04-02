@@ -24,6 +24,8 @@ try{
     data.amount = response.amount
     data.order_id = response.id,
     data.currency = response.currency
+    console.log(response) 
+
     res.send({code:200,msg:data})
 }catch(error){
     console.log(error)

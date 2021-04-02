@@ -11,6 +11,4 @@ router.post("/patient_registration/:userId",create)
 router.post("/patient_mobile_verfiy/:patientId",patient_verfiy)
 router.put("/patient_details_reg/:patientId",upload.single('patient_img'),patient_info)
 
-
-
 module.exports = router;
