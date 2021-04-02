@@ -117,7 +117,7 @@ exports.greetings5 = async (req, res) => {
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
     const details = {}
 
-    const text_ms = `Congratulations! We have found the best ${depart_data.disease_name} doctor for you! `
+    const text_ms = `Still we are finding. the best ${depart_data.disease_name} doctor for you! `
     details.text = text_ms
     res.json({ code: 200, msg: details })
 }
