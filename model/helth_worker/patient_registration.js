@@ -52,7 +52,7 @@ const patientSchema = new schema(
     },
     status: {
         type: String,
-        default: 'ongoing'
+        enum: ['ongoing','accepted',"completed","cancelled"]
     }
   },
   { timestamps: true }

@@ -3,7 +3,7 @@ const patient_name = require("../../model/helth_worker/patient_registration")
 var colors = require('colors');
 const chalk = require('chalk'); 
 const Doctor_data = require("../../model/Doctor/doctor_regis")
-
+const patient_data = require("../../model/helth_worker/patient_registration")
 
 const greeting_time = (today) => {
     var curHr = today.getHours()
@@ -24,6 +24,7 @@ exports.greetings = async (req, res) => {
     const { patient_id, desease_id, depart_name, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
     const depart_data = await desease_name.find({ department_name: depart_name }, { department_name: 1, disease_name: 1 })
+    const update_desease = await patient_data.updateOne({_id:patient_id},{disease:desease_id})
     let greet = '';
     const details = {}
     if (patients.gender == "Male") {
@@ -132,5 +133,7 @@ exports.doctor_sagastion = async(req,res)=>{
     res.json({code:200,msg:details})
     
 }
+
+
 
 // http://148.72.214.135
