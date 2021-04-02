@@ -156,9 +156,7 @@ exports.anathor_doctor = async (req, res) => {
 
 exports.sendMsg_to_doctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
-    if (!patient_id && !doctor_id) {
-
-
+    if (patient_id && doctor_id) {
         const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
         res.json({ code: 200, msg: "send msg success" })
     } else {
