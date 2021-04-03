@@ -237,9 +237,10 @@ exports.log_social =(req,res)=>{
 
 exports.otpSend = async (req,res)=>{
     var str = req.body.type  
+    console.log(str)
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
-        doc.findOne({Phone_Number:str}) 
+        doc.findOne({mobile_number:str}) 
         .exec((err,data)=>{
         if(err || !data){
           res.json({code:400, error:'this number does not exist'})  
@@ -249,16 +250,17 @@ exports.otpSend = async (req,res)=>{
         console.log(OTP, typeof OTP)
         
         otp.send_otp(str,OTP).then((data)=>{
-        doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
-            if(err){
-                res.json(err)
-            }
-            else{
-                res.json({code:200,msg:"otp send successfully"})
-            }
-             })
-          }).catch((err)=>{
-            res.send(err)
+            res.send(data)
+        // doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
+        //     if(err){
+        //         res.json(err)
+        //     }
+        //     else{
+        //         res.json({code:200,msg:"otp send successfully"})
+        //     }
+        //      })
+        //   }).catch((err)=>{
+        //     res.send(err)
       })
     }
   }) 

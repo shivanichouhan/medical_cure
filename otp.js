@@ -9,12 +9,12 @@ function otp(){
       var req = unirest("GET", "http://sms.webappssoft.com/app/smsapi/index.php?");
         
       req.query({
-      "key": "46041D0DD2BF5B",
-      "campaign":"10072",
-      "routeid": "7",
+      "key": "25E15B5643C006",
+      "campaign":"XXXXXX",
+      "routeid": "AIRTEL",
       "type":"text",
       "contacts": `${str}`,
-      "senderid": "VIRALL",
+      "senderid": "XPCURE",
       "msg": `Please do not share this OTP ${OTP}`,
       });
  
@@ -27,7 +27,7 @@ function otp(){
         reject({msg:'otp not sent'})
       }
       else{
-        resolve({msg:'otp sent'})
+        resolve(resp)
       }
       // if (resp.body == 'ERR: NOT VALID SENDERID'){
       //     reject(resp)

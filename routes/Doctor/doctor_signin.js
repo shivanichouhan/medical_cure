@@ -8,6 +8,7 @@ router.post("/doctor/social_login",log_social)
 router.post("/doctor/login_doctor",doctorLogin)
 router.post("/doctor/signup_doctor",doctor_reg)
 router.post("/doctor/registration_doctor/:docId",upload.fields([{name:'certificate_Img'},{name:'License_img_front_side'},{name:'License_img_back_side'},{name:'passing_year_certificate'},{name:'identity_front_side_img'},{name:'identity_back_side_img'}]),reg_from)
+
 router.post("/doctor/send_otp",otpSend)
 router.post("/doctor/verify_otp",otpVerify)
 router.put("/doctor/update_password",passupdate)
