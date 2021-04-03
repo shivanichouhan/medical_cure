@@ -219,7 +219,7 @@ exports.accept_patient = (req, res) => {
                     if (response) {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
-                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                        const update_patient = await patient_data.updateOne({_id: patient_id }, { $set: { status: "accepted" } })
                         console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
@@ -231,7 +231,7 @@ exports.accept_patient = (req, res) => {
                         })
                         data_resp.save()
                             .then((resp) => {
-                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                                patient_data.updateOne({_id: patient_id }, { $set: { status: "accepted" } })
                                console.log(patient_data)
                                 res.json({ code: 200, msg: resp })
                             }).catch((err) => {
@@ -284,9 +284,7 @@ exports.patient_accept_status =(req,res)=>{
     }).catch((err)=>{
         console.log(err)
         res.json({code:400,msg:"something went wrong"})
-
     })
-
 }
 
 // http://148.72.214.135

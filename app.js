@@ -58,7 +58,8 @@ const Prescription = require("./routes/Doctor/prescription")
 //
 const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
 const Phone_varify = require('./routes/Doctor/phone_varify')
-const Review = require('./routes/Doctor/Reviews')
+const Review = require('./routes/Doctor/Reviews');
+const appoinement_list = require("./routes/Doctor/appointment_lists")
 
 
 
@@ -194,6 +195,7 @@ app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)
 app.use('/api',Phone_varify)
 app.use('/api',Review)
+app.use('/api',appoinement_list)
 
 
 
