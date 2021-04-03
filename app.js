@@ -43,6 +43,7 @@ const patient = require('./routes/helth_worker/patient_registration')
 // const cureBlogList = require("./routes/Doctor/search_cureblog")
 // const
 // const Doctor = require('./routes/Doctor/Registration')
+const push_notification = require("./routes/Doctor/notification")
 const Educational = require('./routes/Doctor/doctor_educational')
 const Professional = require('./routes/Doctor/doctor_professional')
 const Identity = require('./routes/Doctor/doctor_identity')
@@ -168,6 +169,7 @@ app.use('/api', listDepartment)
 app.use('/api', doc_deg)
 app.use('/api', cureBlogList)
 app.use('/api', Prescription)
+app.use('/api', push_notification)
 //
 app.get("/admin_login", (req, res) => {
   res.send('hello')
