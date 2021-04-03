@@ -8,7 +8,7 @@ const docDegSchema = new schema(
             type: String
         }, room: {
             type: String
-        }
+        },status:{type:String}
     },
     { timestamps: true }
 
