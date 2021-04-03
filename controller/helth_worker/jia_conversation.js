@@ -277,7 +277,16 @@ exports.accept_patient = (req, res) => {
 
 
 exports.patient_accept_status =(req,res)=>{
-    const { doctor_id, patient_id}=req.body
+    const { doctor_id, patient_id}=req.body;
+    patient_data.findOne({$and:[{doctor_id:doctor_id,patient_id:patient_id}]})
+    .then((responce)=>{
+        res.json({code:200,msg:responce})
+    }).catch((err)=>{
+        console.log(err)
+        res.json({code:400,msg:"something went wrong"})
+
+    })
+
 }
 
 // http://148.72.214.135
