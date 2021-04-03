@@ -39,32 +39,6 @@ exports.signup = async (req, res) => {
           }
 };
 
-/*exports.signin = async (req, res) => {
-    var { email, password } = req.body
-    console.log(email)
-    const admin = await Admin.findOne({ email: email })
-    if (!admin) {
-        res.json({
-            code: 400,
-            msg: 'Admin with that email does not exist. Please signup'
-        })
-    }
-    else {
-        const validPassword = await validatePassword(password, admin.password)
-        console.log(validPassword, '44')
-        if (!validPassword) {
-            res.json({ code: 400, msg: 'Password is not correct' })
-        }
-        else {
-            const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET)
-            console.log(token)
-            console.log(admin)
-            return res.json({ token, data: {username: admin.username, email: admin.email } });
-        }
-        // res.json({ code: 200, msg: Doc })
-    }
-}*/
-
 exports.signin = async (req, res) => {
     const { email, password } = req.body
     const admin = await Admin.findOne({email:email})
