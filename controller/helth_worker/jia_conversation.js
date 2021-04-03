@@ -220,6 +220,7 @@ exports.accept_patient = (req, res) => {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
                         const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                        console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
                         const data_resp = new doctor_patientChat({
@@ -231,6 +232,7 @@ exports.accept_patient = (req, res) => {
                         data_resp.save()
                             .then((resp) => {
                                 patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                               console.log(patient_data)
                                 res.json({ code: 200, msg: resp })
                             }).catch((err) => {
                                 res.json({ code: 400, msg: "something went wrong" })
@@ -245,6 +247,7 @@ exports.accept_patient = (req, res) => {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
                         const update_patient = await patient_data.updateOne({_id: patient_id }, { $set: { status: "cancelled" } })
+                        console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
                         const data_resp = new doctor_patientChat({
@@ -256,6 +259,8 @@ exports.accept_patient = (req, res) => {
                         data_resp.save()
                             .then((resp) => {
                                 patient_data.updateOne({_id: patient_id }, { $set: { status: "cancelled" } })
+                                console.log(patient_data)
+
                                 res.json({ code: 200, msg: resp })
                             }).catch((err) => {
                                 res.json({ code: 400, msg: "something went wrong" })
