@@ -35,6 +35,8 @@ exports.doc_signup = async(req,res)=>{
 
 exports.reg_doctor = async(req,res)=>{
       console.log(req.body)
+      console.log(req.files)
+      
       docReg.findOne({phone_number:req.body.phone_number})
      .exec((err,resp)=>{
          if(err){
