@@ -6,21 +6,22 @@ var data = await Doct.find({_id:req.body.docId})
 if(data){
 var serverkey = process.env.FIREBASE_KEY  
 var fcm = new FCM(serverkey);
-var message = {  
-			to : data.firebase_token,
-			collapse_key : 'XXX',
-			data : {my_key: 'my value', contents: "abcv/"},
-			notification : {
-			    title : `${data.username} Title of the notification`,
-				body  :  req.body.msg
-			}
-        };
-fcm.send(message,(err,response)=>{  
+
+var msg ={}
+var Notification={}
+msg.to = data.firebase_token
+msg.collapse_key = 'XXX'
+msg.data = {my_key: 'my value', contents: "abcv/"}
+Notification.title =`${data.username} Title of the notification`
+Notification.body = req.body.msg
+msg.notification = Notification
+
+fcm.send(msg,(err,resp)=>{  
 if(err){
        console.log(err) 
        res.json({code:400,msg:'notification not send'}) 
 }else{
-     console.log(response);
+     console.log(resp);
      res.json({code:200,msg:'notification send successfully'}) 
     }
  });	
