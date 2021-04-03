@@ -39,10 +39,10 @@ exports.payment_verfiy = (req,res)=>{
                     .digest('hex')
                     console.log('real_sign',req.body.razorpay_signature)
                     console.log('exp_sign',exp_signature)
-   if(exp_signature === req.body.razorpay_signature){
+  
+    if(exp_signature === req.body.razorpay_signature){
        res.send({code:200,msg:'payment successfully'})
    }else{
     res.send({code:400,msg:'payment failure'})
    }                 
-                    
 }
