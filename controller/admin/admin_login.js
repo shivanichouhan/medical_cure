@@ -39,7 +39,7 @@ exports.signup = async (req, res) => {
           }
 };
 
-exports.signin = async (req, res) => {
+/*exports.signin = async (req, res) => {
     var { email, password } = req.body
     console.log(email)
     const admin = await Admin.findOne({ email: email })
@@ -63,9 +63,9 @@ exports.signin = async (req, res) => {
         }
         // res.json({ code: 200, msg: Doc })
     }
-}
+}*/
 
-/*exports.signin = async (req, res) => {
+exports.signin = async (req, res) => {
     const { email, password } = req.body
     const admin = await Admin.findOne({email:email})
     if (!admin) {
@@ -90,7 +90,7 @@ exports.signin = async (req, res) => {
     }
   }
 }
-*/
+
 
 
 exports.otpSend = async (req,res)=>{
