@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
-const schema= mongoose.Schema
+const schema = mongoose.Schema
 
 const adminSchema = new schema(
   {
     user_name: {
       type: String
-    }, 
+    },
     email: {
       type: String,
       default: " "
@@ -14,12 +14,14 @@ const adminSchema = new schema(
       type: String
     },
     phone: {
-      type: String,
-      default: ''
-    }, 
-    role:{
-        type:Number,
-        default:1
+      type: String
+    },
+    otp: {
+      type: String
+    },
+    role: {
+      type: Number,
+      default: 1
     }
   })
 
