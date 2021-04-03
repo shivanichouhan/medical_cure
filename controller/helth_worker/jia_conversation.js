@@ -5,6 +5,8 @@ const chalk = require('chalk');
 const Doctor_data = require("../../model/Doctor/doctor_regis")
 const patient_data = require("../../model/helth_worker/patient_registration")
 const helth_workers = require("../../model/helth_worker/users")
+const doctor_patientChat = require("../../model/Doctor/doctor_patient_chat")
+
 
 const greeting_time = (today) => {
     var curHr = today.getHours()
@@ -125,7 +127,7 @@ exports.greetings5 = async (req, res) => {
 
 exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id, department_name } = req.body;
-    const doctor_find = await Doctor_data.findOne({ _id: "6066edbeb9d1c00531f15e8f" });
+    const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
     const details = {}
     if (doctor_find) {
         const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
@@ -168,37 +170,76 @@ exports.sendMsg_to_doctor = async (req, res) => {
 
 exports.booked_patient = async (req, res) => {
     const { doctor_id } = req.body
-    const arr =[]
-    patient_data.find({$and:[{ status: "booked" ,doctor_id:doctor_id}]})
+    const arr = []
+    patient_data.find({ $and: [{ status: "booked", doctor_id: doctor_id }] })
         .exec(async (err, List) => {
             if (err) {
                 res.json({ code: 400, msg: 'patient list not found' })
             }
             else {
-                await Promise.all(List.map(async(items) => {
+                await Promise.all(List.map(async (items) => {
                     const obj = {}
-                    const helth_workerdata = await helth_workers.findOne({_id:items.health_worker_id})
+                    const helth_workerdata = await helth_workers.findOne({ _id: items.health_worker_id })
                     obj.helthwork_username = helth_workerdata.username;
                     obj.health_worker_id = helth_workerdata._id
                     obj.patient_id = items._id
                     obj.patient_name = items.patient_name
                     obj.status = items.status
-                    obj.createdAt =items.createdAt
+                    obj.createdAt = items.createdAt
                     obj.patient_img = items.patient_img
                     obj.mobile = items.mobile,
-                    obj.disease = "High Blood Sugar"
+                        obj.disease = "High Blood Sugar"
                     obj.address = " "
                     obj.doctor_id = doctor_id
                     arr.push(obj)
-                })).then((response)=>{
-
+                })).then((response) => {
                 })
-
                 res.json({ code: 200, msg: arr })
             }
         })
 }
+function randomString(len, charSet) {
+    charSet = charSet || '0123456789'
+    var randomString = ''
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length)
+        randomString += charSet.substring(randomPoz, randomPoz + 1)
+    }
+    return randomString
+}
 
+
+exports.accept_patient = (req, res) => {
+    const { doctor_id, patient_id, type } = req.body;
+    var otp = randomString(8, 'abcdefgjklmnopqrstuvwxyz')
+    if (patient_id && doctor_id) {
+
+    doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+        .then(async (response) => {
+            if (response) {
+                const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
+                )
+                res.json({ code: 200, msg: response })
+            } else {
+                const data_resp = new doctor_patientChat ({
+                    doctor_id: doctor_id,
+                    patient_id: patient_id,
+                    room: otp
+                })
+                data_resp.save()
+                    .then((resp) => {
+                        res.json({ code: 200, msg: resp })
+                    }).catch((err)=>{
+                        res.json({ code: 400, msg: "something went wrong" })
+
+                    })
+            }
+        })
+    }else{
+        res.json({ code: 400, msg: "something went wrong" })
+ 
+    }
+}
 
 
 // http://148.72.214.135
