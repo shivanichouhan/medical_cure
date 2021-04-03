@@ -172,7 +172,10 @@ const EventSchema = new mongoose.Schema(
         bearer_token: {
             type: String
         },
-        profile_pic: {
+        firebase_token:{
+            type:String
+        },
+        profile_pic:{
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
         }, user_id:

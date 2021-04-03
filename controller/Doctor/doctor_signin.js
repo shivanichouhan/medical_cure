@@ -154,34 +154,45 @@ exports.doctorLogin = async (req, res) => {
         else {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
             console.log(token)
-            // const Doc = await doc.findByIdAndUpdate({_id:user._id},{$set:{ bearer_token: token} })
-            // res.cookie('token', token, { expire: new Date() + 9999 })
-            console.log(user)
-            return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id ,register:user.register} });
+            const Doc = await doc.updateOne({_id:user._id},{$set:{firebase_token : req.body.firebase_token} })
+            if(Doc){
+             return res.json({ code:200, msg: {bearer_token:token,username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id ,register:user.register} });    
+            }
+            else{
+                res.json({code:400,msg:'firebase token not update'})
+            }
+            
         }
         // res.json({ code: 200, msg: Doc })
     }
 }
 
-exports.log_social =(req,res)=>{
+exports.log_social = async(req,res)=>{
     console.log(req.body)
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     const { email, gmailId, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
         doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
-            .then((resp) => {
+            .then(async(resp) => {
                 if (resp) {
+                      var fire_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token}})
+                      if(fire_token){
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp,{bearer_token:token})
                         res.json({ code: 200, msg: result })
+                      }                       
+                       else{
+                        res.json({ code: 400, msg: 'fire_base token not update' })
+                       } 
                    }
-                else {
+                else{
                     console.log(req.body)
                     var userinfo = new doc({
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
+                        firebase_token:req.body.firebase_token
                         // profile_pic: photo
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
@@ -201,12 +212,18 @@ exports.log_social =(req,res)=>{
             })
     } else if (login_type == 'facebook') {
         doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }]})
-        .then((resp) => {
+        .then(async(resp) => {
                 console.log(resp)
                 if(resp){
+                    var firebase_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token}})
+                  if(firebase_token){
                     const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                     var result = _.extend(resp,{bearer_token:token})
                     res.json({ code: 200, msg: result })
+                  }
+                  else{
+                    res.json({ code: 400, msg: 'fire_base token not update' })
+                   } 
                 }
                 else {
                     console.log(req.body)
@@ -214,6 +231,7 @@ exports.log_social =(req,res)=>{
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
+                        firebase_token:req.body.firebase_token
                         // profile_pic: photo
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
@@ -251,16 +269,16 @@ exports.otpSend = async (req,res)=>{
         
         otp.send_otp(str,OTP).then((data)=>{
             res.send(data)
-        // doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
-        //     if(err){
-        //         res.json(err)
-        //     }
-        //     else{
-        //         res.json({code:200,msg:"otp send successfully"})
-        //     }
-        //      })
-        //   }).catch((err)=>{
-        //     res.send(err)
+        doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
+            if(err){
+                res.json(err)
+            }
+            else{
+                res.json({code:200,msg:"otp send successfully"})
+            }
+             })
+          }).catch((err)=>{
+            res.send(err)
       })
     }
   }) 
