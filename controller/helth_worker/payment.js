@@ -3,8 +3,8 @@ const shortid = require('shortid')
 const Crypto =require('crypto')
 
 var razorpay = new Razorpay({
-    key_id:'rzp_live_uroygFNlI2ROD9',
-    key_secret:'RO60jVm7adVvv1KCagTT92ZL'
+    key_id:'rzp_test_71bMsZX0h63757',
+    key_secret:'BaXwG1Ey4z1m440ZsQZPcV5b'
 })
 
 exports.gen_orderId = async(req,res)=>{
@@ -24,7 +24,7 @@ try{
     data.amount = response.amount
     data.order_id = response.id,
     data.currency = response.currency
-    data. key_id = 'rzp_live_uroygFNlI2ROD9'
+    data. key_id = 'rzp_test_71bMsZX0h63757'
     console.log(response) 
 
     res.send({code:200,msg:data})
