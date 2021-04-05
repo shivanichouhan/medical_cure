@@ -2,7 +2,8 @@ const Doct = require("../../model/Doctor/doctor_regis")
 var FCM = require('fcm-node');
 
 exports.notification = async(req,res)=>{
-var data = await Doct.find({_id:req.body.docId})    
+var data = await Doct.findOne({_id:req.body.docId})  
+console.log(data)  
 if(data){
 var serverkey = process.env.FIREBASE_KEY  
 var fcm = new FCM(serverkey);

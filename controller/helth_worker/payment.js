@@ -9,7 +9,7 @@ var razorpay = new Razorpay({
 
 exports.gen_orderId = async(req,res)=>{
 const currency = 'INR'
-const payment_capture = 1
+const payment_capture = '1'
 const amount =req.body.amount
 
 const info={
@@ -24,6 +24,7 @@ try{
     data.amount = response.amount
     data.order_id = response.id,
     data.currency = response.currency
+    data. key_id = 'rzp_live_uroygFNlI2ROD9'
     console.log(response) 
 
     res.send({code:200,msg:data})
