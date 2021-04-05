@@ -4,36 +4,39 @@ const _ = require("lodash")
 const cloud = require("../../cloudinary")
 const otp = require("../../otp")
 const otpGenerator = require('otp-generator')
-const helth_workers =require("../../model/helth_worker/users") 
+const helth_workers = require("../../model/helth_worker/users")
 
 const fs = require('fs')
 const { response } = require("express")
 
-exports.appoinment_status =(req,res)=>{
+exports.appoinment_status = (req, res) => {
     patient.aggregate([
-        {"$match":{ health_worker_id:req.params.userId }},
-        {"$group":{
-            _id:"$status",
-            list:{$push:{
-                patient_name:"$patient_name",
-                patient_img:"$patient_img",
-                health_worker_name:"$health_worker_name",
-                disease:"$disease",
-                location:"$location"   
-          }},
-       }
-     }
-  ]).exec((err,resp)=>{
-      if(err){
-          res.json({code:400,msg:'patient appoinment status not found'})
-      }
-      else{
-          res.json({code:200,msg:resp})
-      }
-  })
+        { "$match": { health_worker_id: req.params.userId } },
+        {
+            "$group": {
+                _id: "$status",
+                list: {
+                    $push: {
+                        patient_name: "$patient_name",
+                        patient_img: "$patient_img",
+                        health_worker_name: "$health_worker_name",
+                        disease: "$disease",
+                        location: "$location"
+                    }
+                },
+            }
+        }
+    ]).exec((err, resp) => {
+        if (err) {
+            res.json({ code: 400, msg: 'patient appoinment status not found' })
+        }
+        else {
+            res.json({ code: 200, msg: resp })
+        }
+    })
 }
 
-exports.search_patient =(req,res)=>{
+exports.search_patient = (req, res) => {
     console.log(req.params.userId)
     var filter = {
         $and: [{ health_worker_id: req.params.userId },
@@ -63,34 +66,34 @@ exports.patient_list = (req, res) => {
         })
 }
 
-exports.create = async(req,res)=>{
-               var Health = await health.findOne({_id:req.params.userId}) 
-               if(Health){
-                const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-                    otp.send_otp(req.body.mobile,OTP).then((resp)=>{
-                        var patObj = new patient(req.body)
-                        patObj.health_worker_id =req.params.userId
-                        patObj.patient_id =patObj._id
-                        patObj.otp = OTP,
-                        patObj.health_worker_name = Health.username
-                        patObj.location = Health.city
-                        patObj.save((err,data)=>{
-                            if(err){
-                                res.json({code:400,msg:'patient detail not save'})
-                                console.log(err)
-                            }
-                            else{
-                                res.json({code:200,msg:'otp send successfully',Data:data})
-                            }
-                        })
+exports.create = async (req, res) => {
+    var Health = await health.findOne({ _id: req.params.userId })
+    if (Health) {
+        const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+        otp.send_otp(req.body.mobile, OTP).then((resp) => {
+            var patObj = new patient(req.body)
+            patObj.health_worker_id = req.params.userId
+            patObj.patient_id = patObj._id
+            patObj.otp = OTP,
+                patObj.health_worker_name = Health.username
+            patObj.location = Health.city
+            patObj.save((err, data) => {
+                if (err) {
+                    res.json({ code: 400, msg: 'patient detail not save' })
+                    console.log(err)
+                }
+                else {
+                    res.json({ code: 200, msg: 'otp send successfully', Data: data })
+                }
+            })
 
-                    }).catch((err)=>{
-                        res.json({code:400,msg:'otp not sent'})
-                })
-            }
-            else{
-                res.json({code:400,msg:'health worker data not found'})
-            }
+        }).catch((err) => {
+            res.json({ code: 400, msg: 'otp not sent' })
+        })
+    }
+    else {
+        res.json({ code: 400, msg: 'health worker data not found' })
+    }
 }
 
 exports.patient_verfiy = (req, res) => {
@@ -164,32 +167,30 @@ exports.doctor_reg = (req, res) => {
 
 exports.status_patient = (req, res) => {
     const { doctor_id } = req.body
-    const arr =[]
-    patient.find({$and:[{ status: "ongoing" ,doctor_id:doctor_id}]})
+    const arr = []
+    patient.find({ $and: [{ status: "ongoing", doctor_id: doctor_id }] })
         .exec(async (err, List) => {
             if (err) {
                 res.json({ code: 400, msg: 'patient list not found' })
             }
             else {
-                await Promise.all(List.map(async(items) => {
+                await Promise.all(List.map(async (items) => {
                     const obj = {}
-                    const helth_workerdata = await helth_workers.findOne({_id:items.health_worker_id})
+                    const helth_workerdata = await helth_workers.findOne({ _id: items.health_worker_id })
                     obj.helthwork_username = helth_workerdata.username;
                     obj.health_worker_id = helth_workerdata._id
                     obj.patient_id = items._id
                     obj.patient_name = items.patient_name
                     obj.status = items.status
-                    obj.createdAt =items.createdAt
+                    obj.createdAt = items.createdAt
                     obj.patient_img = items.patient_img
                     obj.mobile = items.mobile,
-                    obj.disease = "High Blood Sugar"
+                        obj.disease = "High Blood Sugar"
                     obj.address = " "
                     obj.doctor_id = doctor_id
                     arr.push(obj)
-                })).then((response)=>{
-
+                })).then((response) => {
                 })
-
                 res.json({ code: 200, msg: arr })
             }
         })
