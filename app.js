@@ -9,10 +9,13 @@ const cors = require('cors')
 const morgan = require('morgan')
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http);
 app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.set("views", path.join(__dirname, "views"));
 
-if(typeof localStorage === "undefined" || localStorage === null){
+if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./scratch');
 }
@@ -33,7 +36,7 @@ const states = require('./routes/helth_worker/state');
 const dep_health = require('./routes/helth_worker/list_dep')
 const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 const patient = require('./routes/helth_worker/patient_registration')
-
+const conversation = require("./routes/helth_worker/jia_conversation")
 //Doctor
 // const dashboard_img = require('./routes/helth_worker/dashboard_img_list')
 // const patient = require('./routes/helth_worker/patient_registration')
@@ -54,6 +57,14 @@ const doc_deg = require("./routes/Doctor/degree_list")
 const cureBlogList = require("./routes/Doctor/search_cureblog")
 const Prescription = require("./routes/Doctor/prescription")
 //
+const Doctor_Certificate = require('./routes/Doctor/doctor_certificate')
+const Phone_varify = require('./routes/Doctor/phone_varify')
+const Review = require('./routes/Doctor/Reviews');
+const appoinement_list = require("./routes/Doctor/appointment_lists")
+
+
+
+
 
 //admin routes 
 const adminReg = require("./routes/admin/admin_login")
@@ -76,11 +87,18 @@ const medicine = require("./routes/admin/pharmacy/medicine")
 const labs = require("./routes/admin/investigation_daignosic/lab")
 const lab_test = require("./routes/admin/investigation_daignosic/lab_test")
 const listPatient = require("./routes/admin/patient")
+const analytics = require("./routes/admin/analytics")
 const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
 const cityAdd = require("./routes/admin/state_city/add_city")
 const Comission = require("./routes/admin/comission")
 //
+
+const contact_us = require('./routes/admin/contact_us')
+
+
+//Patient
+const patients = require("./routes/patient/patient_signin")
 
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
@@ -113,7 +131,7 @@ app.get("/demo", (req, res) => {
   res.send("good shivani")
 })
 
-//users middleware
+//helthworker middleware
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
@@ -128,6 +146,7 @@ app.use('/api', Admin_approve)
 app.use('/api', Block_Worker)
 app.use('/api', states);
 app.use('/api', dep_health)
+app.use("/api", conversation)
 app.use('/api', payment)
 //
 
@@ -144,7 +163,7 @@ app.use('/api', medicine)
 app.use('/api', addsubCategory)
 app.use('/api', disease)
 app.use('/api', blogs)
-app.use('/api', cat_blog)
+app.use('/', cat_blog)
 app.use('/api', subcat_blog)
 app.use('/api', childCat_blog)
 app.use('/api', appoinment)
@@ -152,9 +171,12 @@ app.use('/api', department)
 app.use('/api', labs)
 app.use('/api', lab_test)
 app.use('/api', listPatient)
-app.use('/api', inspire) 
+app.use("/api", analytics)
+app.use('/api', inspire)
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
+app.use('/api', Prescription)
+app.use('/api',contact_us)
 app.use('/api', Comission)
 //
 
@@ -171,18 +193,82 @@ app.use('/api', cureBlogList)
 app.use('/api', Prescription)
 app.use('/api', push_notification)
 //
+app.use('/api', doctor_reg)
+app.use('/api', Phone_varify)
+app.use('/api',Phone_varify)
+app.use('/api',Review)
+app.use('/api',appoinement_list)
+
+
+
+
 app.get("/admin_login", (req, res) => {
   res.send('hello')
   // res.sendFile(path.join(__dirname + '/views/login.html'));
 });
-
 app.get("/deshboard", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/index.html'));
-
 })
 
+
+
+//Patient 
+app.use('/api', patients)
+
+app.post("/data_resp", (req, res) => {
+  console.log(req.body)
+  res.send("good shivani")
+})
+
+//
+app.use('/api', addsubCategory)
+app.use('/api', disease)
+app.use('/api', blogs)
+app.use('/api', cat_blog)
+app.use('/api', subcat_blog)
+app.use('/api', appoinment)
+app.use('/api', department)
+//
+
+
+// var socket = io.connect();
+console.log("shivani socket connected")
+io.on('connection', function (socket) {
+  console.log("shivani socket is connected")
+  console.log('User Conncetion');
+  socket.on('connect user', async function (user) {
+    io.emit('connect user', user);
+
+  });
+  socket.on("reconnect", () => {
+    io.emit('user-reconnected', username);
+  });
+  socket.on('on typing', function (typing) {
+    console.log("Typing.... ");
+    io.emit('on typing', typing);
+  });
+  socket.on("accept_petient",async function(datas){
+    if(datas.type == "1"){
+      socket.join(datas.p_id);
+      socket.join(datas.d_id);
+    }
+  })
+
+  socket.on('chat message', async function (msg) {
+    console.log("Message " + msg['message']);
+    io.emit('chat message', msg);
+    //   io.emit('chat message', msg);
+
+  });
+});
+
+
+
+//doctor middleware
+app.use('/api', doctor_reg)
+
 const port = process.env.PORT || 8000
-app.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 

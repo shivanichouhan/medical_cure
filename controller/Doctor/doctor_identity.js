@@ -1,68 +1,107 @@
 const Identity = require('../../model/Doctor/doctor_regis')
-
-const cloudenary = require('cloudinary').v2
-
-cloudenary.config({
-    cloud_name: 'dha2sjb75',
-    api_key: '893623795746522',
-    api_secret: '3dwh3SUUvf0yEsLU-Fl1O-yi8Tw'
-})
-
-
+const cloud = require('../../cloudinary')
+const fs = require("fs")
+var Up = require("../../handler/multer")
+Up = Up.fields([{name:'PanCard_front_side_img'},{name:'PanCard_back_side_img'}])
 
 exports.doctor_identity = (req, res) => {
-    const {
-        select_identity,
-        PAN_Number,
-        PanCard_front_side_img,
-        PanCard_back_side_img
 
-    } = req.body
-    console.log(req.files)
-    if (req.files) {
-        const data = {
-            select_identity: select_identity,
-            PAN_Number: PAN_Number,
-            PanCard_front_side_img: PanCard_front_side_img,
-            PanCard_back_side_img: PanCard_back_side_img
-        }
-        const uniqueFilename = new Date().toISOString()
-        console.log(req.files)
-
-        const pancard = req.files.PanCard_front_side_img
-        const pancard_front = pancard[0].path
-        cloudenary.uploader.upload(
-            pancard_front,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, pancardimg) {
-                if (err) console.log(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(pancard_front)
-                data.PanCard_front_side_img = pancardimg.secure_url
-            })
-
-        const path = req.files.PanCard_back_side_img;
-        const image_path = path[0].path
-        cloudenary.uploader.upload(
-            image_path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, pancardimg) {
-                if (err) console.log(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(image_path)
-                data.PanCard_back_side_img = pancardimg.secure_url
-                Identity.updateOne({_id:req.params.user_id},{$set:data})
-                    .then((resp) => {
-                        res.json({
-                            code: 200, msg: "Doctor Identity Details Uploaded"
-                        })
-                    })
+    Identity.updateOne({ _id: req.params.user_id }, { $set: req.body },
+        async (err, resp) => {
+            if (err) {
+                res.json(err)
             }
-        )
-    } else {
-        res.send("you dint choose PanCard_image file")
-    }
+            else {
+                if (req.files) {
+                    var i_front = req.files.PanCard_front_side_img
+                    var i_back = req.files.PanCard_back_side_img
+
+                    const idenRegF = async (path) => await cloud.iden_front(path)
+                    const idenRegB = async (path) => await cloud.iden_back(path)
+
+
+                    const iF = i_front[0].path
+                    const iB = i_back[0].path
+
+                    const url_front = await idenRegF(iF)
+                    const url_back = await idenRegB(iB)
+
+                    Identity.updateOne({ _id: req.params.user_id }, { $set: { PanCard_front_side_img: url_front, PanCard_back_side_img: url_back } })
+                        .exec((err, proRep) => {
+                            if (err) {
+                                res.json(err)
+                            }
+                            else {
+                                fs.unlinkSync(iF)
+                                fs.unlinkSync(iB)
+                                res.json({ data: proRep })
+                            }
+                        })
+
+                }
+                else {
+                    res.json({ data: resp })
+                }
+            }
+        })
+}
+
+exports.edit_doctor_identity = (req, res) => {
+    Identity.updateOne({ _id: req.params.userId }, req.body, (err, updteUser) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            Up(req, res, function (err) {
+                if (err) {
+                    res.send({ code: 400, msg: 'file formart not support' })
+                }
+                else {
+                    if (req.files.PanCard_front_side_img) {
+                        console.log(req.files.PanCard_front_side_img)
+                        for (row of req.files.PanCard_front_side_img) {
+                            var p = row.path
+                        }
+                        const path = p
+                        cloud.iden_front(path).then((resp) => {
+                            fs.unlinkSync(path)
+                            console.log(resp)
+                            Identity.updateOne({ 'PanCard_front_side_img.imgId': req.body.imgId }, { $set: { "PanCard_front_side_img.$.url": resp.url, "PanCard_front_side_img.$.imgId": resp.imgId } })
+                                .then((resPatient) => {
+                                    res.json({ code: 200, msg: 'Doctor details update with Identity pancard front side image' })
+                                }).catch((error) => {
+                                    res.json({ code: 400, msg: 'pancard front side image not update' })
+                                })
+                        }).catch((err) => {
+                            res.send(err)
+                        })
+                    }
+
+                    else if (req.files.PanCard_back_side_img) {
+                        console.log(req.files.PanCard_back_side_img)
+                        for (row of req.files.PanCard_back_side_img) {
+                            var p = row.path
+                        }
+                        const path = p
+                        cloud.iden_back(path).then((resp) => {
+                            fs.unlinkSync(path)
+                            console.log(resp)
+                            Identity.updateOne({ 'PanCard_back_side_img.imgId': req.body.imgId }, { $set: { "PanCard_back_side_img.$.url": resp.url, "PanCard_back_side_img.$.imgId": resp.imgId } })
+                                .then((resPatient) => {
+                                    res.json({ code: 200, msg: 'identity details update with Pancard back side image' })
+                                }).catch((error) => {
+                                    res.json({ code: 400, msg: 'pancard back side image not update' })
+                                })
+                        }).catch((err) => {
+                            res.send(err)
+                        })
+                    }
+                    else {
+                        res.json({ code: 200, msg: 'identity details update successfully' })
+                    }
+                }
+            })
+        }
+    })
 }
 

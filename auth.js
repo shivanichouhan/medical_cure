@@ -28,7 +28,8 @@ exports.checkLogin =(req,res,next)=>{
     console.log(myToken)
         jwt.verify(myToken,process.env.JWT_SECRET,(err,data)=>{
             if(err){
-                res.json({error:"token is expire"})
+                res.redirect("/admin_login")
+                // res.json({error:"token is expire"})
             }
             else{
                 if(data.role === 1){

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 require('mongoose-double')(mongoose)
+
 var SchemaTypes = mongoose.Schema.Types
 
 const EventSchema = new mongoose.Schema(
@@ -134,14 +135,14 @@ const EventSchema = new mongoose.Schema(
         Account_holder_name: {
             type: String
         },
-        status:{
-            type:Number,
+        status: {
+            type: Number,
         },
         otp: {
             type: String
         },
-        otp_verify:{
-            type:Number
+        otp_verify: {
+            type: Number
         },
         present_place:{
             type:String
@@ -153,11 +154,11 @@ const EventSchema = new mongoose.Schema(
         gmailId: {
             type: String
         },
-        first_name:{
-            type:String
+        first_name: {
+            type: String
         },
-        last_name:{
-            type:String
+        last_name: {
+            type: String
         },
         username: {
             type: String
@@ -165,10 +166,10 @@ const EventSchema = new mongoose.Schema(
         email: {
             type: String
         },
-        password:{
+        password: {
             type: String
         },
-        bearer_token:{
+        bearer_token: {
             type: String
         },
         firebase_token:{
@@ -177,14 +178,32 @@ const EventSchema = new mongoose.Schema(
         profile_pic:{
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
+        }, user_id:
+            { type: String },
+        dumy_userName: { type: String },
+
+        certificate: {
+            type: Array
         },
-        user_id:{           
-             type: String 
-        },
-        dumy_userName:{
+        mobile_number: {
             type: String
+        },
+        user_id: {
+            type: String
+        },
+        otp: {
+            type: String
+        },
+        otp_verify: {
+            type: Number
+        },fees:{
+            type:Number,
+            default:200
+
+        },rating:{
+            type:Number,
+            default:4
         }
-        
-    },{timestamps:true})
+    })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)

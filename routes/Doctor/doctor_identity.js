@@ -26,8 +26,8 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
 
-const {doctor_identity} = require('../../controller/Doctor/doctor_identity');
-router.post("/Identity_details/:user_id",upload.fields([{name:'PanCard_front_side_img'},{name:'PanCard_back_side_img'}]),doctor_identity)
-
+const {doctor_identity, edit_doctor_identity} = require('../../controller/Doctor/doctor_identity');
+router.put("/Identity_details/:user_id",upload.fields([{name:'PanCard_front_side_img'},{name:'PanCard_back_side_img'}]),doctor_identity)
+router.put("/doctor/edit_Identity_details/:user_id",/*upload.fields([{name:'PanCard_front_side_img'},{name:'PanCard_back_side_img'}]),*/edit_doctor_identity)
 
 module.exports = router;

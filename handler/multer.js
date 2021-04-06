@@ -12,7 +12,7 @@ const multer = require('multer')
    
  const upload = multer({
         storage:storage,
-        limits:{fileSize:1024*1024},
+        limits:500000,
         fileFilter:(req, file, cb)=>{
             // if(!file.mimetype.match(/jpe|jpeg|png|gif$i/)) {
             //     cb(new Error('file is not supported'),false)

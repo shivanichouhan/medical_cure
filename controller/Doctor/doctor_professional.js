@@ -1,85 +1,108 @@
 const Professional = require('../../model/Doctor/doctor_regis')
-
-const cloudenary = require('cloudinary').v2
-
-cloudenary.config({
-    cloud_name: 'dha2sjb75',
-    api_key: '893623795746522',
-    api_secret: '3dwh3SUUvf0yEsLU-Fl1O-yi8Tw'
-})
-
-
+const cloud = require('../../cloudinary')
+const fs = require("fs")
+var Up = require("../../handler/multer")
+Up = Up.fields([{name:'License_img_front_side'},{name:'License_img_back_side'}])
 
 exports.doctor_professional = (req, res) => {
-    const {
-
-        Employment_status,
-        Specialization,
-        Experience,
-        State,
-        City,
-        Address,
-        pincode,
-        Lincense_no,
-        issued_date,
-        License_img_front_side,
-        License_img_back_side
-
-    } = req.body
-    console.log(req.files)
-    if (req.files) {
-        const data = {
-            Employment_status:Employment_status,
-            Specialization:Specialization,
-            Experience:Experience,
-            State:State,
-            City:City,
-            Address:Address,
-            pincode:pincode,
-            Lincense_no:Lincense_no,
-            issued_date:issued_date,
-            License_img_front_side:License_img_front_side,
-            License_img_back_side:License_img_back_side
+    // var profObj = new Professional(req.body)
+    Professional.updateOne({ _id: req.params.user_id },{$set:req.body},
+    async (err, resp) => {
+        if (err) {
+            res.json(err)
         }
-        const uniqueFilename = new Date().toISOString()
-        console.log(req.files)
+        else {
+            if (req.files) {
+                var p_front = req.files.License_img_front_side
+                var p_back = req.files.License_img_back_side
 
-        const lincense = req.files.License_img_front_side
-        const lincense_front = lincense[0].path
-        cloudenary.uploader.upload(
-            lincense_front,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, lincenseimage) {
-                if (err) console.log(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(lincense_front)
-                data.License_img_front_side = lincenseimage.secure_url
-            })
+                const proRegF = async (path) => await cloud.License_front_side(path)
+                const proRegB = async (path) => await cloud.License_back_side(path)
 
-        const path = req.files.License_img_back_side;
-        const image_path = path[0].path
-        cloudenary.uploader.upload(
-            image_path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, licenseimg) {
-                if (err) console.log(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(image_path)
-                data.License_img_back_side = licenseimg.secure_url
-                data.p_id = data._id
-                Professional.updateOne({_id:req.params.user_id},{$set:data})
-                    .then((resp) => {
-                        res.json({
-                            code: 200, msg: "License_Image Uploaded"
-                        })
+
+                const pF = p_front[0].path
+                const pB = p_back[0].path
+
+                const url_front = await proRegF(pF)
+                const url_back = await proRegB(pB)
+
+                Professional.updateOne({ _id: req.params.user_id }, { $set: { License_img_front_side: url_front, License_img_back_side: url_back } })
+                    .exec((err, proRep) => {
+                        if (err) {
+                            res.json(err)
+                        }
+                        else {
+                            fs.unlinkSync(pF)
+                            fs.unlinkSync(pB)
+                            res.json({ data: proRep })
+                        }
                     })
+
             }
-        )
-    } else {
-        res.send("you dint choose license_image file")
-    }
+            else {
+                res.json({ data: resp })
+            }
+        }
+    })
+}
+
+exports.Edit_doctor_professional = (req, res) => {
+    Professional.updateOne({ _id: req.params.userId }, req.body, (err, updteUser) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            Up(req, res, function (err) {
+                if (err) {
+                    res.send({ code: 400, msg: 'file formart not support' })
+                }
+                else {
+                    if (req.files.License_img_front_side) {
+                        console.log(req.files.License_img_front_side)
+                        for (row of req.files.License_img_front_side) {
+                            var p = row.path
+                        }
+                        const path = p
+                        cloud.License_front_side(path).then((resp) => {
+                            fs.unlinkSync(path)
+                            console.log(resp)
+                            Professional.updateOne({ 'License_img_front_side.imgId': req.body.imgId }, { $set: { "License_img_front_side.$.url": resp.url, "License_img_front_side.$.imgId": resp.imgId } })
+                                .then((resPatient) => {
+                                    res.json({ code: 200, msg: 'Doctor details update with License front side image' })
+                                }).catch((error) => {
+                                    res.json({ code: 400, msg: 'License front side image not update' })
+                                })
+                        }).catch((err) => {
+                            res.send(err)
+                        })
+                    }
+
+                    else if (req.files.License_img_back_side) {
+                        console.log(req.files.License_img_back_side)
+                        for (row of req.files.License_img_back_side) {
+                            var p = row.path
+                        }
+                        const path = p
+                        cloud.iden_back(path).then((resp) => {
+                            fs.unlinkSync(path)
+                            console.log(resp)
+                            Professional.updateOne({ 'License_img_back_side.imgId': req.body.imgId }, { $set: { "License_img_back_side.$.url": resp.url, "License_img_back_side.$.imgId": resp.imgId } })
+                                .then((resPatient) => {
+                                    res.json({ code: 200, msg: 'Professional details update with license back side image' })
+                                }).catch((error) => {
+                                    res.json({ code: 400, msg: 'license back side image not update' })
+                                })
+                        }).catch((err) => {
+                            res.send(err)
+                        })
+                    }
+                    else {
+                        res.json({ code: 200, msg: 'professional details update successfully' })
+                    }
+                }
+            })
+        }
+    })
 }
 
 
