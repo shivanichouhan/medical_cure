@@ -16,6 +16,7 @@ msg.data = {my_key: 'my value', contents: "abcv/"}
 Notification.title =`${data.username} Title of the notification`
 Notification.body = req.body.msg
 msg.notification = Notification
+console.log(msg)
 
 fcm.send(msg,(err,resp)=>{  
 if(err){
