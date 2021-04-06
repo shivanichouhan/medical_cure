@@ -9,7 +9,7 @@ var razorpay = new Razorpay({
 
 exports.gen_orderId = async(req,res)=>{
 const currency = 'INR'
-const payment_capture = 1
+const payment_capture = '1'
 const amount =req.body.amount
 
 const info={
@@ -34,8 +34,8 @@ try{
 }
 
 exports.payment_verfiy = (req,res)=>{
-    var body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    var exp_signature = Crypto.createHmac('sha256','RO60jVm7adVvv1KCagTT92ZL')
+    var body = req.body.razorpay_order_id+ "|" +req.body.razorpay_payment_id;
+    var exp_signature = Crypto.createHmac('sha256','BaXwG1Ey4z1m440ZsQZPcV5b')
                     .update(body.toString())
                     .digest('hex')
                     console.log('real_sign',req.body.razorpay_signature)
