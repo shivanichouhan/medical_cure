@@ -312,7 +312,8 @@ exports.onGoing_patients = (req,res)=>{
                         obj.disease = "High Blood Sugar"
                     obj.address = " "
                     obj.doctor_id = docter_data._id
-                    obj.doctor_name = docter_data.username 
+                    obj.doctor_name = docter_data.username
+                    obj.doctor_pic = docter_data.profile_pic 
                     arr.push(obj)
                 })).then((response) => {
                 })
