@@ -63,9 +63,6 @@ const Review = require('./routes/Doctor/Reviews');
 const appoinement_list = require("./routes/Doctor/appointment_lists")
 
 
-
-
-
 //admin routes 
 const adminReg = require("./routes/admin/admin_login")
 const docRegistration = require("./routes/admin/Doctor/doctor_reg")
@@ -261,7 +258,6 @@ io.on('connection', function (socket) {
 
   });
 });
-
 
 
 //doctor middleware

@@ -24,7 +24,7 @@ try{
     data.amount = response.amount
     data.order_id = response.id,
     data.currency = response.currency
-    data. key_id = 'rzp_test_71bMsZX0h63757'
+    data. key_id = 'rzp_test_71bMsZX0h63757'    
     console.log(response) 
 
     res.send({code:200,msg:data})

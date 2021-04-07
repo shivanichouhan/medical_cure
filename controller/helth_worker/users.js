@@ -255,7 +255,7 @@ exports.normal_signin = async (req, res) => {
 exports.clinic_reg = async (req, res) => {
     var certificate = req.files.certificate
     var clinic = req.files.clinic
-
+    console.log(req.files)
     const urlsF = []
     if(certificate){
     const uploaderF = async (path) => await cloud.Certificate(path, 'Certificates')
@@ -292,7 +292,8 @@ exports.clinic_reg = async (req, res) => {
             res.json({code:400,msg:'health worker detail no add'})
         }
         else {
-            res.json({code:200,msg:data})
+            res.json({code:200,msg:'health worker add successfully'})
+            console.log(data)
         }
     })
 }

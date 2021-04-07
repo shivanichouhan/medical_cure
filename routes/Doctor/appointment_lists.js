@@ -4,5 +4,4 @@ const {allAppointmentList,completeAppointmentlist}=require("../../controller/Doc
 router.post("/doctor/all_appointments",allAppointmentList)
 router.post("/doctor/complete_appointments",completeAppointmentlist)
 
-
 module.exports = router;
