@@ -314,6 +314,7 @@ exports.onGoing_patients = (req,res)=>{
                     obj.doctor_id = docter_data._id
                     obj.doctor_name = docter_data.username
                     obj.doctor_pic = docter_data.profile_pic 
+                    obj.disease_id = items.disease
                     arr.push(obj)
                 })).then((response) => {
                 })
