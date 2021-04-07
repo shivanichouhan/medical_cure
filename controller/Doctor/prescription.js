@@ -31,6 +31,7 @@ exports.medicine_list =(req,res)=>{
     med.find()
     .select('medicine_name')
     .select('mrp')
+    .select('intro_text')
     .exec((err,resp)=>{
         if(err){
             res.json({code:400,msg:'medicine list not found'})
