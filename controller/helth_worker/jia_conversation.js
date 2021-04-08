@@ -103,6 +103,7 @@ exports.greetings4 = async (req, res) => {
     const { text_msg, disease_id, patient_id, department } = req.body;
     let greet = '';
     const patients = await patient_name.findOne({ _id: patient_id })
+    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { disease_id: disease_id} })
 
     const details = {}
     if (patients.gender == "Male") {
@@ -145,6 +146,7 @@ exports.anathor_doctor = async (req, res) => {
     const details = {}
 
     if (responce == "Yes") {
+
         const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
         if (doctor_find) {
             const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
@@ -159,6 +161,7 @@ exports.anathor_doctor = async (req, res) => {
 
 exports.sendMsg_to_doctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
+    console.log(req.body)
     if (patient_id && doctor_id) {
         const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
         res.json({ code: 200, msg: "send msg success" })
@@ -298,6 +301,7 @@ exports.onGoing_patients = (req,res)=>{
             }
             else {
                 await Promise.all(List.map(async (items) => {
+                    console.log(items)
                     const obj = {}
                     const helth_workerdata = await helth_workers.findOne({ _id: items.health_worker_id })
                     const docter_data =await Doctor_data.findOne({_id:items.doctor_id})
@@ -314,7 +318,8 @@ exports.onGoing_patients = (req,res)=>{
                     obj.doctor_id = docter_data._id
                     obj.doctor_name = docter_data.username
                     obj.doctor_pic = docter_data.profile_pic 
-                    obj.disease_id = items.disease
+                    obj.disease = items.disease
+                    obj.disease_id =items.disease_id
                     arr.push(obj)
                 })).then((response) => {
                 })
