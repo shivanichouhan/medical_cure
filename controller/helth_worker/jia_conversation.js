@@ -163,18 +163,29 @@ exports.sendMsg_to_doctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
     console.log(req.body)
     if (patient_id && doctor_id) {
-        const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "accepted" } })
+        const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
         res.json({ code: 200, msg: "send msg success" })
     } else {
         res.json({ code: 400, msg: "something went wrong" })
     }
 }
 
+exports.patient_accept_status = (req, res) => {
+    const { doctor_id, patient_id } = req.body;
+    patient_data.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+        .then((responce) => {
+            res.json({ code: 200, msg: responce })
+        }).catch((err) => {
+            console.log(err)
+            res.json({ code: 400, msg: "something went wrong" })
+        })
+}
+
 
 exports.booked_patient = async (req, res) => {
     const { doctor_id } = req.body
     const arr = []
-    patient_data.find({ $and: [{ status: "accepted", doctor_id: doctor_id }] })
+    patient_data.find({ $and: [{ status: "booked", doctor_id: doctor_id }] })
         .exec(async (err, List) => {
             if (err) {
                 res.json({ code: 400, msg: 'patient list not found' })
@@ -279,16 +290,7 @@ exports.accept_patient = (req, res) => {
 }
 
 
-exports.patient_accept_status = (req, res) => {
-    const { doctor_id, patient_id } = req.body;
-    patient_data.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
-        .then((responce) => {
-            res.json({ code: 200, msg: responce })
-        }).catch((err) => {
-            console.log(err)
-            res.json({ code: 400, msg: "something went wrong" })
-        })
-}
+
 
 exports.accepted_chat_status = (req, res) => {
     const { doctor_id, patient_id } = req.body;

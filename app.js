@@ -243,7 +243,7 @@ io.on('connection', function (socket) {
 
   socket.on("new message", () => {
     io.emit('new message', username);
-    console.log(username,"new mssage")
+    console.log(username,"new message")
   });
 
   socket.on('on typing', function (typing) {
@@ -261,7 +261,6 @@ io.on('connection', function (socket) {
     console.log("Message " + msg['message']);
     io.emit('chat message', msg);
     //   io.emit('chat message', msg);
-
   });
 });
 
