@@ -237,13 +237,15 @@ io.on('connection', function (socket) {
     console.log(user,"user details");
     io.emit('connect user', user);
     console.log(user,"user fffffff   details");
-
-    // socket.join('chatroom1');
+    socket.join('chatroom1');
+    console.log("join in room")
   });
 
-  socket.on("reconnect", () => {
-    io.emit('user-reconnected', username);
+  socket.on("new message", () => {
+    io.emit('new message', username);
+    console.log(username,"new mssage")
   });
+
   socket.on('on typing', function (typing) {
     console.log("Typing.... ");
     io.emit('on typing', typing);
