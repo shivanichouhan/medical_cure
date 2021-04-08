@@ -234,9 +234,12 @@ io.on('connection', function (socket) {
   console.log("shivani socket is connected")
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
+    console.log(user,"user details");
     io.emit('connect user', user);
 
+    // socket.join('chatroom1');
   });
+
   socket.on("reconnect", () => {
     io.emit('user-reconnected', username);
   });
