@@ -103,7 +103,7 @@ exports.greetings4 = async (req, res) => {
     const { text_msg, disease_id, patient_id, department } = req.body;
     let greet = '';
     const patients = await patient_name.findOne({ _id: patient_id })
-    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { disease_id: disease_id} })
+    const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { disease_id: disease_id } })
 
     const details = {}
     if (patients.gender == "Male") {
@@ -222,7 +222,7 @@ exports.accept_patient = (req, res) => {
                     if (response) {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
-                        const update_patient = await patient_data.updateOne({_id: patient_id }, { $set: { status: "accepted" } })
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
                         console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
@@ -230,12 +230,12 @@ exports.accept_patient = (req, res) => {
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                             room: otp,
-                            status:"accepted"
+                            status: "accepted"
                         })
                         data_resp.save()
                             .then((resp) => {
-                                patient_data.updateOne({_id: patient_id }, { $set: { status: "accepted" } })
-                               console.log(patient_data)
+                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                                console.log(patient_data)
                                 res.json({ code: 200, msg: resp })
                             }).catch((err) => {
                                 res.json({ code: 400, msg: "something went wrong" })
@@ -249,7 +249,7 @@ exports.accept_patient = (req, res) => {
                     if (response) {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
-                        const update_patient = await patient_data.updateOne({_id: patient_id }, { $set: { status: "cancelled" } })
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
                         console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
@@ -257,11 +257,11 @@ exports.accept_patient = (req, res) => {
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                             room: otp,
-                            status:"cancelled"
+                            status: "cancelled"
                         })
                         data_resp.save()
                             .then((resp) => {
-                                patient_data.updateOne({_id: patient_id }, { $set: { status: "cancelled" } })
+                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
                                 console.log(patient_data)
 
                                 res.json({ code: 200, msg: resp })
@@ -279,19 +279,43 @@ exports.accept_patient = (req, res) => {
 }
 
 
-exports.patient_accept_status =(req,res)=>{
-    const { doctor_id, patient_id}=req.body;
-    patient_data.findOne({$and:[{doctor_id:doctor_id,patient_id:patient_id}]})
-    .then((responce)=>{
-        res.json({code:200,msg:responce})
-    }).catch((err)=>{
-        console.log(err)
-        res.json({code:400,msg:"something went wrong"})
-    })
+exports.patient_accept_status = (req, res) => {
+    const { doctor_id, patient_id } = req.body;
+    patient_data.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+        .then((responce) => {
+            res.json({ code: 200, msg: responce })
+        }).catch((err) => {
+            console.log(err)
+            res.json({ code: 400, msg: "something went wrong" })
+        })
+}
+
+exports.accepted_chat_status = (req, res) => {
+    const { doctor_id, patient_id } = req.body;
+    const obj = {}
+    patient_data.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+        .then((responce) => {
+            // obj.
+            if (responce) {
+                if (responce.status == "ongoing") {
+                    obj.msg = "accepted"
+                } else {
+                    obj.msg = "rejected"
+                }
+                res.json({ code: 200, msg: obj })
+            } else {
+                res.json({ code: 400, msg: "something went wrong" })
+
+            }
+
+        }).catch((err) => {
+            console.log(err)
+            res.json({ code: 400, msg: "something went wrong" })
+        })
 }
 
 
-exports.onGoing_patients = (req,res)=>{
+exports.onGoing_patients = (req, res) => {
     const { helth_worker_id } = req.body
     const arr = []
     patient_data.find({ $and: [{ status: "ongoing", health_worker_id: helth_worker_id }] })
@@ -304,7 +328,7 @@ exports.onGoing_patients = (req,res)=>{
                     console.log(items)
                     const obj = {}
                     const helth_workerdata = await helth_workers.findOne({ _id: items.health_worker_id })
-                    const docter_data =await Doctor_data.findOne({_id:items.doctor_id})
+                    const docter_data = await Doctor_data.findOne({ _id: items.doctor_id })
                     obj.helthwork_username = helth_workerdata.username;
                     obj.health_worker_id = helth_workerdata._id
                     obj.patient_id = items._id
@@ -317,9 +341,9 @@ exports.onGoing_patients = (req,res)=>{
                     obj.address = " "
                     obj.doctor_id = docter_data._id
                     obj.doctor_name = docter_data.username
-                    obj.doctor_pic = docter_data.profile_pic 
+                    obj.doctor_pic = docter_data.profile_pic
                     obj.disease = items.disease
-                    obj.disease_id =items.disease_id
+                    obj.disease_id = items.disease_id
                     arr.push(obj)
                 })).then((response) => {
                 })
