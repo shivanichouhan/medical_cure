@@ -222,7 +222,7 @@ exports.accept_patient = (req, res) => {
                     if (response) {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
-                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "ongoing" } })
                         console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
