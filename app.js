@@ -236,6 +236,7 @@ io.on('connection', function (socket) {
   socket.on('connect user', async function (user) {
     console.log(user,"user details");
     io.emit('connect user', user);
+    console.log(user,"user fffffff   details");
 
     // socket.join('chatroom1');
   });
