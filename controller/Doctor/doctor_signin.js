@@ -266,12 +266,10 @@ exports.otpSend = async (req,res)=>{
         else{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         console.log(OTP, typeof OTP)
-        
         otp.send_otp(str,OTP).then((data)=>{
-            res.send(data)
-        doc.updateOne({Phone_Number:str},{$set:{otp:OTP}},(err,respdata)=>{
+        doc.updateOne({mobile_number:str},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
-                res.json(err)
+                res.json({code:400,msg:'otp not update in doctor'})
             }
             else{
                 res.json({code:200,msg:"otp send successfully"})

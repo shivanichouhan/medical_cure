@@ -70,12 +70,13 @@ exports.create = async (req, res) => {
     var Health = await health.findOne({ _id: req.params.userId })
     if (Health) {
         const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-        otp.send_otp(req.body.mobile, OTP).then((resp) => {
+       
+        otp.send_otp(req.body.mobile, OTP).then((result) => {
             var patObj = new patient(req.body)
             patObj.health_worker_id = req.params.userId
             patObj.patient_id = patObj._id
             patObj.otp = OTP,
-                patObj.health_worker_name = Health.username
+            patObj.health_worker_name = Health.username
             patObj.location = Health.city
             patObj.save((err, data) => {
                 if (err) {
@@ -87,7 +88,8 @@ exports.create = async (req, res) => {
                 }
             })
 
-        }).catch((err) => {
+        }).catch((error) => {
+            console.log('erfsfsfr')
             res.json({ code: 400, msg: 'otp not sent' })
         })
     }
@@ -164,7 +166,6 @@ exports.doctor_reg = (req, res) => {
         }))
 }
 
-
 exports.status_patient = (req, res) => {
     const { doctor_id } = req.body
     const arr = []
@@ -196,4 +197,4 @@ exports.status_patient = (req, res) => {
         })
 }
 
-// http://148.72.214.135
+

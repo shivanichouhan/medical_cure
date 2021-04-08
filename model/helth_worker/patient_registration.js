@@ -56,6 +56,10 @@ const patientSchema = new schema(
     patient_status:{
         type:String,
     },
+    prescription:[{
+        type:schema.Types.ObjectId,
+        ref:"prescription"
+    }],
     status: {
         type: String,
         enum: ['ongoing',"booked",'accepted',"completed","cancelled"]

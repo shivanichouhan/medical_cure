@@ -4,7 +4,6 @@ const otpGenerator = require('otp-generator')
 
 exports.phone_varify = async (req, res) => {
     const { mobile_number } = req.body
-
     const data_find = await Doctor_num.findOne({ mobile_number: mobile_number })
     if (data_find) {
         res.send('this is already exist')
@@ -22,7 +21,6 @@ exports.phone_varify = async (req, res) => {
             })
     }
 }
-
 
 exports.sent_Otp = (req, res) => {
     const user_ids = req.params.user_id

@@ -2,6 +2,9 @@ const med = require("../../model/admin/pharmacy/medicine")
 const labTest = require("../../model/admin/investigation_daignosic/lab_test")
 const alergis = require("../../model/admin/alergies")
 const daignos = require("../../model/Doctor/daignosis")
+const Prescription = require("../../model/Doctor/prescription")
+const Patient = require("../../model/helth_worker/patient_registration")
+
 
 exports.list_daignosis =(req,res)=>{
     var daignosis = new RegExp('^'+req.body.search,'i');
@@ -76,4 +79,23 @@ exports.add_alergies =(req,res)=>{
             res.json({code:200,msg:resp})
         }
     })
+}
+
+exports.add_prescription =(req,res)=>{
+    console.log(req.body)
+    var preObj = new Prescription(req.body)
+    preObj.save((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'prescription not add'})
+        }else{
+            Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id}},(err,resp)=>{
+                if(err){
+                    res.json({code:400,msg:'prescription not add in patient'})
+                }else{
+                    res.json({code:200,msg:resp})
+                }
+            })
+        }
+    })
+
 }
