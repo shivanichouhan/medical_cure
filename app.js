@@ -245,7 +245,7 @@ io.on('connection', function (socket) {
     // var clients = io.sockets.clients('chatroom1');
     // console.log(clients, "connected user on room......................")
     var clientsList = io.sockets.adapter.rooms["chatroom1"];
-    var numClients = clientsList.length;
+    var numClients = clientsList;
     console.log(numClients,"shivaniiiiiiiiiiiiiiiiiiiiiiiiii")
 
     io.in('chatroom1').sockets.sockets.forEach((socket,key)=>{
