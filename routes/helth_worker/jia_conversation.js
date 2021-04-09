@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
-const {accepted_chat_status,patient_chat_request,chat_requestedList, greetings, greetings1,onGoing_patients,patient_accept_status,booked_patient,accept_patient, greetings2,sendMsg_to_doctor, greetings3, greetings4, greetings5, doctor_sagastion,anathor_doctor } = require("../../controller/helth_worker/jia_conversation");
+const {accepted_chat_status,chatAccepted_by_Doctor,patient_chat_request,chat_requestedList, greetings, greetings1,onGoing_patients,patient_accept_status,booked_patient,accept_patient, greetings2,sendMsg_to_doctor, greetings3, greetings4, greetings5, doctor_sagastion,anathor_doctor } = require("../../controller/helth_worker/jia_conversation");
 
 router.post("/helthworker/greetings", greetings)
 router.post('/helthworker/greetings1', greetings1)
@@ -20,6 +20,7 @@ router.post("/helthworker/onGoing_patients",onGoing_patients)
 router.post("/helthworker/patient_chat_request",patient_chat_request)
 router.post("/helthworker/accepted_chat_status",accepted_chat_status)
 router.post("/doctor/chat_requested_list",chat_requestedList)
+router.post("/doctor/chatAccepted_by_Doctor",chatAccepted_by_Doctor)
 module.exports = router;
 
 

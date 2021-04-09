@@ -225,6 +225,71 @@ exports.chat_requestedList =(req,res)=>{
 }
 
 
+exports.chatAccepted_by_Doctor =(req,res)=>{
+    const { doctor_id, patient_id, type } = req.body;
+    var otp = randomString(8, 'abcdefgjklmnopqrstuvwxyz')
+    if (patient_id && doctor_id) {
+        if (type == "1") {
+            doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+                .then(async (response) => {
+                    if (response) {
+                        const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
+                        )
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                        console.log(update_patient)
+                        res.json({ code: 200, msg: response })
+                    } else {
+                        const data_resp = new doctor_patientChat({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                            room: otp,
+                            status: "accepted"
+                        })
+                        data_resp.save()
+                            .then((resp) => {
+                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
+                                console.log(patient_data)
+                                res.json({ code: 200, msg: resp })
+                            }).catch((err) => {
+                                res.json({ code: 400, msg: "something went wrong" })
+
+                            })
+                    }
+                })
+        } if (type == "0") {
+            doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
+                .then(async (response) => {
+                    if (response) {
+                        const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
+                        )
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
+                        console.log(update_patient)
+                        res.json({ code: 200, msg: response })
+                    } else {
+                        const data_resp = new doctor_patientChat({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                            room: otp,
+                            status: "cancelled"
+                        })
+                        data_resp.save()
+                            .then((resp) => {
+                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
+                                console.log(patient_data)
+
+                                res.json({ code: 200, msg: resp })
+                            }).catch((err) => {
+                                res.json({ code: 400, msg: "something went wrong" })
+
+                            })
+                    }
+                })
+        }
+    } else {
+        res.json({ code: 400, msg: "something went wrong" })
+
+    }
+}
 
 
 
