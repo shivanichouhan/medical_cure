@@ -192,8 +192,8 @@ exports.log_social = async(req,res)=>{
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
-                        firebase_token:req.body.firebase_token
-                        // profile_pic: photo
+                        firebase_token:req.body.firebase_token,
+                        profile_pic: req.body.profile_pic
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
@@ -231,8 +231,8 @@ exports.log_social = async(req,res)=>{
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
-                        firebase_token:req.body.firebase_token
-                        // profile_pic: photo
+                        firebase_token:req.body.firebase_token,
+                        profile_pic: req.body.profile_pic
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token

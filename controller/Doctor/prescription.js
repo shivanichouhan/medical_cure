@@ -92,7 +92,7 @@ exports.add_prescription =(req,res)=>{
                 if(err){
                     res.json({code:400,msg:'prescription not add in patient'})
                 }else{
-                    res.json({code:200,msg:resp})
+                    res.json({code:200,msg:'prescription add successfully'})
                 }
             })
         }
