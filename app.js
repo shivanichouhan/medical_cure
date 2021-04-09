@@ -21,7 +21,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 }
 
 //user routes
-const payment =require('./routes/helth_worker/payment')
+const payment = require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
@@ -173,7 +173,7 @@ app.use('/api', inspire)
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
 app.use('/api', Prescription)
-app.use('/api',contact_us)
+app.use('/api', contact_us)
 app.use('/api', Comission)
 //
 
@@ -192,9 +192,9 @@ app.use('/api', push_notification)
 //
 app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)
-app.use('/api',Phone_varify)
-app.use('/api',Review)
-app.use('/api',appoinement_list)
+app.use('/api', Phone_varify)
+app.use('/api', Review)
+app.use('/api', appoinement_list)
 
 
 
@@ -234,29 +234,32 @@ io.on('connection', function (socket) {
   console.log("shivani socket is connected")
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
-    console.log(user,"user details");
+    console.log(user, "user details");
     io.emit('connect user', user);
-    console.log(user,"user fffffff   details");
+    console.log(user, "user fffffff   details");
     socket.join('chatroom1');
     console.log('check 2', socket.connected);
 
     console.log("join in room")
 
-    var clients = io.sockets.clients('chatroom1');
-    console.log(clients,"connected user on room......................")
+    // var clients = io.sockets.clients('chatroom1');
+    // console.log(clients, "connected user on room......................")
+    var clientsList = io.sockets.adapter.rooms[room];
+    var numClients = clientsList.length;
+    console.log(numClients,"shivaniiiiiiiiiiiiiiiiiiiiiiiiii")
   });
 
   socket.on("new message", () => {
     io.emit('new message', username);
-    console.log(username,"new message")
+    console.log(username, "new message")
   });
 
   socket.on('on typing', function (typing) {
     console.log("Typing.... ");
     io.emit('on typing', typing);
   });
-  socket.on("accept_petient",async function(datas){
-    if(datas.type == "1"){
+  socket.on("accept_petient", async function (datas) {
+    if (datas.type == "1") {
       socket.join(datas.p_id);
       socket.join(datas.d_id);
     }
