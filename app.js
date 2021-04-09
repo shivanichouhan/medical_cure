@@ -242,7 +242,8 @@ io.on('connection', function (socket) {
 
     console.log("join in room")
   });
-
+  var clients = io.sockets.clients('chatroom1');
+  console.log(clients,"connected user on room......................")
   socket.on("new message", () => {
     io.emit('new message', username);
     console.log(username,"new message")
