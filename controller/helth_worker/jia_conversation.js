@@ -128,7 +128,7 @@ exports.greetings5 = async (req, res) => {
 
 exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id, department_name } = req.body;
-    const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
+    const doctor_find = await Doctor_data.findOne({ _id: "6068453d8a864506bebe73f9" });
     const details = {}
     if (doctor_find) {
         const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
@@ -193,7 +193,7 @@ exports.patient_chat_request = async(req, res) => {
     }
 }
 
-exports.chat_requestedList =(req,res)=>{
+exports.chat_requestedList = (req,res)=>{
     const { doctor_id } = req.body
     const arr = []
     patient_data.find({ $and: [{ status: "booked", doctor_id: doctor_id }] })
