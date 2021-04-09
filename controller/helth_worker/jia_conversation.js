@@ -412,7 +412,7 @@ exports.accepted_chat_status = (req, res) => {
         .then((responce) => {
             // obj.
             if (responce) {
-                if (responce.status == "ongoing") {
+                if (responce.status == "accepted") {
                     obj.msg = "accepted"
                 } else {
                     obj.msg = "waiting"
