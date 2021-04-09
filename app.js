@@ -244,7 +244,7 @@ io.on('connection', function (socket) {
 
     // var clients = io.sockets.clients('chatroom1');
     // console.log(clients, "connected user on room......................")
-    var clientsList = io.sockets.adapter.rooms[room];
+    var clientsList = io.sockets.adapter.rooms["chatroom1"];
     var numClients = clientsList.length;
     console.log(numClients,"shivaniiiiiiiiiiiiiiiiiiiiiiiiii")
 
