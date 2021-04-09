@@ -415,7 +415,7 @@ exports.accepted_chat_status = (req, res) => {
                 if (responce.status == "ongoing") {
                     obj.msg = "accepted"
                 } else {
-                    obj.msg = "rejected"
+                    obj.msg = "waiting"
                 }
                 res.json({ code: 200, msg: obj })
             } else {
