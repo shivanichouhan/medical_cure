@@ -248,9 +248,9 @@ io.on('connection', function (socket) {
     var numClients = clientsList;
     console.log(numClients,"shivaniiiiiiiiiiiiiiiiiiiiiiiiii")
 
-    io.in('chatroom1').sockets.sockets.forEach((socket,key)=>{
-      console.log(socket,"connected u datahhhhhhhh");
-  })
+  //   io.in('chatroom1').sockets.sockets.forEach((socket,key)=>{
+  //     console.log(socket,"connected u datahhhhhhhh");
+  // })
 
 
 
