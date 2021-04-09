@@ -163,7 +163,7 @@ exports.sendMsg_to_doctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
     console.log(req.body)
     if (patient_id && doctor_id) {
-        const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
+        const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "appoint_requested" } })
         res.json({ code: 200, msg: "send msg success" })
     } else {
         res.json({ code: 400, msg: "something went wrong" })
@@ -179,13 +179,25 @@ exports.patient_accept_status = (req, res) => {
             console.log(err)
             res.json({ code: 400, msg: "something went wrong" })
         })
+};
+
+
+exports.patient_chat_request = async(req, res) => {
+    const { doctor_id, patient_id } = req.body;
+    console.log(req.body)
+    if (patient_id && doctor_id) {
+        const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "booked" } })
+        res.json({ code: 200, msg: "msg send successfully" })
+    } else {
+        res.json({ code: 400, msg: "something went wrong" })
+    }
 }
 
 
 exports.booked_patient = async (req, res) => {
     const { doctor_id } = req.body
     const arr = []
-    patient_data.find({ $and: [{ status: "booked", doctor_id: doctor_id }] })
+    patient_data.find({ $and: [{ status: "appoint_requested", doctor_id: doctor_id }] })
         .exec(async (err, List) => {
             if (err) {
                 res.json({ code: 400, msg: 'patient list not found' })
@@ -233,7 +245,7 @@ exports.accept_patient = (req, res) => {
                     if (response) {
                         const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                         )
-                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "ongoing" } })
+                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "appoint_accepted" } })
                         console.log(update_patient)
                         res.json({ code: 200, msg: response })
                     } else {
@@ -241,11 +253,11 @@ exports.accept_patient = (req, res) => {
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                             room: otp,
-                            status: "ongoing"
+                            status: "appoint_accepted"
                         })
                         data_resp.save()
                             .then((resp) => {
-                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "ongoing" } })
+                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "appoint_accepted" } })
                                 console.log(patient_data)
                                 res.json({ code: 200, msg: resp })
                             }).catch((err) => {
