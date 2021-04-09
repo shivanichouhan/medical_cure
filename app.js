@@ -239,7 +239,7 @@ io.on('connection', function (socket) {
     console.log(user, "user fffffff   details");
     socket.join('chatroom1');
     console.log('check 2', socket.connected);
-
+    console.log(socket.id,"this is connected iiiii uuuuusssseeeerrr ")
     console.log("join in room")
 
     // var clients = io.sockets.clients('chatroom1');
