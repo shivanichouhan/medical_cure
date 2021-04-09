@@ -238,6 +238,8 @@ io.on('connection', function (socket) {
     io.emit('connect user', user);
     console.log(user,"user fffffff   details");
     socket.join('chatroom1');
+    console.log('check 2', socket.connected);
+
     console.log("join in room")
   });
 
