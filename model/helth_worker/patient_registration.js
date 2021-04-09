@@ -61,7 +61,11 @@ const patientSchema = new schema(
             enum: ['ongoing', "booked", 'accepted', "completed", "cancelled"]
         }, availability_check: {
             type: String
-        }, doctor_id: { type: String }
+        }, doctor_id: { type: String }, 
+        prescription: [{
+            type: schema.Types.ObjectId,
+            ref: "prescription"
+        }],
     },
     { timestamps: true }
 )
