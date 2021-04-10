@@ -102,23 +102,22 @@ exports.facebook_Login =(req,res)=>{
     } else if (login_type == 'facebook') {
         Patient.findOne({ gmailId: gmailId })
         .then((resp) => {
-                console.log(resp)
+                console.log(resp,'fsdfs')
                 if(resp){
-                    //console.log("shubham medicaps")
                     res.json({ code: 200, msg: resp })
                 }
                 else {
-                    console.log(req.body)
-                    var patientinfo = new Patient({
+                    console.log(req.body,'inside')
+                    var pateintobj = new Patient({
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
                         patient_img:profile_pic
                     })
-                    var Token = jwt.sign({ _id: patientinfo._id }, process.env.JWT_SECRET)
-                    patientinfo.bearer_token = Token
-                    console.log(patientinfo)
-                    patientinfo.save((err, Data) => {
+                    console.log(pateintobj)
+                    var Token = jwt.sign({ _id: pateintobj._id }, process.env.JWT_SECRET)
+                    pateintobj.bearer_token = Token
+                    pateintobj.save((err, Data) => {
                         if (err) {
                             res.send({code:400,msg:'patient detail not add'})
                         }
@@ -129,6 +128,7 @@ exports.facebook_Login =(req,res)=>{
                     })
                 }
             }).catch((error) => {
+                console.log(error)
                 res.json({code:400,msg:'data is empty'})
             })
     }
