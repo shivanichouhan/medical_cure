@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const { create_blog, list_blog, remove_blog, edit_blog, blog_status } = require("../../controller/admin/blog")
+const { create_blog, list_blog, remove_blog, edit_blog, blog_status,blogInfo } = require("../../controller/admin/blog")
 const { checkLogin } = require("../../auth")
 const upload = require("../../handler/multer")
 
+router.get("/admin/blog_info/:blogId",blogInfo)
 router.get("/admin/blog_list", list_blog)
 router.post("/admin/add_blog",upload.array('blog_img'),create_blog);
 router.put("/admin/edit_blog/:blogId", upload.array('blog_img'), edit_blog)

@@ -3,6 +3,19 @@ const blogsubcat = require("../../model/admin/blog_sub_cat")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
+exports.blogInfo = (req,res)=>{
+    blogModal.find({_id:req.params.blogId})
+    .populate('comment')
+    .exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:"blog info not get"})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.list_blog = (req, res) => {
     blogModal.find().exec((err, blogList) => {
         if (err) {

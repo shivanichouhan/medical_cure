@@ -97,12 +97,13 @@ exports.facebook_Login =(req,res)=>{
                     })
                 }
             }).catch((error) => {
+                console.log(error)
                 res.send({code: 400, msg: 'data is empty'})
             })
     } else if (login_type == 'facebook') {
         Patient.findOne({ gmailId: gmailId })
         .then((resp) => {
-                console.log(resp,'fsdfs')
+                console.log('inside facebook')
                 if(resp){
                     res.json({ code: 200, msg: resp })
                 }
@@ -111,7 +112,7 @@ exports.facebook_Login =(req,res)=>{
                     var pateintobj = new Patient({
                         email: req.body.email,
                         gmailId: req.body.gmailId,
-                        username: username,
+                        user_name: username,
                         patient_img:profile_pic
                     })
                     console.log(pateintobj)

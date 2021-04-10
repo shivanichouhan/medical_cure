@@ -26,7 +26,11 @@ const blogSchema = new schema(
             type: String
         }, video_file: {
             type: String
-        }
+        },
+        comment:[{
+            type:schema.Types.ObjectId,
+            ref:'blog_comment'
+        }]
     }
     ,
     { timestamps: true }

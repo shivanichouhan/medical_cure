@@ -64,6 +64,7 @@ const appoinement_list = require("./routes/Doctor/appointment_lists")
 
 
 //admin routes 
+const comment = require("./routes/admin/blog_comment")
 const adminReg = require("./routes/admin/admin_login")
 const docRegistration = require("./routes/admin/Doctor/doctor_reg")
 const img_banner = require("./routes/admin/banner_img")
@@ -150,6 +151,7 @@ app.use('/api', payment)
 
 //admin middleware
 app.use('/api', adminReg)
+app.use('/api', comment)
 app.use('/api', docRegistration)
 app.use('/api', img_banner)
 app.use('/api', img_offer)
