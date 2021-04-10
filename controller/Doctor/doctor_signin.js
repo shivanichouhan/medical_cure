@@ -276,7 +276,7 @@ exports.otpSend = async (req,res)=>{
             }
              })
           }).catch((err)=>{
-            res.send(err)
+            res.send({code:400,msg:'otp not sent'})
       })
     }
   }) 

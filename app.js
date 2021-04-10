@@ -192,7 +192,7 @@ app.use('/api', push_notification)
 //
 app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)
-app.use('/api',Phone_varify)
+
 app.use('/api',Review)
 app.use('/api',appoinement_list)
 
