@@ -13,9 +13,8 @@ upload.fields([{ name: 'blog_img' }, {
 }, { name: "video_file", maxCount: 1 }]),
  create_blog);
 
-
-router.put("/admin/edit_blog/:blogId", checkLogin, upload.array('blog_img'), edit_blog)
-router.delete("/admin/remove_blog/:blogId", checkLogin, remove_blog)
+router.put("/admin/edit_blog/:blogId", upload.array('blog_img'), edit_blog)
+router.delete("/admin/remove_blog/:blogId", remove_blog)
 router.put("/admin/manage_blog_status", checkLogin, blog_status)
 
 module.exports = router;

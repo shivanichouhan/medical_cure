@@ -14,7 +14,6 @@ async function validatePassword(plainPassword, hashedPassword) {
 }
 
 exports.patient_signup = async (req, res) => {
-
     const OTP = otpGenerator.generate(44, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     console.log(req.body)
     const { user_name, email, mobile_number, password } = req.body;
@@ -58,42 +57,40 @@ exports.patient_Login = async (req, res) => {
         else {
             const token = jwt.sign({ _id: patient._id }, process.env.JWT_SECRET)
             console.log(token)
-            console.log(patient)
-            return res.json({ token, data: {username: patient.username, email: patient.email } });
+            console.log(patient,patient.user_name)
+            return res.json({ token, data: {user_name: patient.user_name, email: patient.email } });
         }
-        // res.json({ code: 200, msg: Doc })
     }
 }
 
 exports.facebook_Login =(req,res)=>{
-    const { email, gmailId, username,login_type } = req.body
+    const { email, gmailId, username,login_type,profile_pic } = req.body
     console.log("shubham  gmail data", req.body)
     if (login_type == "gmail") {
-        console.log("run")
         Pat.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
+                    console.log('respone come')
                        res.json({ code: 200, msg: resp })
                    }
                 else {
                     console.log(req.body)
-                    var pateintinfo = new doc({
-                        email: req.body.email,
-                        gmailId: req.body.gmailId,
-                        user_name: user_name,
+                    var pateintinfo = new Pat({
+                        email: email,
+                        gmailId: gmailId,
+                        user_name: username,
+                        profile_pic:profile_pic
                        
                     })
                     var Token = jwt.sign({ _id: pateintinfo._id }, process.env.JWT_SECRET)
                     pateintinfo.bearer_token = Token
-                    console.log(pateintinfo)
-
+                    console.log(pateintinfo,'obj')
                     pateintinfo.save((err, Data) => {
                         if (err) {
-                            res.send(err)
+                            res.send({code:400,msg:'patient detail not add'})
                         }
                         else {
-                            console.log("shubham shukla")
                             res.json({ code: 200, msg: Data })
                         }
                     })
@@ -115,6 +112,7 @@ exports.facebook_Login =(req,res)=>{
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
+                        profile_pic:profile_pic
 
                     })
                     var Token = jwt.sign({ _id: patientinfo._id }, process.env.JWT_SECRET)
@@ -122,10 +120,10 @@ exports.facebook_Login =(req,res)=>{
                     console.log(patientinfo)
                     patientinfo.save((err, Data) => {
                         if (err) {
-                            res.send(err)
+                            res.send({code:400,msg:'patient detail not add'})
                         }
                         else {
-                            console.log("Run")
+                            
                             res.send({ code: 200, msg: Data })
                         }
                     })
