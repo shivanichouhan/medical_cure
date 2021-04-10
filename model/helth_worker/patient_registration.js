@@ -3,7 +3,19 @@ const schema = mongoose.Schema
 
 const patientSchema = new schema(
     {
+        email: {
+            type: String
+        },
+        gmailId: {
+            type: String
+        },
+        user_name: {
+            type: String
+        },
         patient_id: {
+            type: String
+        },
+        reg_type: {
             type: String
         },
         health_worker_name: {
@@ -55,17 +67,18 @@ const patientSchema = new schema(
         },
         patient_status: {
             type: String,
-        }, disease_id: { type: String },
-        status: {
-            type: String,
-            enum: ['ongoing',"appoint_requested","appoint_accepted", "booked", 'accepted', "completed", "cancelled"]
-        }, availability_check: {
-            type: String
-        }, doctor_id: { type: String }, 
+        },
         prescription: [{
             type: schema.Types.ObjectId,
             ref: "prescription"
         }],
+        bearer_token: {
+            type: String
+        },
+        status: {
+            type: String,
+            enum: ['ongoing', "booked", 'accepted', "completed", "cancelled"]
+        }, doctor_id: { type: String }
     },
     { timestamps: true }
 )

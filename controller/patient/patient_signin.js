@@ -1,4 +1,5 @@
-const Pat = require("../../model/patient/patient_signin")
+// const Pat = require("../../model/patient/patient_signin")
+const Patient = require("../../model/helth_worker/patient_registration")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const otp = require("../../otp")
@@ -67,7 +68,7 @@ exports.facebook_Login =(req,res)=>{
     const { email, gmailId, username,login_type,profile_pic } = req.body
     console.log("shubham  gmail data", req.body)
     if (login_type == "gmail") {
-        Pat.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
+        Patient.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
@@ -76,11 +77,11 @@ exports.facebook_Login =(req,res)=>{
                    }
                 else {
                     console.log(req.body)
-                    var pateintinfo = new Pat({
+                    var pateintinfo = new Patient({
                         email: email,
                         gmailId: gmailId,
                         user_name: username,
-                        profile_pic:profile_pic
+                        patient_img:profile_pic
                        
                     })
                     var Token = jwt.sign({ _id: pateintinfo._id }, process.env.JWT_SECRET)
@@ -99,25 +100,24 @@ exports.facebook_Login =(req,res)=>{
                 res.send({code: 400, msg: 'data is empty'})
             })
     } else if (login_type == 'facebook') {
-        Pat.findOne({ gmailId: gmailId })
+        Patient.findOne({ gmailId: gmailId })
         .then((resp) => {
-                console.log(resp)
+                console.log(resp,'fsdfs')
                 if(resp){
-                    //console.log("shubham medicaps")
                     res.json({ code: 200, msg: resp })
                 }
                 else {
-                    console.log(req.body)
-                    var patientinfo = new Pat({
+                    console.log(req.body,'inside')
+                    var pateintobj = new Patient({
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
-                        profile_pic:profile_pic
+                        patient_img:profile_pic
                     })
-                    var Token = jwt.sign({ _id: patientinfo._id }, process.env.JWT_SECRET)
-                    patientinfo.bearer_token = Token
-                    console.log(patientinfo)
-                    patientinfo.save((err, Data) => {
+                    console.log(pateintobj)
+                    var Token = jwt.sign({ _id: pateintobj._id }, process.env.JWT_SECRET)
+                    pateintobj.bearer_token = Token
+                    pateintobj.save((err, Data) => {
                         if (err) {
                             res.send({code:400,msg:'patient detail not add'})
                         }
@@ -128,12 +128,13 @@ exports.facebook_Login =(req,res)=>{
                     })
                 }
             }).catch((error) => {
+                console.log(error)
                 res.json({code:400,msg:'data is empty'})
             })
     }
 }
 
-exports.otpSend = async (req,res)=>{
+exports.forget_otpSend = async (req,res)=>{
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
@@ -174,7 +175,7 @@ exports.otpSend = async (req,res)=>{
     }
 }
 
-exports.otpVerify =(req,res)=>{
+exports.forget_otpVerify =(req,res)=>{
     Pat.findOne({mobile_number:req.body.mobile_number})
     .exec((err,resp)=>{
         if(err || !resp){
@@ -198,6 +199,99 @@ exports.otpVerify =(req,res)=>{
     })
 }
 
+exports.reg_otpSend = async (req,res)=>{
+    var patient = await Patient.findOne({ _id: req.body.patientId })
+    if (patient) {
+        const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+        otp.send_otp(req.body.mobile, OTP).then((result) => {
+            Patient.updateOne({_id:req.body.patientId},{$set:{mobile:req.body.mobile,otp:OTP}},
+                (err,resp)=>{
+                    if(err){
+                        res.json({code:400,msg:'mobile no is not add in patient'})
+                    }
+                    else{
+                        res.json({code:200,msg:'otp send successfully'})
+                    }
+                })
+
+        }).catch((error) => {
+            console.log()
+            res.json({ code: 400, msg: 'otp not sent' })
+        })
+    }else{
+        res.json({code:400,msg:'patient id not come'})
+    }
+   
+}
+
+exports.reg_otpVerify = async(req,res)=>{
+    Patient.findOne({ _id: req.body.patientId })
+    .exec((err, resp) => {
+        if (err || !resp) {
+            res.json({ code: 400, msg: 'wrong patient id' })
+        }
+        else {
+            console.log(resp)
+            if (resp.otp === req.body.otp) {
+                Patient.updateOne({ _id: resp._id }, { $set: { otp: '', mob_verify: true } }, (err, updtePatient) => {
+                    if (err) {
+                        res.json({ code: 400, msg: 'phone no is verify' })
+                    }
+                    else {
+                        res.json({ code: 200, msg: 'otp verify success', patient_id: resp._id })
+                    }
+                })
+            }
+            else {
+                res.json({ code: 400, msg: 'wrong otp' })
+            }
+        }
+    })
+}
+
+exports.reg_patient = async(req,res)=>{
+    console.log(req.body)
+    if(req.body.type == 'self'){
+       var result = await Patient.findOne({_id:req.body.patientId})
+       if(result){
+            Patient.updateOne({_id:req.body.patientId},{
+                reg_type:'self',
+                patient_id:result._id,
+                age:req.body.age,
+                gender:req.body.gender,
+                height:req.body.height,
+                weight:req.body.weight,
+                patient_name:req.body.patient_name,
+                p_reg:true
+            },(err,resp)=>{
+                if(err){
+                    res.json({code:400,msg:'self patient is not register'})
+                }
+                else{
+                    res.json({code:200,msg:'self patient register successfully'})
+                }
+            })
+       }else{
+           res.json({code:400,msg:'patient id is not come'})
+       }
+    }
+    else if(req.body.type == 'other'){
+        console.log('run')
+        var patObj = new Patient(req.body)
+        patObj.patient_id = req.body.patientId
+        patObj.reg_type='other'
+        patObj.p_reg=true
+        console.log(patObj)
+        patObj.save((err,resp)=>{
+            if(err){
+                res.json({code:400,msg:'other patient is not register'})
+            }else{
+                res.json({code:200,msg:'other patient is register'})
+            }
+        })
+    }
+}
+
 exports.passwordupdate = async(req,res)=>{
     console.log(req.body.password,req.body.confirmPass)
     if(req.body.password === req.body.confirmPass){
@@ -218,11 +312,3 @@ exports.passwordupdate = async(req,res)=>{
     }
 }
 
-
-// var obj={
-//     "email":"depak@gmail.com",
-//     "gmailId":"1111111",
-//     "username":"depak",
-//     "login_type":"gmail",
-//     "profile_pic":"imgurl"
-// }

@@ -12,7 +12,7 @@ const PatientSchema = new schema(
         email: {
             type: String
         },
-        mobile_number: {
+        mobile: {
             type: String
         },
         otp: {

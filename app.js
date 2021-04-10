@@ -97,6 +97,7 @@ const contact_us = require('./routes/admin/contact_us')
 //Patient
 const patients = require("./routes/patient/patient_signin")
 
+
 mongoose.Promise = global.Promise
 const PASSWORD = encodeURIComponent('@123navgurukul');
 const database = 'xpresscure'
