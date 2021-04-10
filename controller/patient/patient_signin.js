@@ -113,7 +113,6 @@ exports.facebook_Login =(req,res)=>{
                         gmailId: req.body.gmailId,
                         username: username,
                         profile_pic:profile_pic
-
                     })
                     var Token = jwt.sign({ _id: patientinfo._id }, process.env.JWT_SECRET)
                     patientinfo.bearer_token = Token
@@ -220,3 +219,10 @@ exports.passwordupdate = async(req,res)=>{
 }
 
 
+// var obj={
+//     "email":"depak@gmail.com",
+//     "gmailId":"1111111",
+//     "username":"depak",
+//     "login_type":"gmail",
+//     "profile_pic":"imgurl"
+// }

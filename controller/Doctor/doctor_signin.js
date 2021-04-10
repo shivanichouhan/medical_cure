@@ -170,13 +170,14 @@ exports.doctorLogin = async (req, res) => {
 exports.log_social = async(req,res)=>{
     console.log(req.body)
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-    const { email, gmailId, username, photo, login_type } = req.body
+    const { email, gmailId, username, profile_pic, login_type } = req.body
     console.log("shivani gmail data", req.body)
+
     if (login_type == "gmail") {
         doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then(async(resp) => {
                 if (resp) {
-                      var fire_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token}})
+                      var fire_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token,profile_pic:profile_pic}})
                       if(fire_token){
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp,{bearer_token:token})
@@ -215,7 +216,7 @@ exports.log_social = async(req,res)=>{
         .then(async(resp) => {
                 console.log(resp)
                 if(resp){
-                    var firebase_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token}})
+                    var firebase_token = await doc.updateOne({_id:resp._id},{$set:{firebase_token:req.body.firebase_token,profile_pic:profile_pic}})
                   if(firebase_token){
                     const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                     var result = _.extend(resp,{bearer_token:token})

@@ -15,7 +15,6 @@ exports.list_blog = (req, res) => {
 }
 
 exports.create_blog = (req, res) => {
-    // console.log(req.files, "bhhygigyy88u88888ih")
     var blogObj = new blogModal(req.body)
     blogObj.save(async (err, resp) => {
         if (err) {
@@ -53,10 +52,8 @@ exports.create_blog = (req, res) => {
                         console.log(thumb, "hgguyguyguy")
                         obj.video_image = thumb.url
                     }
-                    resolve(obj)
-                })
-                .then((resp) => {
-                    console.log(resp,"hhutyft77878989889989898989898")
+               
+                 
                     blogModal.findByIdAndUpdate({ _id: resp._id }, { $set: obj })
                         .exec((err, blogUpdte) => {
                             if (err) {
