@@ -8,6 +8,15 @@ cloudenary.config({
     api_secret: process.env.cloud_api_secret
 });
 
+exports.Blogs = (file) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `Blogs/${uniqueFilename}`, tags: `Blogs` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+
 exports.uploads = (file) => {
     return new Promise(resolve => {
         var uniqueFilename = Date.now()

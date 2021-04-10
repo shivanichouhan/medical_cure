@@ -3,9 +3,21 @@ const schema = mongoose.Schema
 
 const patientSchema = new schema(
   {
+    email:{
+        type:String
+    }, 
+    gmailId:{
+        type:String
+    },
+    user_name:{
+        type:String
+    },
     patient_id:{
       type:String
     },  
+    reg_type:{
+        type:String
+    },
     health_worker_name:{
         type:String
     },
@@ -60,6 +72,9 @@ const patientSchema = new schema(
         type:schema.Types.ObjectId,
         ref:"prescription"
     }],
+    bearer_token:{
+        type:String
+    },
     status: {
         type: String,
         enum: ['ongoing',"booked",'accepted',"completed","cancelled"]

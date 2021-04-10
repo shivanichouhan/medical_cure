@@ -5,9 +5,7 @@ const { checkLogin } = require("../../auth")
 const upload = require("../../handler/multer")
 
 router.get("/admin/blog_list", list_blog)
-
 router.post("/admin/add_blog",upload.array('blog_img'),create_blog);
-
 router.put("/admin/edit_blog/:blogId", upload.array('blog_img'), edit_blog)
 router.delete("/admin/remove_blog/:blogId", remove_blog)
 router.put("/admin/manage_blog_status", checkLogin, blog_status)
