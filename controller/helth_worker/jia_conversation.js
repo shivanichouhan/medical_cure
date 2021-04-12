@@ -410,7 +410,6 @@ exports.accepted_chat_status = (req, res) => {
     const obj = {}
     patient_data.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
         .then((responce) => {
-            // obj.
             if (responce) {
                 if (responce.status == "accepted") {
                     obj.msg = "accepted"
@@ -420,9 +419,7 @@ exports.accepted_chat_status = (req, res) => {
                 res.json({ code: 200, msg: obj })
             } else {
                 res.json({ code: 400, msg: "something went wrong" })
-
             }
-
         }).catch((err) => {
             console.log(err)
             res.json({ code: 400, msg: "something went wrong" })

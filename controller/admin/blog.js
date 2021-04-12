@@ -4,7 +4,7 @@ const cloud = require("../../cloudinary")
 const fs = require('fs')
 
 exports.blogInfo = (req,res)=>{
-    blogModal.find({_id:req.params.blogId})
+    blogModal.findOne({_id:req.params.blogId})
     .populate('comment')
     .exec((err,resp)=>{
         if(err){
