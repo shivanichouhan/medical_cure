@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken')
 const otp = require("../../otp")
 var otpGenerator = require('otp-generator')
 const _ = require('lodash')
+const cloud = require("../../cloudinary")
+const fs = require('fs')
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -139,8 +141,6 @@ exports.forget_otpSend = async (req,res)=>{
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
-        //console.log("Sveltosh technology")
-
         Pat.findOne({mobile_number:req.body.forgetpass}) 
         .exec((err,data)=>{
         if(err || !data){
@@ -312,4 +312,48 @@ exports.passwordupdate = async(req,res)=>{
         res.json({code:400,error:'password does not match'})
     }
 }
+
+exports.edit_patient = async (req,res)=>{
+    console.log(req.body)
+    console.log(req.file)
+    Patient.updateOne({_id:req.body.patientId},req.body,(err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'patient details not update'})
+        }
+        else{
+            if(req.file){
+                const { path } = req.file
+                console.log(path)
+                cloud.patient(path).then((patImg)=>{
+                    fs.unlinkSync(path)
+                    console.log(patImg)
+                    Patient.updateOne({_id:req.body.patientId},{$set:{patient_img:patImg.url}},(err,resp)=>{
+                        if(err){
+                            res.json({code:400,msg:'patient img not update'})
+                        }
+                        else{
+                            res.json({code:200,msg:'patient detail update with image'})
+                        }
+                    })
+
+                }).catch((error)=>{ 
+                    res.json({code:400,msg:'img url not create'})
+                })
+
+            }else{
+                res.json({code:200,msg:'patient details update successfully'})
+            }
+        }
+    })
+}
+
+exports.other_patient = async (req,res)=>{
+    var data = await Patient.find({$and:[{patient_id:req.params.patient_id},{reg_type:'other'}]})
+    if(data.length>0){
+        res.json({code:200,msg:data})
+    }else{
+        res.json({code:400,msg:'other patient data not found'})
+    }
+}
+
 
