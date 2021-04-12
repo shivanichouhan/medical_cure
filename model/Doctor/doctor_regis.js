@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 require('mongoose-double')(mongoose)
-
 var SchemaTypes = mongoose.Schema.Types
-
 const EventSchema = new mongoose.Schema(
     {
         first_name:{
