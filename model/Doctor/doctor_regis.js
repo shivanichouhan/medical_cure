@@ -185,9 +185,6 @@ const EventSchema = new mongoose.Schema(
         certificate: {
             type: Array
         },
-        mobile_number: {
-            type: String
-        },
         user_id: {
             type: String
         },
