@@ -134,7 +134,7 @@ const EventSchema = new mongoose.Schema(
             type: String
         },
         status: {
-            type: Number,
+            type: String,
         },
         otp: {
             type: String

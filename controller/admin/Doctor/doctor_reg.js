@@ -47,6 +47,7 @@ exports.reg_doctor = async(req,res)=>{
                  var docObj = new docReg(req.body)
                  docObj.save(async(err,regDoc)=>{
                     if(err){
+                        console.log(err)
                         res.json({code:400,msg:'doctor details not save'})
                     }
                     else{

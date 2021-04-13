@@ -12,6 +12,9 @@ const patientSchema = new schema(
     user_name:{
         type:String
     },
+    password:{
+        type:String
+    },
     patient_id:{
       type:String
     },  
@@ -25,7 +28,8 @@ const patientSchema = new schema(
         type:String
     },
     patient_img:{
-        type:String
+        type:String,
+        default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
     },
     mobile:{
         type:String
