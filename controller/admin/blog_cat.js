@@ -1,4 +1,4 @@
-const { model } = require("mongoose")
+const { model, Promise } = require("mongoose")
 const blogCat = require("../../model/admin/blog_cat")
 // const a = require("../../views/add")
 const path = require("path")
@@ -64,6 +64,7 @@ exports.blog_sub_category = (req, res) => {
 }
 
 exports.detail_blog =(req,res)=>{
+    const arr =[]
     blogCat.findOne({_id:req.params.catId},{blog_cat_name:1})
     .populate([{
         path:'blog_subcategory',
@@ -77,7 +78,17 @@ exports.detail_blog =(req,res)=>{
         if(err){
             res.json({code:400,msg:'blog info not found'})
         }else{
-            res.json({code:200,msg:resp.blog_subcategory})
+            const blog_categ = resp.blog_subcategory
+            Promise.all(blog_categ.map((items)=>{
+                const blog = items.blogs
+                console.log(blog,"s 88888888888888888888888hinaaaaaaaa")
+                if(blog.length !=0){
+                    arr.push(...blog);
+                    console.log(items,"shinaaaaaaaa")
+
+                }
+            }))
+            res.json({code:200,msg:arr})
         }
     })
   
