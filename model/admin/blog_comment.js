@@ -14,6 +14,12 @@ const commentblogSchema = new schema(
       },
       comment:{
           type:String
+      },
+      date:{
+          type:String
+      },
+      time:{
+          type:String
       }
     }
     ,

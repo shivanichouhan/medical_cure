@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken')
 const otp = require("../../otp")
 var otpGenerator = require('otp-generator')
 const _ = require('lodash')
+const cloud = require("../../cloudinary")
+const fs = require('fs')
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -139,34 +141,35 @@ exports.forget_otpSend = async (req,res)=>{
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
-        //console.log("Sveltosh technology")
-
-        Pat.findOne({mobile_number:req.body.forgetpass}) 
+        Patient.findOne({mobile:req.body.forgetpass}) 
         .exec((err,data)=>{
         if(err || !data){
           res.json({code:400, error:'this number does not exist'})  
         }
         else{
+        console.log(data.gmailId.length)
+        if(data.gmailId.length < 0){
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         console.log(OTP, typeof OTP)
-        
         otp.send_otp(str,OTP).then((data)=>{
-            Pat.updateOne({mobile_number:str},{$set:{otp:OTP}},(err,respdata)=>{
+            Patient.updateOne({mobile:str,p_reg:true},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
-                res.json(err)
+                res.json({code:400,msg:'otp number not add in patient'})
             }
             else{
                 res.json({code:200,msg:"otp send successfully"})
             }
              })
           }).catch((err)=>{
-            res.send(err)
+            res.send({code:400,msg:'otp not send'})
       })
     }
-  }) 
-}
     else{
-
+        res.json({code:400,msg:'you are login gmail or facebook'})
+    }
+   }
+ }) 
+}else{
         var Email = await Pat.findOne({email:req.body.email})
         if(!Email){
             res.json({code:400, msg:'this email id not exist'})
@@ -177,16 +180,16 @@ exports.forget_otpSend = async (req,res)=>{
 }
 
 exports.forget_otpVerify =(req,res)=>{
-    Pat.findOne({mobile_number:req.body.mobile_number})
+    Patient.findOne({mobile:req.body.mobile})
     .exec((err,resp)=>{
         if(err || !resp){
             res.json({ code:400,msg:'mobile not does not exist'})
         }
        else{
             if(resp.otp === req.body.otp){
-                Pat.findOneAndUpdate({mobile_number:req.body.mobile_number},{$set:{otp:" "}},(err,patUpdate)=>{
+                Patient.findOneAndUpdate({mobile:req.body.mobile},{$set:{otp:" "}},(err,patUpdate)=>{
                 if(err){
-                        res.json(err)
+                        res.json({code:400,msg:'data not found'})
                     }
                     else{
                         res.json({code:200,patient_id:patUpdate._id,msg:'otp verfiy successfully'})
@@ -201,6 +204,11 @@ exports.forget_otpVerify =(req,res)=>{
 }
 
 exports.reg_otpSend = async (req,res)=>{
+    var patData = await Patient.findOne({$and:[{mobile:req.body.mobile},{p_reg:true}]})
+    if(patData){
+        res.json({code:400,msg:'this mobile no already register'})
+    }
+    else{
     var patient = await Patient.findOne({ _id: req.body.patientId })
     if (patient) {
         const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
@@ -222,7 +230,7 @@ exports.reg_otpSend = async (req,res)=>{
     }else{
         res.json({code:400,msg:'patient id not come'})
     }
-   
+}
 }
 
 exports.reg_otpVerify = async(req,res)=>{
@@ -297,9 +305,8 @@ exports.passwordupdate = async(req,res)=>{
     console.log(req.body.password,req.body.confirmPass)
     if(req.body.password === req.body.confirmPass){
         const Password = await hashPassword(req.body.password)
-        Pat.findByIdAndUpdate(req.body.patient_id,{$set:{password:Password}},
+        Patient.findByIdAndUpdate(req.body.patient_id,{$set:{password:Password}},
         (err,passupdate)=>{
-            console.log("shubham shukla")
            if(err){
                res.json({code:400, error:'password does not update'})
            }
@@ -312,4 +319,48 @@ exports.passwordupdate = async(req,res)=>{
         res.json({code:400,error:'password does not match'})
     }
 }
+
+exports.edit_patient = async (req,res)=>{
+    console.log(req.body)
+    console.log(req.file)
+    Patient.updateOne({_id:req.body.patientId},req.body,(err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'patient details not update'})
+        }
+        else{
+            if(req.file){
+                const { path } = req.file
+                console.log(path)
+                cloud.patient(path).then((patImg)=>{
+                    fs.unlinkSync(path)
+                    console.log(patImg)
+                    Patient.updateOne({_id:req.body.patientId},{$set:{patient_img:patImg.url}},(err,resp)=>{
+                        if(err){
+                            res.json({code:400,msg:'patient img not update'})
+                        }
+                        else{
+                            res.json({code:200,msg:'patient detail update with image'})
+                        }
+                    })
+
+                }).catch((error)=>{ 
+                    res.json({code:400,msg:'img url not create'})
+                })
+
+            }else{
+                res.json({code:200,msg:'patient details update successfully'})
+            }
+        }
+    })
+}
+
+exports.other_patient = async (req,res)=>{
+    var data = await Patient.find({$and:[{patient_id:req.params.patient_id},{reg_type:'other'}]})
+    if(data.length>0){
+        res.json({code:200,msg:data})
+    }else{
+        res.json({code:400,msg:'other patient data not found'})
+    }
+}
+
 

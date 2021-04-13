@@ -3,6 +3,18 @@ const blogsubcat = require("../../model/admin/blog_sub_cat")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
+exports.blog_search =(req,res)=>{
+    var blog_name = new RegExp('^'+req.body.search,'i');
+    blogModal.find({name:blog_name}).exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'blog list not found'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
 exports.blogInfo = (req,res)=>{
     blogModal.findOne({_id:req.params.blogId})
     .populate('comment')

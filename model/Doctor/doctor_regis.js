@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 require('mongoose-double')(mongoose)
-
 var SchemaTypes = mongoose.Schema.Types
-
 const EventSchema = new mongoose.Schema(
     {
         first_name:{
@@ -184,9 +182,6 @@ const EventSchema = new mongoose.Schema(
 
         certificate: {
             type: Array
-        },
-        mobile_number: {
-            type: String
         },
         user_id: {
             type: String

@@ -27,6 +27,10 @@ const blogSchema = new schema(
         }, video_file: {
             type: String
         },
+        comment_count:{
+            type:Number,
+            default:0
+        },
         comment:[{
             type:schema.Types.ObjectId,
             ref:'blog_comment'
