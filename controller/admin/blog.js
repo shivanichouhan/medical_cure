@@ -4,6 +4,7 @@ const cloud = require("../../cloudinary")
 const fs = require('fs')
 
 exports.blog_search =(req,res)=>{
+    console.log(req.body)
     var blog_name = new RegExp('^'+req.body.search,'i');
     blogModal.find({name:blog_name}).exec((err,resp)=>{
         if(err){

@@ -71,7 +71,7 @@ exports.detail_blog =(req,res)=>{
         populate: {
             path: 'blogs',
             model: 'blog',
-            select:'blog_img'
+            select:'blog_img name discription'
         }
     }]).exec((err,resp)=>{
         if(err){
@@ -80,5 +80,5 @@ exports.detail_blog =(req,res)=>{
             res.json({code:200,msg:resp})
         }
     })
-
+ 
 }
