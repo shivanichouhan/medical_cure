@@ -2,6 +2,7 @@ const { model } = require("mongoose")
 const blogCat = require("../../model/admin/blog_cat")
 // const a = require("../../views/add")
 const path = require("path")
+
 exports.list_cat_blog = (req, res) => {
     blogCat.find()
    .select('blog_cat_name')
@@ -60,4 +61,24 @@ exports.blog_sub_category = (req, res) => {
             res.send(respo.blog_subcategory)
 
         })
+}
+
+exports.detail_blog =(req,res)=>{
+    blogCat.find({_id:req.params.catId},{blog_cat_name:1})
+    .populate([{
+        path:'blog_subcategory',
+        select:'blog_sub_cat blogs',
+        populate: {
+            path: 'blogs',
+            model: 'blog',
+            select:'blog_img'
+        }
+    }]).exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'blog info not found'})
+        }else{
+            res.json({code:200,msg:resp})
+        }
+    })
+
 }

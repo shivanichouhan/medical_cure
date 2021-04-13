@@ -169,9 +169,7 @@ exports.forget_otpSend = async (req,res)=>{
     }
    }
  }) 
-}
-    else{
-
+}else{
         var Email = await Pat.findOne({email:req.body.email})
         if(!Email){
             res.json({code:400, msg:'this email id not exist'})
