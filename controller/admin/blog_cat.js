@@ -64,6 +64,22 @@ exports.blog_sub_category = (req, res) => {
 }
 
 exports.detail_blog =(req,res)=>{
+    // blogCat.find({_id:req.params.catId},{blog_cat_name:1})
+    // .populate([{
+    //     path:'blog_subcategory',
+    //     select:'blog_sub_cat blogs',
+    //     populate: {
+    //         path: 'blogs',
+    //         model: 'blog',
+    //         select:'blog_img name discription'
+    //     }
+    // }]).exec((err,resp)=>{
+    //     if(err){
+    //         res.json({code:400,msg:'blog info not found'})
+    //     }else{
+    //         res.json({code:200,msg:resp})
+    //     }
+    // })
     blogCat.find({_id:req.params.catId},{blog_cat_name:1})
     .populate([{
         path:'blog_subcategory',
@@ -77,8 +93,8 @@ exports.detail_blog =(req,res)=>{
         if(err){
             res.json({code:400,msg:'blog info not found'})
         }else{
-            res.json({code:200,msg:resp})
+            res.json({code:200,msg:resp[0].blog_subcategory})
         }
     })
- 
+  
 }
