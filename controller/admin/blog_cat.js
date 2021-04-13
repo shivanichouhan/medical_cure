@@ -71,14 +71,14 @@ exports.detail_blog =(req,res)=>{
         populate: {
             path: 'blogs',
             model: 'blog',
-            select:'blog_img'
+            select:'blog_img name discription'
         }
     }]).exec((err,resp)=>{
         if(err){
             res.json({code:400,msg:'blog info not found'})
         }else{
-            res.json({code:200,msg:resp})
+            res.json({code:200,msg:resp.blog_subcategory})
         }
     })
-
+  
 }
