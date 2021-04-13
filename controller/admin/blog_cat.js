@@ -64,7 +64,7 @@ exports.blog_sub_category = (req, res) => {
 }
 
 exports.detail_blog =(req,res)=>{
-    blogCat.find({_id:req.params.catId},{blog_cat_name:1})
+    blogCat.findOne({_id:req.params.catId},{blog_cat_name:1})
     .populate([{
         path:'blog_subcategory',
         select:'blog_sub_cat blogs',
