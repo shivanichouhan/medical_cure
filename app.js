@@ -240,7 +240,7 @@ io.on('connection', function (socket) {
     console.log(user, "user details");
     io.emit('connect user', user);
     console.log(user, "user fffffff   details");
-    socket.join('chatroom1');
+    socket.join(user.room_id);
     console.log('check 2', socket.connected);
     console.log(socket.id,"this is connected iiiii uuuuusssseeeerrr ")
     console.log("join in room")
