@@ -261,7 +261,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('on typing', function (typing) {
-    console.log("Typing.... ");
+    console.log("Typing.... ",typing);
     io.emit('on typing', typing);
   });
   socket.on("accept_petient", async function (datas) {
