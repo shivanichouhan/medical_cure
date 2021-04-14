@@ -251,15 +251,12 @@ io.on('connection', function (socket) {
     var numClients = clientsList;
     console.log(numClients,"shivaniiihhygyggiiiiiiiiiiiiiiiiiiiiiii")
 
-
-
   });
 
   socket.on('on typing', function (typing) {
     console.log("Typing.... ",typing);
     io.emit('on typing', typing);
   });
-
 
   socket.on('new message', async function (username) {
     io.emit('new message', username);
