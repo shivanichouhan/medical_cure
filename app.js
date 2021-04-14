@@ -255,15 +255,17 @@ io.on('connection', function (socket) {
 
   });
 
+  socket.on('on typing', function (typing) {
+    console.log("Typing.... ",typing);
+    io.emit('on typing', typing);
+  });
+
+
   socket.on('new message', async function (username) {
     io.emit('new message', username);
     console.log(username, "new message")
   });
 
-  socket.on('on typing', function (typing) {
-    console.log("Typing.... ",typing);
-    io.emit('on typing', typing);
-  });
   socket.on("accept_petient", async function (datas) {
     if (datas.type == "1") {
       socket.join(datas.p_id);
