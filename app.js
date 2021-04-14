@@ -255,7 +255,7 @@ io.on('connection', function (socket) {
 
   });
 
-  socket.on('chat message', async function (username) {
+  socket.on('new message', async function (username) {
     io.emit('new message', username);
     console.log(username, "new message")
   });
