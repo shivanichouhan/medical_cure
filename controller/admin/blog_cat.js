@@ -81,11 +81,8 @@ exports.detail_blog =(req,res)=>{
             const blog_categ = resp.blog_subcategory
             Promise.all(blog_categ.map((items)=>{
                 const blog = items.blogs
-                console.log(blog,"s 88888888888888888888888hinaaaaaaaa")
                 if(blog.length !=0){
                     arr.push(...blog);
-                    console.log(items,"shinaaaaaaaa")
-
                 }
             }))
             res.json({code:200,msg:arr})
