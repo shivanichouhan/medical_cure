@@ -19,6 +19,9 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./scratch');
 }
+//email
+const mail = require("./routes/admin/suscribe")
+
 
 //user routes
 const payment = require('./routes/helth_worker/payment')
@@ -129,6 +132,9 @@ app.use(express.json());
 app.get("/demo", (req, res) => {
   res.send("good shivani")
 })
+//email
+app.use('/api', mail)
+
 
 //helthworker middleware
 app.use('/api', dashboard_img)

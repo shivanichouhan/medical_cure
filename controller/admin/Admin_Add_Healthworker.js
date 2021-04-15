@@ -101,8 +101,9 @@ exports.Add_Health_Worker = async (req, res) => {
  }
 
 exports.findhealthworker = async (req, res) => {
+    console.log('fds')
     try{
-        const workersData = await HealthWorker.find({mobile_verfiy:1});
+        const workersData = await HealthWorker.find();
         res.send(workersData);
     }catch(e){
         res.send(e);

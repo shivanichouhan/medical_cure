@@ -21,15 +21,14 @@ exports.patient_signup = async (req, res) => {
     console.log(req.body)
     const { user_name, email, mobile_number, password } = req.body;
     const hashedPassword = await hashPassword(password)
-    const data_check = await Pat.findOne({ email: email })
+    const data_check = await Patient.findOne({ email: email })
     console.log(data_check)
     if (!data_check) {
-        const datas = new Pat({
+        const datas = new Patient({
             user_name: user_name,
             email: email,
             mobile_number: mobile_number,
             password: hashedPassword,
-
         })
         datas.save()
             .then((resp) => {
@@ -44,7 +43,7 @@ exports.patient_signup = async (req, res) => {
 exports.patient_Login = async (req, res) => {
     var { email, password } = req.body
     console.log(email)
-    const patient = await Pat.findOne({ email: email })
+    const patient = await Patient.findOne({ email: email })
     if (!patient) {
         res.json({
             code: 400,
@@ -52,6 +51,7 @@ exports.patient_Login = async (req, res) => {
         })
     }
     else {
+        console.log(patient)
         const validPassword = await validatePassword(password, patient.password)
         console.log(validPassword, '44')
         if (!validPassword) {
@@ -61,7 +61,7 @@ exports.patient_Login = async (req, res) => {
             const token = jwt.sign({ _id: patient._id }, process.env.JWT_SECRET)
             console.log(token)
             console.log(patient,patient.user_name)
-            return res.json({ token, data: {user_name: patient.user_name, email: patient.email } });
+            return res.json({code:200, token, msg:{user_name: patient.user_name, email: patient.email,patient_img:patient.patient_img} });
         }
     }
 }
@@ -138,6 +138,7 @@ exports.facebook_Login =(req,res)=>{
 }
 
 exports.forget_otpSend = async (req,res)=>{
+    console.log(req.body)
     var str = req.body.forgetpass  
     var patt1 = /^[0-9]*$/;
     if(str.match(patt1)){
@@ -147,8 +148,6 @@ exports.forget_otpSend = async (req,res)=>{
           res.json({code:400, error:'this number does not exist'})  
         }
         else{
-        console.log(data.gmailId.length)
-        if(data.gmailId.length < 0){
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         console.log(OTP, typeof OTP)
         otp.send_otp(str,OTP).then((data)=>{
@@ -163,10 +162,6 @@ exports.forget_otpSend = async (req,res)=>{
           }).catch((err)=>{
             res.send({code:400,msg:'otp not send'})
       })
-    }
-    else{
-        res.json({code:400,msg:'you are login gmail or facebook'})
-    }
    }
  }) 
 }else{
@@ -180,6 +175,7 @@ exports.forget_otpSend = async (req,res)=>{
 }
 
 exports.forget_otpVerify =(req,res)=>{
+    console.log(req.body)
     Patient.findOne({mobile:req.body.mobile})
     .exec((err,resp)=>{
         if(err || !resp){
