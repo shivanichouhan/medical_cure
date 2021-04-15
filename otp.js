@@ -33,6 +33,7 @@ function otp(){
     })  
   }
 
+// home page suscribe function
   this.suscribe_mail = (email)=>{
       return new Promise((resolve,reject)=>{
       
@@ -69,6 +70,77 @@ function otp(){
   })
 }
 
+// doctor mitra suscribe function
+this.suscribe_doctor_mitra = (email)=>{
+  return new Promise((resolve,reject)=>{
+  
+    const mailOptions = {
+      sendgrid_key: process.env.EMAIL_KEY,
+      from_email: 'info.xpresscure@gmail.com',
+      from_name: 'kumar saurabh',
+      to: email // REQUIRED: `string` email
+  };
+  
+  mailOptions.subject = 'Suscribe Mail Doctor Mitra';
+  mailOptions.content = `<p>Dear Health Guardian, <br>
+  Thank You for registering with XpressCure.<br>
+  At XpressCure, we are working to create the largest network for online consultations across India.<br>
+  The mission is aimed at:<br>
+  <ul> 
+   <li>Helping Specialist Doctors, reach to the most underserved populations.</li>
+   <li>Helping Patients get consultations with the best of doctors.</li>
+   <li>Helping Health workers register their digital clinics.</li>
+   </ul>
+  XpressCure is building an online consultation platform but retains the human touch through the Doctor Mitras spread across India.<br>
+  We value<br>
+  Our app is in getting ready to serve you better. Please wait for our reply with the launch date. <br>
+  Yours, <br>
+  Kumar Saurabh<br>
+  Founder, XpressCure.</p>
+  `;
+  sendgrid.send_via_sendgrid(mailOptions).then(resp=>{
+    resolve('success')
+  }).catch(error=>{
+    reject('fail')
+  })
+})
+}
+
+// doctor mitra suscribe function
+this.suscribe_doctor = (email)=>{
+  return new Promise((resolve,reject)=>{
+  
+    const mailOptions = {
+      sendgrid_key: process.env.EMAIL_KEY,
+      from_email: 'info.xpresscure@gmail.com',
+      from_name: 'kumar saurabh',
+      to: email // REQUIRED: `string` email
+  };
+  
+  mailOptions.subject = 'Suscribe Mail Doctor';
+  mailOptions.content = `<p>Dear Doctor,<br>
+  Thank You for registering with XpressCure.<br>
+  At XpressCure, we are working to create the largest network for online consultations across India.<br>
+  The mission is aimed at:<br>
+  <ul>
+   <li>Helping Specialist Doctors like you, reach to the most underserved populations.</li>
+   <li>Helping Patients get consultations with the best of doctors.</li>
+   <li>Helping Health workers register their digital clinics.</li>
+   </ul>
+  XpressCure is building an online consultation platform but retains the human touch through the Doctor Mitras spread across India.<br>
+  We value your TRUST.<br>
+  Our app is in getting ready to serve you better. Please wait for our reply with the launch date. <br>
+  Yours, <br>
+  Kumar Saurabh<br>
+  Founder, XpressCure.</p>
+  `;
+  sendgrid.send_via_sendgrid(mailOptions).then(resp=>{
+    resolve('success')
+  }).catch(error=>{
+    reject('fail')
+  })
+})
+}
 }
 
 module.exports = new otp()

@@ -1,15 +1,14 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const suscribeSchema = new schema(
+const doctorsuscribeSchema = new schema(
     {
         suscribe_email:{
             type:String
-        },
-       
+        }
     }
      ,
      {timestamps:true} 
     )
 
-module.exports = mongoose.model("suscribe", suscribeSchema)
+module.exports = mongoose.model("suscribe_doctor", doctorsuscribeSchema)
