@@ -232,7 +232,7 @@ exports.videoUpload = (file, folder) => {
                 eager_async: true
             },
             function (err, video_image) {
-                resolve({ url: video_image.url })
+                resolve({ url: video_image.url,imgId:video_image.asset_id })
             });
     });
 };

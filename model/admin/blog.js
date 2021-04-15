@@ -22,10 +22,12 @@ const blogSchema = new schema(
         },
         status: {
             type: String,
-        }, video_image: {
-            type: String
-        }, video_file: {
-            type: String
+        },
+        video_image:{
+            type: Array
+        },
+        video_file: {
+            type: Array
         },
         comment_count:{
             type:Number,
