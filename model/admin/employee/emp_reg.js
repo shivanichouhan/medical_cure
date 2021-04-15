@@ -3,10 +3,16 @@ const schema = mongoose.Schema
 
 const employeeSchema = new schema(
   {
-     emp_name:{
+    first_name:{
          type:String
      },
-     phone:{
+    last_name:{
+        type:String
+    },
+    user_name:{
+        type:String
+    },
+    phone:{
          type:String
      },
      email:{
@@ -18,7 +24,16 @@ const employeeSchema = new schema(
      address:{
          type:String
      },
+     emp_id:{
+         type:String
+     },
+     joining_date:{
+         type:String
+     },
      discription:{
+         type:String
+     },
+     identity_type:{
          type:String
      },
      identity_no:{
@@ -29,6 +44,9 @@ const employeeSchema = new schema(
      },
      back_identity:{
         type:Array
+     },
+     profile_pic:{
+         type:Array
      },
      salary:{
          type:String
@@ -55,8 +73,7 @@ const employeeSchema = new schema(
         type:String
      },
      status:{
-        type:Number,
-        default:1
+        type:String,
      },
      role:{
          type:String
