@@ -194,6 +194,15 @@ exports.specilist = (file, folder) => {
     })
 };
 
+exports.emp_profile = (file, folder) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `employee/${uniqueFilename}`, tags: `employee` }, (err, result) => {
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+};
+
 
 exports.videoUpload = (file, folder) => {
     return new Promise(resolve => {

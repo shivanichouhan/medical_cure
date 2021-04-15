@@ -22,7 +22,6 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 //email
 const mail = require("./routes/admin/suscribe")
 
-
 //user routes
 const payment = require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');

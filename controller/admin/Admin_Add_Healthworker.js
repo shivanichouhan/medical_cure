@@ -2,6 +2,7 @@ const HealthWorker = require('../../model/helth_worker/users');
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
+const otp = require("../../otp")
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -46,7 +47,7 @@ exports.Add_Health_Worker = async (req, res) => {
        }
        else{
            if(resp.register == "1"){
-            res.send({code:400,msg:'data not found'})
+            res.send({code:400,msg:'this mobile not already register'})
            }
            else{
             var healthObj = new HealthWorker(req.body)
