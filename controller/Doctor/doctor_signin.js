@@ -377,3 +377,24 @@ exports.passupdate = async(req,res)=>{
     }
 }
 
+exports.edit_profile_pic = async(req,res)=>{
+    console.log(req.file,req.body)
+    if(req.file){
+        const {path} = req.file
+        cloud.doctor_profile_pic(path).then(async(resp)=>{
+            fs.unlinkSync(path)
+            var docProfile = await doc.updateOne({_id:req.body.docId},{$set:{profile_pic:resp.url}}) 
+            if(docProfile){
+                res.json({code:200,msg:'doctor profile pic update successfully'})
+            }
+            else{
+                res.json({code:400,msg:'doctor profile pic not update'})
+            }
+        }).catch((error)=>{
+            res.json({code:400,msg:'img url not create'})
+        })
+    }else{
+        res.json({code:400,msg:'profile pic not come'})
+    }
+
+}

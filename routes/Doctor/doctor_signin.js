@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const{ doctor_info,doctor_reg,doctorLogin,log_social,otpSend,otpVerify,passupdate,reg_from } = require("../../controller/Doctor/doctor_signin")
+const{ doctor_info,doctor_reg,doctorLogin,log_social,otpSend,otpVerify,passupdate,reg_from,edit_profile_pic } = require("../../controller/Doctor/doctor_signin")
 const upload = require("../../handler/multer")
 
 router.get("/doctor/doctor_info/:docId",doctor_info)
@@ -11,5 +11,6 @@ router.post("/doctor/registration_doctor/:docId",upload.fields([{name:'certifica
 router.post("/doctor/send_otp",otpSend)// for password forget
 router.post("/doctor/verify_otp",otpVerify)// for password forget verfiy
 router.put("/doctor/update_password",passupdate)
+router.put("/doctor/edit_profile_pic",upload.single('profile_pic'),edit_profile_pic)
 
 module.exports = router;
