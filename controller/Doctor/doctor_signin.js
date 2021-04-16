@@ -16,22 +16,13 @@ async function validatePassword(plainPassword, hashedPassword) {
 }
 
 exports.doctor_info =(req,res)=>{
-   doc.find({_id:req.params.docId},{
-    username:1,
-    profile_pic:1,
-    email:1,
-    dumy_userName:1,
-    mobile_number:1,
-    Address:1,
-    Gender:1,
-    register:1,
-    DOB:1
-   })
+   doc.find({_id:req.params.docId})
   .exec((err,resp)=>{
       if(err){
           res.json({code:400,msg:'doctor info not find'})
       }
-      else{
+      else{ 
+
           res.json({code:200,msg:resp})
       }
   })
