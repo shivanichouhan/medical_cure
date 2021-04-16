@@ -41,26 +41,54 @@ exports.list_blog = (req, res) => {
 }
 
 exports.create_blog = (req, res) => {
+    console.log(req.files.blog_img,req.files.thumb_img,req.files.blog_video)
+
+    if(Object.entries(req.files).length != 0){
     var blogObj = new blogModal(req.body)
     blogObj.save(async (err, resp) => {
         if (err) {
             res.json({code:400,msg:'blog detail not add'})
         }
         else {
-            if (req.files.length > 0) {
-                        const Blog = async (path) => await cloud.Blogs(path)
-                        const Blogurls = []
-                                for (let fileF of req.files){
-                                const { path } = fileF
-                                const newpathF = await Blog(path)
-                                Blogurls.push(newpathF)
-                                fs.unlinkSync(path)
-                              }
-                              console.log(Blogurls)
-                    blogModal.findByIdAndUpdate({ _id: resp._id },{$push:{blog_img:Blogurls}})
+                var BlogImg=[]
+                if(req.files.blog_img){
+                    const blogImg = async (path) => await cloud.Blogs(path)
+                    for (const FileF of req.files.blog_img) {
+                        const { path } = FileF
+                        const newpathF = await blogImg(path)
+                        BlogImg.push(newpathF)
+                        fs.unlinkSync(path)
+                    }
+                  }
+
+                  var BlogThumb=[]
+                  if(req.files.thumb_img){
+                    const blogVT = async (path) => await cloud.videoImages(path)
+                    for (const FileT of req.files.thumb_img){
+                        const { path } = FileT
+                        const newpathF = await blogVT(path)
+                        BlogThumb.push(newpathF)
+                        fs.unlinkSync(path)
+                    }
+                  }
+
+                  var BlogVideo=[]
+                  if(req.files.blog_video){
+                    const blogV = async (path) => await cloud.videoUpload(path)
+                    for (const FileS of req.files.blog_video) {
+                        const { path } = FileS
+                        const newpathF = await blogV(path)
+                        BlogVideo.push(newpathF)
+                        fs.unlinkSync(path)
+                    }
+                  }
+                    console.log(BlogImg,BlogVideo)
+                   
+                    blogModal.findByIdAndUpdate({_id: resp._id},{$push:{blog_img:BlogImg, video_file:BlogVideo, video_image:BlogThumb}})
                         .exec((err, blogUpdte) => {
                             if (err) {
-                                res.json({code:400,msg:'img not add in blog'})
+                                console.log(err,'not upload')
+                                res.json({code:400,msg:'img video not add in blog'})
                             }
                             else {
                                 blogsubcat.updateOne({ blog_sub_cat: req.body.blog_sub_cat }, { $push: { blogs: blogUpdte._id } },
@@ -69,25 +97,18 @@ exports.create_blog = (req, res) => {
                                             ({code:400,msg:'blog is not add subcategory'})
                                         }
                                         else {
-                                            res.json({ result: blogUpdte, blog: blogupdte })
+                                            res.json({ code: 200, msg:'blog add successfully'})
                                         }
                                 })
                             }
                         })
-            }
-            else {
-                blogsubcat.updateOne({ blog_sub_cat: req.body.blog_sub_cat }, { $push: { blogs: resp._id } },
-                    (err, blogupdte) => {
-                        if (err) {
-                            res.json({code:400,msg:'blog is not add subcategory'})
-                        }
-                        else {
-                            res.json({ code: 200, blog: blogupdte })
-                        }
-                    })
-            }
         }
     })
+    }
+    else{
+        res.send({code:400,msg:'please send blog img or blog video'})
+    }
+    
 }
 
 exports.edit_blog = (req, res) => {
@@ -156,3 +177,7 @@ exports.blog_status = (req, res) => {
         })
     }
 }
+
+
+
+  

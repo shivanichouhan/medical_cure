@@ -5,97 +5,128 @@ var SchemaTypes = mongoose.Schema.Types
 const EventSchema = new mongoose.Schema(
     {
         first_name:{
-            type:String
+            type:String,
+            default:" "
         },
         last_name:{
-            type:String
+            type:String,
+            default:" "
         },
         Gender: {
-            type: String
+            type: String,
+            default:" "
         },
         DOB: {
-            type: String
+            type: String,
+            default:" "
         },
         Blood_group: {
-            type: String
+            type: String,
+            default:" "
         },
         UGCollege_University: {
-            type: String
+            type: String,
+            default:" "
         },
         ug_clg:{
-            type:String
+            type:String,
+            default:" "
         },
         Course: {
-            type: String
+            type: String,
+            default:" "
         },
         u_pass_year: {
             type: String,
+            default:" "
         },
         PGCollege_or_University: {
-            type: String
+            type: String,
+            default:" "
         },
         pg_clg:{
-            type:String
+            type:String,
+            default:" "
         },
         Courses: {
-            type: String
+            type: String,
+            default:" "
         },
         p_pass_year: {
             type: String,
+            default:" "
         },
         Certificate_University: {
-            type: String
+            type: String,
+            default:" "
         },
         certificate_course:{
-            type:String
+            type:String,
+            default:" "
         },
         c_pass_year:{
-            type:String
+            type:String,
+            default:" "
         },
         super_clg:{
-            type:String
+            type:String,
+            default:" "
         },
         super_course:{
-            type:String
+            type:String,
+            default:" "
         },
         super_pass_year:{
-            type:String
+            type:String,
+            default:" "
         },
         certificate_Img: {
-            type: Array
+            type: Array,
+
         },
         Employment_status: {
-            type: String
+            type: String,
+            default:" "
         },
         Specialization: {
-            type: String
+            type: String,
+            default:" "
         },
         area_of_interest:{
-            type:String
+            type:String,
+            default:" "
         },
         Experience: {
-            type: String
+            type: String,
+            default:" "
         },
         State: {
-            type: String
+            type: String,
+            default:" "
         },
         City: {
-            type: String
+            type: String,
+            default:" "
         },
         Address: {
-            type: String
+            type: String,
+            default:" "
         },
         pincode: {
-            type: String
+            type: String,
+            default:" "
         },
         Lincense_no: {
-            type: String
+            type: String,
+            default:" "
         },
         issued_date: {
             type: String,
+            default:" "
         },
         issue_auth:{
-            type:String
+            type:String,
+            default:" "
         },
         License_img_front_side: {
             type: Array
@@ -104,10 +135,12 @@ const EventSchema = new mongoose.Schema(
             type: Array
         },
         select_identity: {
-            type: String
+            type: String,
+            default:" "
         },
         identity_Number: {
-            type: String
+            type: String,
+            default:" "
         },
         identity_back_side_img: {
             type: Array
@@ -116,46 +149,51 @@ const EventSchema = new mongoose.Schema(
             type: Array
         },
         select_bank: {
-            type: String
+            type: String,
+            default:" "
         },
         Account_No: {
-            type: String
+            type: String,
+            default:" "
         },
         IFSC_Code: {
-            type: String
+            type: String,
+            default:" "
         },
         phone_number:{
-            type:String
+            type:String,
+            default:" "
         },
         mobile_number: {
             type: String,
+            default:" "
         },
         Account_holder_name: {
-            type: String
+            type: String,
+            default:" "
         },
         status: {
             type: String,
+            default:" "
         },
         otp: {
-            type: String
+            type: String,
+            default:" "
         },
         otp_verify: {
-            type: Number
+            type: Number.toString,
+            default:" "
+
         },
         present_place:{
-            type:String
+            type:String,
+            default:" "
         },
         register:{
             type:String,
             default:"0"
         },
         gmailId: {
-            type: String
-        },
-        first_name: {
-            type: String
-        },
-        last_name: {
             type: String
         },
         username: {

@@ -32,7 +32,25 @@ function otp(){
       });
     })  
   }
-
+  this.forget_email_send = (email,Otp)=>{
+    return new Promise((resolve,reject)=>{
+    
+      const mailOptions = {
+        sendgrid_key: process.env.EMAIL_KEY,
+        from_email: 'info.xpresscure@gmail.com',
+        from_name: 'kumar saurabh',
+        to: email // REQUIRED: `string` email
+    };
+    
+    mailOptions.subject = 'forget password';
+    mailOptions.content = ``;
+    sendgrid.send_via_sendgrid(mailOptions).then(resp=>{
+      resolve('success')
+    }).catch(error=>{
+      reject('fail')
+    })
+})
+}
 // home page suscribe function
   this.suscribe_mail = (email)=>{
       return new Promise((resolve,reject)=>{
