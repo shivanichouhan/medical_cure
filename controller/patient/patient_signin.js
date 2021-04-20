@@ -8,6 +8,7 @@ const _ = require('lodash')
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
+
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
 }
@@ -151,12 +152,12 @@ exports.forget_otpSend = async (req,res)=>{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         console.log(OTP, typeof OTP)
         otp.send_otp(str,OTP).then((data)=>{
-            Patient.updateOne({mobile:str,p_reg:true},{$set:{otp:OTP}},(err,respdata)=>{
+            Patient.findByIdAndUpdate({mobile:str,p_reg:true},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
                 res.json({code:400,msg:'otp number not add in patient'})
             }
             else{
-                res.json({code:200,msg:"otp send successfully"})
+                res.json({code:200,msg:"otp send successfully",patId:respdata._id})
             }
              })
           }).catch((err)=>{
@@ -165,30 +166,41 @@ exports.forget_otpSend = async (req,res)=>{
    }
  }) 
 }else{
-        var Email = await Pat.findOne({email:req.body.email})
+        console.log(str)
+        var Email = await Patient.findOne({email:str})
         if(!Email){
             res.json({code:400, msg:'this email id not exist'})
         }else{
-
+            const otp_no =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
+            console.log(otp_no, typeof OTP)
+            otp.forget_email_otp(str,otp_no).then(async(res_data)=>{
+               var update_pat = await Patient.findByIdAndUpdate({_id:Email._id},{$set:{otp:otp_no}})
+               if(update_pat){
+                   res.json({code:200,msg:'otp send on email successfully',patId:update_pat._id})
+               }
+            }).catch((error)=>{
+                res.json({code:400,msg:'otp not sent on email'})
+                console.log(err)
+            })
         }
     }
 }
 
 exports.forget_otpVerify =(req,res)=>{
     console.log(req.body)
-    Patient.findOne({mobile:req.body.mobile})
+    Patient.findOne({_id:req.body.patId})
     .exec((err,resp)=>{
         if(err || !resp){
-            res.json({ code:400,msg:'mobile not does not exist'})
+            res.json({ code:400,msg:'this patient does not exist'})
         }
        else{
             if(resp.otp === req.body.otp){
-                Patient.findOneAndUpdate({mobile:req.body.mobile},{$set:{otp:" "}},(err,patUpdate)=>{
+                Patient.findOneAndUpdate({_id:req.body.patId},{$set:{otp:" "}},(err,patUpdate)=>{
                 if(err){
                         res.json({code:400,msg:'data not found'})
                     }
                     else{
-                        res.json({code:200,patient_id:patUpdate._id,msg:'otp verfiy successfully'})
+                        res.json({code:200,patient_id:patUpdate._id,msg:'otp verfiy successfully',patId:Patient._id})
                     }   
                 })
             }

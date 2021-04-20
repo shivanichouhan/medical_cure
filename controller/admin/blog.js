@@ -43,14 +43,13 @@ exports.list_blog = (req, res) => {
 exports.create_blog = (req, res) => {
     console.log(req.files.blog_img,req.files.thumb_img,req.files.blog_video)
 
-    // if(Object.entries(req.files).length != 0){
+    if(Object.entries(req.files).length != 0){
     var blogObj = new blogModal(req.body)
     blogObj.save(async (err, resp) => {
         if (err) {
             res.json({code:400,msg:'blog detail not add'})
         }
         else {
-            if(Object.entries(req.files).length > 0){
                 var BlogImg=[]
                 if(req.files.blog_img){
                     const blogImg = async (path) => await cloud.Blogs(path)
@@ -104,15 +103,12 @@ exports.create_blog = (req, res) => {
                             }
                            })
                    }
-                   else{
-                       res.json({code:200,msg:'blog add successfully'})
-                   }
-        }
-    })
-    // }
-    // else{
-    //     res.send({code:400,msg:'please send blog img or blog video'})
-    // }
+        })
+  
+    }
+    else{
+        res.send({code:400,msg:'please send blog img or blog video'})
+    }
     
 }
 

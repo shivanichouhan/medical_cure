@@ -259,9 +259,9 @@ exports.otpSend = async (req,res)=>{
         const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
         console.log(OTP, typeof OTP)
         otp.send_otp(str,OTP).then((data)=>{
-        doc.updateOne({mobile_number:str},{$set:{otp:OTP}},(err,respdata)=>{
+        doc.findOneAndUpdate({mobile_number:str},{$set:{otp:OTP}},(err,respdata)=>{
             if(err){
-                res.json({code:400,msg:'otp not update in doctor'})
+                res.json({code:400,msg:'otp not update in doctor',docId:respdata._id })
             }
             else{
                 res.json({code:200,msg:"otp send successfully"})
@@ -283,38 +283,38 @@ exports.otpSend = async (req,res)=>{
             console.log(Email.gmailId)
             if(Email.gmailId == undefined){
                 const OTP =  otpGenerator.generate(4, {digits: true, upperCase: false, specialChars: false,alphabets:false});
-
-                doc.updateOne({email:str},{$set:{otp:OTP}},(err,respdata)=>{
-                    if(err){
-                        res.json({code:400,msg:'otp not add in doctor'})
-                    }
-                    else{
-                        res.json({code:200,msg:"otp send successfully",otp:OTP})
-                    }
-                  }).catch((err)=>{
-                    res.send(err)
-              })
+                otp.forget_email_otp(str,OTP).then((res_data)=>{
+                    doc.findOneAndUpdate({email:str},{$set:{otp:OTP}},(err,respdata)=>{
+                        if(err){
+                            res.json({code:400,msg:'otp not add in doctor'})
+                        }
+                        else{
+                            res.json({code:200,msg:"otp send successfully",otp:OTP,docId:respdata._id})
+                        }
+                      })
+                }).catch((error)=>{
+                    console.log(error)
+                    res.json({code:400,msg:'otp not sent in email'})
+                })
             }
             else{
                 res.json({code:400,error:'you are login gmail or facebook'})
             }
-  
         }
     }
 }
 
 exports.otpVerify =(req,res)=>{
     var str = req.body.type  
-    var patt1 = /^[0-9]*$/;
-    if(str.match(patt1)){
-        doc.findOne({Phone_Number:str})
+        doc.findOne({_id:req.body.docId})
         .exec((err,resp)=>{
             if(err || !resp){
-                res.json({ code:400,msg:'mobile not does not exist'})
+                console.log(err)
+                res.json({ code:400,msg:'this doctor not found'})
             }
            else{
                 if(resp.otp === req.body.otp){
-                    doc.findOneAndUpdate({Phone_Number:str},{$set:{otp:" "}},(err,docUpdate)=>{
+                    doc.findOneAndUpdate({_id:req.body.docId},{$set:{otp:" "}},(err,docUpdate)=>{
                     if(err){
                             res.json(err)
                         }
@@ -328,33 +328,6 @@ exports.otpVerify =(req,res)=>{
                 }
            } 
         })
-    }
-    else{
-        console.log('email coming')
-        doc.findOne({email:str})
-        .exec((err,resp)=>{
-            if(err || !resp){
-                res.json({ code:400,msg:'email not does not exist'})
-            }
-           else{
-               console.log(resp)
-                if(resp.otp === req.body.otp){
-                    doc.findOneAndUpdate({email:str},{$set:{otp:" "}},(err,docUpdate)=>{
-                    if(err){
-                            res.json(err)
-                        }
-                        else{
-                            res.json({code:200,doctor_id:docUpdate._id,msg:'otp verfiy successfully'})
-                        }   
-                    })
-                }
-                else{
-                    res.json({code:400 ,error:'wrong otp'})
-                }
-           } 
-        })
-    }
-
 }
 
 exports.passupdate = async(req,res)=>{
