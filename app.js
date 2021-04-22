@@ -288,7 +288,9 @@ io.on('connection', function (socket) {
         width: 810, height: 456, crop: "fill"
       },
         function (error, result) {
+          console.log(result,"image urls")
           username.dataURI = result.secure_url
+
           io.emit('new message', username);
         });
     }else{
