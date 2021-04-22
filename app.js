@@ -22,6 +22,18 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 //email
 const mail = require("./routes/admin/suscribe")
 
+const cloudenary = require('cloudinary').v2
+const dotenv = require('dotenv')
+dotenv.config()
+
+cloudenary.config({
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.cloud_api_key,
+    api_secret: process.env.cloud_api_secret
+});
+
+
+
 //user routes
 const payment = require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
@@ -247,25 +259,41 @@ io.on('connection', function (socket) {
     console.log(user, "user fffffff   details");
     socket.join(user.room_id);
     console.log('check 2', socket.connected);
-    console.log(socket.id,"this is connected iiiii uuuuusssseeeerrr ")
+    console.log(socket.id, "this is connected iiiii uuuuusssseeeerrr ")
     console.log("join in room")
 
     // var clients = io.sockets.clients('chatroom1');
     // console.log(clients, "connected user on room......................")
     var clientsList = io.sockets.adapter.rooms["chatroom1"];
     var numClients = clientsList;
-    console.log(numClients,"shivaniiihhygyggiiiiiiiiiiiiiiiiiiiiiii")
+    console.log(numClients, "shivaniiihhygyggiiiiiiiiiiiiiiiiiiiiiii")
 
   });
 
   socket.on('on typing', function (typing) {
-    console.log("Typing.... ",typing);
+    console.log("Typing.... ", typing);
     io.emit('on typing', typing);
   });
 
   socket.on('new message', async function (username) {
-    io.emit('new message', username);
-    console.log(username, "new message")
+    var dataURI = username.dataURI;
+    if (dataURI) {
+      var uploadStr = 'data:image/jpeg;base64,' + dataURI;
+
+      cloudenary.uploader.upload(uploadStr, {
+        overwrite: true,
+        invalidate: true,
+        width: 810, height: 456, crop: "fill"
+      },
+        function (error, result) {
+          username.image_Url = result.secure_url
+          io.emit('new message', username);
+          console.log()
+        });
+    }else{
+      io.emit('new message', username);
+    }
+
   });
 
   socket.on("accept_petient", async function (datas) {
