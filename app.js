@@ -276,6 +276,8 @@ io.on('connection', function (socket) {
   });
 
   socket.on('new message', async function (username) {
+    console.log("new msg",username)
+
     var dataURI = username.dataURI;
     if (dataURI) {
       var uploadStr = 'data:image/jpeg;base64,' + dataURI;
@@ -288,7 +290,6 @@ io.on('connection', function (socket) {
         function (error, result) {
           username.image_Url = result.secure_url
           io.emit('new message', username);
-          console.log()
         });
     }else{
       io.emit('new message', username);
