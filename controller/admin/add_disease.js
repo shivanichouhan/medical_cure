@@ -21,31 +21,35 @@ exports.create_disease = (req, res) => {
     var diseaseObj = new disease(req.body)
     diseaseObj.save((err, resp) => {
         if (err) {
-            res.json(err)
+            res.json({code:400,msg:'disease not add'})
         }
         else {
             if (req.file) {
                 const { path } = req.file
                 cloud.uploads(path).then((result) => {
                     fs.unlinkSync(path)
+                    console.log(result)
                     disease.findByIdAndUpdate(resp._id, { $set: { icon: result.url } })
                         .then((data) => {
                             // res.json(data)
                             depart.updateOne({ department_name: req.body.department_name }, { $push: { disease: data } }
                                 , (err, depatUpdte) => {
                                     if (err) {
-                                        res.json(err)
+                                        res.json({code:400,msg:'disease not add in department'})
                                     }
                                     else {
-                                        res.json({ Data: data })
+                                        res.json({code:200,msg: 'disease add successfully with img' })
                                     }
                                 })
                         }).catch((err) => {
-                            res.json(err)
+                            res.json({code:400,msg:'img not add in disease'})
                         })
                 }).catch((error) => {
-                    res.json(error)
+                    res.json({code:400,msg:'img url not create'})
                 })
+            }
+            else{
+                res.json({code:200,msg:'disease add successfully'})
             }
         }
     })
