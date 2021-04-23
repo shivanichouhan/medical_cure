@@ -101,9 +101,10 @@ exports.create_blog = (req, res) => {
                                         }
                                 })
                             }
-                        })
-        }
-    })
+                           })
+                   }
+        })
+  
     }
     else{
         res.send({code:400,msg:'please send blog img or blog video'})

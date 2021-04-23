@@ -143,6 +143,7 @@ app.use(bodyParser.urlencoded({
   parameterLimit: 50000
 }));
 // app.use(expressValidator())
+
 app.set('view engine', 'ejs')
 app.use(cors())
 app.use(morgan('dev'))

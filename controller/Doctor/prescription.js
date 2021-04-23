@@ -88,6 +88,7 @@ exports.add_prescription =(req,res)=>{
         if(err){
             res.json({code:400,msg:'prescription not add'})
         }else{
+            
             Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id}},(err,resp)=>{
                 if(err){
                     res.json({code:400,msg:'prescription not add in patient'})

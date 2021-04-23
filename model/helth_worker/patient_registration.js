@@ -31,6 +31,9 @@ const patientSchema = new schema(
         type:String,
         default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
     },
+    prescription_url:{
+        type:String
+    },
     mobile:{
         type:String
     },

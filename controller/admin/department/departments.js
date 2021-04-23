@@ -3,19 +3,15 @@ const path = require("path")
 const cloud = require("../../../cloudinary")
 const url = require("url")
 exports.list_dep = (req, res) => {
-    depart.find({}, { department_name: 1, department_status: 1, _id: 1 })
+    depart.find()
         // .select('department_name')
         // .populate('disease','disease_name icon')
         .exec((err, depList) => {
             if (err) {
-                res.json(err)
+                res.json({code:400,msg:'department list not found'})
             }
             else {
-                // res.json({data:depList})
-                res.render(
-                    path.join(__dirname, '../../../views/departments.ejs'),
-                    { data: depList }
-                )
+                res.json({code:400,msg:depList})
             }
         })
 }

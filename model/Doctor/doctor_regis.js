@@ -93,7 +93,7 @@ const EventSchema = new mongoose.Schema(
             default:" "
         },
         area_of_interest:{
-            type:String,
+            type:Array,
             default:" "
         },
         Experience: {
