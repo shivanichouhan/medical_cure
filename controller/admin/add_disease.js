@@ -7,13 +7,12 @@ exports.list_disease = (req, res) => {
     disease.find()
         .exec((err, resp) => {
             if (err) {
-                res.json(err)
+                res.json({code:400,msg:'disease list not found'})
             }
             else {
-                res.json({ data: resp })
+                res.json({ code:200,msg: resp })
             }
         })
-
 }
 
 exports.create_disease = (req, res) => {
@@ -85,10 +84,10 @@ exports.edit_disease = (req, res) => {
 exports.remove_disease = (req, res) => {
     disease.remove({ _id: req.params.diseaseId }, (err, del_disease) => {
         if (err) {
-            res.json(err)
+            res.json({code:400,msg:'disease not remove'})
         }
         else {
-            res.json(del_disease)
+            res.json({code:200,msg:'disease remove successfully'})
         }
     })
 }
