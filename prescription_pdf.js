@@ -1,3 +1,8 @@
+
+function Prescription() {
+  // this.send_otp = (str,OTP)=>{
+  this.patPrescription = (patData)=>{
+  return new Promise((resolve,reject)=>{  
 var pdf = require("pdf-creator-node");
 var fs = require("fs");
 var html = fs.readFileSync("index.html", "utf8");
@@ -8,8 +13,7 @@ var options = {
   border: "10mm",
   header: {
       height: "10mm",
-      contents: "Xpress Cure"
-      
+      contents: `<div style="text-align:center"><h2>Xpress Cure</h2></div>`
   },
   footer: {
       height: "28mm",
@@ -21,17 +25,14 @@ var options = {
       }
   }
 };
-const path = require('path')
-var imgSrc = 'file://' + __dirname + '/logo/xpress.png';
-imgSrc = path.normalize(imgSrc);
-console.log(imgSrc)
 var users = [
   {
-    name: "Shyam",
-    age: "26",
+    name:"",
+    age:"26",
     height:"6.1",
     weight:"70kg",
-    disease:"harniya"
+    disease:"harniya",
+    
   },
 ];
 var document = {
@@ -41,14 +42,19 @@ var document = {
   },
   path: "./output.pdf",
   type: "",
-  // result:"<div id='pageHeader'><img src='" + imgSrc + "' /><div style='text-align: center;'>Author: Marc Bachmann</div></div>"
 };
 
 pdf
   .create(document,options)
-  .then((res) => {
-    console.log(res);
+  .then((resp) => {
+    console.log(resp);
+    resolve(resp.filename)
   })
   .catch((error) => {
     console.error(error);
   });
+})
+  }
+}
+
+module.exports =  new Prescription()

@@ -2,10 +2,9 @@ const depart = require("../../../model/admin/department/departments")
 const path = require("path")
 const cloud = require("../../../cloudinary")
 const url = require("url")
+
 exports.list_dep = (req, res) => {
     depart.find()
-        // .select('department_name')
-        // .populate('disease','disease_name icon')
         .exec((err, depList) => {
             if (err) {
                 res.json({code:400,msg:'department list not found'})
@@ -44,26 +43,23 @@ exports.create_dep = (req, res) => {
     var departObj = new depart(req.body)
     departObj.save((err, resp) => {
         if (err) {
-            res.json(err)
+            res.json({code:400,msg:'department not add'})
         }
         else {
-            res.redirect("/list_department")
-
-            // res.json(resp)
+            res.json({code:400,msg:resp})
         }
     })
 }
 
-exports.add_department = (req, res) => {
-    // add-department
-    res.render(
-        path.join(__dirname, '../../../views/add-department.ejs')
+// exports.add_department = (req, res) => {
+//     // add-department
+//     res.render(
+//         path.join(__dirname, '../../../views/add-department.ejs')
 
-    )
-}
+//     )
+// }
 
 exports.edit_dep =async (req, res) => {
-
     const { department_name, depId, description, status } = req.body
     console.log(req.body)
     const obj = {}
@@ -140,11 +136,10 @@ exports.remove_dep = (req, res) => {
     console.log(req.body)
     depart.remove({ department_name: ids }, (err, depRemove) => {
         if (err) {
-            res.json(err)
+            res.json({code:400,msg:'department is not remove'})
         }
         else {
-            res.redirect("/list_department")
-            // res.json(depRemove)
+            res.json({code:400,msg:'department is remove'})
         }
     })
 }

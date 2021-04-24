@@ -6,9 +6,10 @@
   </head>
   <body>
     <!-- <img src="./logo/xpress.png"><br> -->
+    {{#each users}}
+    <img height="70" width="70" src="{{this.img}}" alt=>
     <h5>Prescription</h5>
     <ul>
-      {{#each users}}
       <li>Name: {{this.name}}</li>
       <li>Age: {{this.age}}</li>
       <li>Height: {{this.height}}</li>
