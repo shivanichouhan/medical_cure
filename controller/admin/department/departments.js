@@ -7,10 +7,10 @@ exports.list_dep = (req, res) => {
     depart.find()
         .exec((err, depList) => {
             if (err) {
-                res.json({code:400,msg:'department list not found'})
+                res.send('department list not found')
             }
             else {
-                res.json({code:400,msg:depList})
+                res.send(depList)
             }
         })
 }

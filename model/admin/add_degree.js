@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 const collageSchema = new schema(
   {
-    clg_name:{
+    dgree_name:{
           type:String
       }
       

@@ -1,11 +1,11 @@
 
 function Prescription() {
-  // this.send_otp = (str,OTP)=>{
-  this.patPrescription = (patData)=>{
-  return new Promise((resolve,reject)=>{  
+  
+this.patPrescription = (patData)=>{
+return new Promise((resolve,reject)=>{  
 var pdf = require("pdf-creator-node");
 var fs = require("fs");
-var html = fs.readFileSync("index.html", "utf8");
+var html = fs.readFileSync("pre.html", "utf8");
 
 var options = {
   format: "A3",
@@ -32,20 +32,30 @@ var users = [
     height:"6.1",
     weight:"70kg",
     disease:"harniya",
-    
   },
 ];
+var users1 = [
+  {
+    name:"11",
+    age:"12",
+    height:"13",
+    weight:"14",
+    disease:"15",
+  },
+];
+var dt = '.pdf'
 var document = {
   html: html,
   data: {
     users: users,
+    users1:users1
   },
-  path: "./output.pdf",
+  path: "./uploads/output"+`${dt}`,
   type: "",
 };
 
 pdf
-  .create(document,options)
+  .create(document,options,)
   .then((resp) => {
     console.log(resp);
     resolve(resp.filename)

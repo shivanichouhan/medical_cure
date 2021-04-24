@@ -1,4 +1,29 @@
 const clg = require("../../model/admin/clg_name")
+const degree = require("../../model/helth_worker/courseList")
+
+exports.addDegree =(req,res)=>{
+    var degreeObj = new degree(req.body)
+    degreeObj.save((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'degree not add'})
+        }
+        else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
+
+exports.listDeg =(req,res)=>{
+    degree.find().exec((err,degList)=>{
+        if(err){
+            res.json({code:400,msg:'deg list not found'})
+        }
+        else{
+            res.json({code:200,msg:degList})
+        }
+    })
+}
 
 exports.listClg =(req,res)=>{
     clg.find().exec((err,clgList)=>{
