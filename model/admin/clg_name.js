@@ -4,8 +4,7 @@ const collageSchema = new schema(
   {
     clg_name:{
           type:String
-      }
-      
+      }    
   },  
   { timestamps: true }
  
