@@ -14,7 +14,7 @@ exports.add_feedback = (req, res) => {
         Rate_Us,
         Rate_Status,
         Comment,
-        User_Image
+        helth_worker_id
     } = req.body
     if (req.file) {
         const uniqueFilename = new Date().toISOString()
@@ -32,17 +32,17 @@ exports.add_feedback = (req, res) => {
                     Rate_Status: Rate_Status,
                     Comment: Comment,
                     User_Image: User_Image,
-                    image: image.secure_url
+                    image: image.secure_url,
+                    helth_worker_id:helth_worker_id
                 })
-                data.p_id = data._id
                 data.save()
                     .then((resp) => {
-                        res.json({ code: 200, msg: "Successfully Feedback" })
+                        res.json({ code: 200, msg: "Successfully add Feedback" })
                     })
             }
         )
     } else {
-        res.send("you dint choose image file")
+        res.send({code:400,msg:"you dint choose image file"})
     }
 
 }

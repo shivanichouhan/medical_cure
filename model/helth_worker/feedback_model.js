@@ -21,7 +21,9 @@ const EventSchema = new mongoose.Schema(
         User_Image: {
             type: String,
             default:" "
+        },helth_worker_id:{
+            type:String
         }
     })
 
-module.exports = mongoose.model('Feedback', EventSchema)
+module.exports = mongoose.model('helthFeedback', EventSchema)
