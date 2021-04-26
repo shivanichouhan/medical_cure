@@ -1,12 +1,62 @@
 const cloudenary = require('cloudinary').v2
 const dotenv = require('dotenv')
+const Path = require('path')
+const fs = require('fs')
 dotenv.config()
+
+// uploads/Clinic
+// {
+//   asset_id: 'bb0f2f6fa10700ff9e139a3361a9574b',
+//   public_id: 't0y97igz3iarglzdskfq',
+//   version: 1619263272,
+//   version_id: '91951946ac18312d8ab5ef489c70b3d2',
+//   signature: '641599c0a9700fb0278b3c189de71deb1fe4a217',
+//   resource_type: 'raw',
+//   created_at: '2021-04-24T11:21:12Z',
+//   tags: [],
+//   bytes: 12797,
+//   type: 'upload',
+//   etag: '4e813d53054a802702d5402d90a577f3',
+//   placeholder: false,
+//   url: 'http://res.cloudinary.com/dha2sjb75/raw/upload/v1619263272/t0y97igz3iarglzdskfq',
+//   secure_url: 'https://res.cloudinary.com/dha2sjb75/raw/upload/v1619263272/t0y97igz3iarglzdskfq',
+//   original_filename: 'Clinic'
+// }
 
 cloudenary.config({
     cloud_name: process.env.cloud_name,
     api_key: process.env.cloud_api_key,
     api_secret: process.env.cloud_api_secret
 });
+
+exports.prescription_patient = (file) => {
+  
+    console.log(file)
+    var File = file.split('.')
+    console.log(file,File[0],'oldfilename')
+  
+    var Pa = Path.join('uploads',file)
+    console.log(Pa)
+
+    fs.rename(Pa, 'uploads/output', () => {
+        console.log("\nFile Renamed!\n");
+      });
+   
+      var nePath = File[0]
+      var nPa = Path.join('uploads',nePath)
+      console.log(nePath,'newfilename')
+ 
+    return new Promise(resolve => {
+        cloudenary.uploader.upload(nPa, {resource_type: "raw" },  (err, result) => {
+            if(err){
+                console.log(err,'fsdf')
+            }else{
+            // console.log(result)}
+            resolve({ url: result.url, imgId: result.asset_id ,fileP :nPa})
+            }
+        })
+    })
+}
 
 exports.Blogs = (file) => {
     return new Promise(resolve => {
