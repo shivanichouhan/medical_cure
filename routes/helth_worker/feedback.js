@@ -24,7 +24,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-const { add_feedback }=require('../controller/feedback_controller');
+const { add_feedback }=require('../../controller/helth_worker/feedback_controller');
 
 router.post("/helthworker/Feedback",upload.array('User_image',3),add_feedback)
 //router.get('/image_data',image_data)

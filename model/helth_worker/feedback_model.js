@@ -18,10 +18,9 @@ const EventSchema = new mongoose.Schema(
             type: String,
             default:" "
         },
-        User_Image: {
+        User_Image: [{
             type: String,
-            default:" "
-        },helth_worker_id:{
+        }],helth_worker_id:{
             type:String
         }
     })

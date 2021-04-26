@@ -116,10 +116,12 @@ const Comission = require("./routes/admin/comission")
 //
 
 const contact_us = require('./routes/admin/contact_us')
+const Feedbacks = require("./routes/helth_worker/feedback")
 
 
 //Patient
 const patients = require("./routes/patient/patient_signin")
+
 
 
 mongoose.Promise = global.Promise
@@ -173,6 +175,7 @@ app.use('/api', mail)
 
 
 //helthworker middleware
+app.use("/api",Feedbacks)
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
@@ -192,6 +195,7 @@ app.use('/api', payment)
 //
 
 //admin middleware
+
 app.use('/api', adminReg)
 app.use('/api', comment)
 app.use('/api', docRegistration)
