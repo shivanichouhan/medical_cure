@@ -21,13 +21,13 @@ exports.add_feedback = async (req, res) => {
             obj.Comment = Comment
         }
         const datas = req.files
-        console.log(datas,"kkkkk")
+        console.log(datas, "kkkkk")
         const image_arr = []
 
         if (req.files) {
             console.log("edit images")
             const details = req.files
-           await Promise.all(details.map(async (item) => {
+            await Promise.all(details.map(async (item) => {
                 const images = await cloudenarys.Certificate(item.path)
                 console.log(images, "jijiihhh")
                 image_arr.push(images.url)
@@ -49,7 +49,6 @@ exports.add_feedback = async (req, res) => {
                 image_arr.push(images.url)
                 fs.unlinkSync(item.path)
             })).then((resp) => {
-
                 const data = new Feedback({
                     Rate_Us: Rate_Us,
                     Rate_Status: Rate_Status,
@@ -63,7 +62,17 @@ exports.add_feedback = async (req, res) => {
                     })
             })
         } else {
-            res.send({ code: 400, msg: "you dint choose image file" })
+            const data = new Feedback({
+                Rate_Us: Rate_Us,
+                Rate_Status: Rate_Status,
+                Comment: Comment,
+                helth_worker_id: helth_worker_id
+            })
+            data.save()
+                .then((resp) => {
+                    res.json({ code: 200, msg: "Successfully add Feedback" })
+                })
+            // res.send({ code: 400, msg: "you dint choose image file" })
         }
     }
 
