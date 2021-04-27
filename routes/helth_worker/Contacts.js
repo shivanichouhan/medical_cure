@@ -24,9 +24,10 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-const {Contact_data,HelthworkerContact_data}=require('../../controller/helth_worker/Contacts_controller');
+const {doctorContact_data,Contact_data,HelthworkerContact_data}=require('../../controller/helth_worker/Contacts_controller');
 
 router.post("/Contacts_data",Contact_data)
 router.post("/helthworker/contact_us",HelthworkerContact_data)
+router.post("/doctor/contact_us",doctorContact_data)
 
 module.exports = router;

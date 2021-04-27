@@ -55,4 +55,25 @@ exports.HelthworkerContact_data = (req, res) => {
         })
 }
 
+exports.doctorContact_data = (req, res) => {
+    const {
+        Description,
+        Contact_No,
+        name,
+        Emailid,
+        subject } = req.body
+
+    const data = new Contact({
+        Description: Description,
+        Contact_No: Contact_No,
+        Emailid: Emailid,
+        subject: subject,
+        name: name
+
+    })
+    data.save()
+        .then((resp) => {
+            res.json({ code: 200, msg: "data save" })
+        })
+}
 
