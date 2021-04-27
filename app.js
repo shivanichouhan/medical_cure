@@ -36,12 +36,14 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 cloudenary.config({
-    cloud_name: process.env.cloud_name,
-    api_key: process.env.cloud_api_key,
-    api_secret: process.env.cloud_api_secret
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.cloud_api_key,
+  api_secret: process.env.cloud_api_secret
 });
 
 
+
+const chat_msg = require("./model/chat_msg")
 
 //user routes
 const payment = require('./routes/helth_worker/payment')
@@ -155,14 +157,14 @@ app.use(express.json());
 
 app.get("/sender_call", (req, res) => {
   res.sendFile(
-      path.join(__dirname + '/sender/sender.html')
+    path.join(__dirname + '/sender/sender.html')
   )
 }
 )
 
 app.get("/recieve_call", (req, res) => {
   res.sendFile(
-      path.join(__dirname + '/receiver/receiver.html')
+    path.join(__dirname + '/receiver/receiver.html')
   )
 }
 )
@@ -176,7 +178,7 @@ app.use('/api', mail)
 
 
 //helthworker middleware
-app.use("/api",Feedbacks)
+app.use("/api", Feedbacks)
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
@@ -277,6 +279,17 @@ app.use('/api', appoinment)
 app.use('/api', department)
 //
 
+app.post('/all_msg', async (req, res) => {
+  //find chats between two users
+  const { room_id } = req.body
+  console.log(req.body)
+  chat_msg.find({ rooms_name: room_id })
+      .sort({ createdAt: 1 })
+      .then(messages => {
+          res.json({code:200,msg:messages})
+          console.log(messages, "shivani messages")
+      });
+})
 
 // var socket = io.connect();
 console.log("shivani socket connected")
@@ -305,11 +318,33 @@ io.on('connection', function (socket) {
     io.emit('on typing', typing);
   });
 
+  // {
+  //   0 | app | message: 'roeyoeeyo',
+  //     0 | app | drId: '6068453d8a864506bebe73f9',
+  //       0 | app | dataURI: '',
+  //         0 | app | pid: '605ebed767359f123cb168d2',
+  //           0 | app | h_name: 'Sonu Sahu',
+  //             0 | app | currentTime: 'Tue Apr 27 15:57:45 GMT+05:30 2021',
+  //               0 | app | room_id: 123,
+  //                 0 | app | username: 'Sonu Sahu'
+  //   0 | app | }
+
+
+
   socket.on('new message', async function (username) {
-    console.log("new msg",username)
+    console.log("new msg", username)
 
     var dataURI = username.dataURI;
     if (dataURI) {
+      const chatdata = new chat_msg({
+        msg: username.message,
+        drId: username.drId,
+        pid: username.pid,
+        h_name: username.h_name,
+        currentTime: username.currentTime,
+        rooms_name: username.room_id,
+        username: username.username
+      })
       var uploadStr = 'data:image/jpeg;base64,' + dataURI;
 
       cloudenary.uploader.upload(uploadStr, {
@@ -317,13 +352,24 @@ io.on('connection', function (socket) {
         invalidate: true,
         width: 810, height: 456, crop: "fill"
       },
-        function (error, result) {
-          console.log(result,"image urls")
+        async function (error, result) {
+          console.log(result, "image urls")
           username.dataURI = result.secure_url
-
+          chatdata.chat_image = result.secure_url
+          chatdata.save()
           io.emit('new message', username);
         });
-    }else{
+    } else {
+      const chatdata = new chat_msg({
+        msg: username.message,
+        drId: username.drId,
+        pid: username.pid,
+        h_name: username.h_name,
+        currentTime: username.currentTime,
+        rooms_name: username.room_id,
+        username: username.username
+      })
+      chatdata.save()
       io.emit('new message', username);
     }
 
@@ -361,101 +407,101 @@ const webSocket = new Socket({ httpServer: http })
 let users = []
 
 webSocket.on('request', (req) => {
-    const connection = req.accept()
+  const connection = req.accept()
 
-    connection.on('message', (message) => {
-        const data = JSON.parse(message.utf8Data)
+  connection.on('message', (message) => {
+    const data = JSON.parse(message.utf8Data)
 
-        const user = findUser(data.username)
+    const user = findUser(data.username)
 
-        switch (data.type) {
-            case "store_user":
+    switch (data.type) {
+      case "store_user":
 
-                if (user != null) {
-                    return
-                }
-
-                const newUser = {
-                    conn: connection,
-                    username: data.username
-                }
-
-                users.push(newUser)
-                console.log(newUser.username)
-                break
-            case "store_offer":
-                if (user == null)
-                    return
-                user.offer = data.offer
-                break
-
-            case "store_candidate":
-                if (user == null) {
-                    return
-                }
-                if (user.candidates == null)
-                    user.candidates = []
-
-                user.candidates.push(data.candidate)
-                break
-            case "send_answer":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "answer",
-                    answer: data.answer
-                }, user.conn)
-                break
-            case "send_candidate":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "candidate",
-                    candidate: data.candidate
-                }, user.conn)
-                break
-            case "join_call":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "offer",
-                    offer: user.offer
-                }, connection)
-
-                user.candidates.forEach(candidate => {
-                    sendData({
-                        type: "candidate",
-                        candidate: candidate
-                    }, connection)
-                })
-
-                break
+        if (user != null) {
+          return
         }
-    })
 
-    connection.on('close', (reason, description) => {
-        users.forEach(user => {
-            if (user.conn == connection) {
-                users.splice(users.indexOf(user), 1)
-                return
-            }
+        const newUser = {
+          conn: connection,
+          username: data.username
+        }
+
+        users.push(newUser)
+        console.log(newUser.username)
+        break
+      case "store_offer":
+        if (user == null)
+          return
+        user.offer = data.offer
+        break
+
+      case "store_candidate":
+        if (user == null) {
+          return
+        }
+        if (user.candidates == null)
+          user.candidates = []
+
+        user.candidates.push(data.candidate)
+        break
+      case "send_answer":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "answer",
+          answer: data.answer
+        }, user.conn)
+        break
+      case "send_candidate":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "candidate",
+          candidate: data.candidate
+        }, user.conn)
+        break
+      case "join_call":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "offer",
+          offer: user.offer
+        }, connection)
+
+        user.candidates.forEach(candidate => {
+          sendData({
+            type: "candidate",
+            candidate: candidate
+          }, connection)
         })
+
+        break
+    }
+  })
+
+  connection.on('close', (reason, description) => {
+    users.forEach(user => {
+      if (user.conn == connection) {
+        users.splice(users.indexOf(user), 1)
+        return
+      }
     })
+  })
 })
 
 function sendData(data, conn) {
-    conn.send(JSON.stringify(data))
+  conn.send(JSON.stringify(data))
 }
 
 function findUser(username) {
-    for (let i = 0; i < users.length; i++) {
-        if (users[i].username == username)
-            return users[i]
-    }
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].username == username)
+      return users[i]
+  }
 }

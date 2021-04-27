@@ -6,9 +6,9 @@ const blogSchema = new schema(
         name: {
             type: String
         },
-        blog_img: {
-            type: Array
-        },
+        blog_img: [{
+            type: String
+        }],
         blog_cat_name: {
             type: String
         },
@@ -23,19 +23,19 @@ const blogSchema = new schema(
         status: {
             type: String,
         },
-        video_image:{
+        video_image: {
             type: Array
         },
         video_file: {
             type: Array
         },
-        comment_count:{
-            type:Number,
-            default:0
+        comment_count: {
+            type: Number,
+            default: 0
         },
-        comment:[{
-            type:schema.Types.ObjectId,
-            ref:'blog_comment'
+        comment: [{
+            type: schema.Types.ObjectId,
+            ref: 'blog_comment'
         }]
     }
     ,
