@@ -53,6 +53,7 @@ exports.clinic_otp_verify = async(req,res)=>{
    if(result){
        console.log(req.body)
         if(result.otp == req.body.otp){
+            console.log("otp confirm")
                 User.findOneAndUpdate({mobile:req.body.mobile},{$set:{mobile_verfiy:1, otp:''}},
                 (err,resp)=>{
                     if(err){
@@ -63,6 +64,7 @@ exports.clinic_otp_verify = async(req,res)=>{
                     }
                 })
         }else{
+            console.log("otp wrong")
             res.json({code:400, msg:'wrong otp'})
         }
    }
