@@ -40,6 +40,18 @@ exports.list_blog = (req, res) => {
     });
 }
 
+exports.home_pageBlog = (req,res)=>{
+    blogModal.find().sort( { "createdAt": -1 } ).limit(3)
+    .exec((err, blogList) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            res.json({ data: blogList })
+        }
+    });
+}
+
 exports.create_blog = (req, res) => {
     console.log(req.files.blog_img, req.files.thumb_img, req.files.blog_video)
 
