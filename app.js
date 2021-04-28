@@ -284,11 +284,54 @@ app.post('/all_msg', async (req, res) => {
   const { room_id } = req.body
   console.log(req.body)
   chat_msg.find({ rooms_name: room_id })
-      .sort({ createdAt: 1 })
-      .then(messages => {
-          res.json({code:200,msg:messages})
-          console.log(messages, "shivani messages")
-      });
+    .sort({ createdAt: 1 })
+    .then(messages => {
+      res.json({ code: 200, msg: messages })
+      console.log(messages, "shivani messages")
+    });
+});
+
+function randomString(len, charSet) {
+  charSet = charSet || '0123456789'
+  var randomString = ''
+  for (var i = 0; i < len; i++) {
+      var randomPoz = Math.floor(Math.random() * charSet.length)
+      randomString += charSet.substring(randomPoz, randomPoz + 1)
+  }
+  return randomString
+}
+
+
+const chat_room = require("./model/chat_room")
+app.post("/chat_room", (req, res) => {
+  const { user_one, user_two } = req.body;
+  console.log(req.body)
+  var otps = randomString(10, '123456abcdefghijklmnopqrstuvwxyz7890')
+  chat_room.findOne({ $and: [{ user_one: user_one, user_two: user_two }] })
+    .then(async (resp) => {
+      if (resp) {
+        console.log(resp)
+        res.json({ code: 200, msg: { room: resp.room, status: "room already exist" } })
+      } else {
+        const store_datas = await chat_room.findOne({ $and: [{ user_two: user_one, user_one: user_two }] })
+        if (store_datas) {
+          res.json({ code: 200, msg: { room: store_datas.room, status: "room already exist" } })
+        } else {
+          const video_store = new chat_room({
+            user_one: user_one,
+            user_two: user_two,
+            room: otps
+          })
+          video_store.save()
+            .then((responce) => {
+              console.log(responce)
+              res.json({ code: 200, msg: { room: responce.room, status: "chat room created" } })
+
+            })
+        }
+      }
+
+    })
 })
 
 // var socket = io.connect();

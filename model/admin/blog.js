@@ -7,7 +7,11 @@ const blogSchema = new schema(
             type: String
         },
         blog_img: [{
-            type: String
+            url: {
+                type: String
+            }, imgId: {
+                type: String
+            }
         }],
         blog_cat_name: {
             type: String

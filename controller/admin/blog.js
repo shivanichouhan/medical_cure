@@ -113,19 +113,23 @@ exports.create_blog = (req, res) => {
 }
 
 exports.edit_blog = (req, res) => {
+    console.log(req.files)
     blogModal.findByIdAndUpdate(req.params.blogId, req.body)
         .exec((err, updteBlog) => {
             if (err) {
                 res.json(err)
             }
             else {
-                if (req.files.length > 0) {
+                if (req.files) {
                     for (row of req.files.blog_img) {
                         var p = row.path
                     }
                     const path = p
                     cloud.uploads(path).then((resp) => {
-                        blogModal.updateOne({ 'blog_img': req.body.imgId }, { $set: { "blog_img.$.url": resp.url, "blog_img.$.imgId": resp.imgId } })
+                        console.log(resp,"images")
+                        console.log(resp,"images")
+                        const data = [resp]
+                        blogModal.updateOne({ _id: req.body.imgId }, { $set:{blog_img:data } })
                             .exec((err, blogUpdte) => {
                                 if (err) {
                                     res.json(err)
