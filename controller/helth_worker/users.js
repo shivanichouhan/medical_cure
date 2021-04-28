@@ -259,6 +259,7 @@ exports.clinic_reg = async (req, res) => {
     var certificate = req.files.certificate
     var clinic = req.files.clinic
     console.log(req.files)
+    console.log("hjjjjjjjjjjj",req.body)
     const urlsF = []
     if(certificate){
     const uploaderF = async (path) => await cloud.Certificate(path, 'Certificates')
@@ -288,7 +289,7 @@ exports.clinic_reg = async (req, res) => {
     }
 
     var detail = _.extend(req.body, URL)
-    console.log(detail)
+    console.log("details addedddddddddddd",detail)
 
     User.updateOne({ _id: req.params.userId }, detail, (err, data) => {
         if (err) {
