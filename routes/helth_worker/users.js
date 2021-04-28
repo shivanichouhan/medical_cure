@@ -23,3 +23,10 @@ router.put("/health_worker/update_password",updatePass)
 // router.post("/user/verify_otp",otp_verify)
 
 module.exports = router;
+
+
+// {
+//     "code": 200,
+//     "msg": "otp send successfully",
+//     "otp": "2402"
+// }

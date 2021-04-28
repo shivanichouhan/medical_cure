@@ -51,6 +51,7 @@ exports.clinic_otp = async(req,res)=>{
 exports.clinic_otp_verify = async(req,res)=>{
    var result = await User.findOne({mobile:req.body.mobile})
    if(result){
+       console.log(req.body)
         if(result.otp == req.body.otp){
                 User.findOneAndUpdate({mobile:req.body.mobile},{$set:{mobile_verfiy:1, otp:''}},
                 (err,resp)=>{
