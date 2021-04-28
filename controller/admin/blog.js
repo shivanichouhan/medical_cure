@@ -129,7 +129,7 @@ exports.edit_blog = (req, res) => {
                         console.log(resp,"images")
                         console.log(resp,"images")
                         const data = [resp]
-                        blogModal.updateOne({ _id: req.body.imgId }, { $set:{blog_img:data } })
+                        blogModal.updateOne({ _id: req.params.blogId }, { $set:{blog_img:data } })
                             .exec((err, blogUpdte) => {
                                 if (err) {
                                     res.json(err)

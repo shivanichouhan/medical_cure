@@ -2,6 +2,7 @@ const { model, Promise } = require("mongoose")
 const blogCat = require("../../model/admin/blog_cat")
 // const a = require("../../views/add")
 const path = require("path")
+const blog_data = require("../../model/admin/blog")
 
 exports.list_cat_blog = (req, res) => {
     blogCat.find()
@@ -52,7 +53,7 @@ exports.remove_cat_blog = (req, res) => {
 }
 
 
-exports.blog_sub_category = (req, res) => {
+exports.blog_sub_category = async(req, res) => {
     const { data } = req.body;
     console.log(req.body);
     blogCat.findOne({ blog_cat_name: data }).populate("blog_subcategory")
@@ -63,31 +64,25 @@ exports.blog_sub_category = (req, res) => {
         })
 }
 
-exports.detail_blog =(req,res)=>{
+exports.detail_blog =async(req,res)=>{
     const arr =[]
-    blogCat.findOne({_id:req.params.catId},{blog_cat_name:1})
-    .populate([{
-        path:'blog_subcategory',
-        select:'blog_sub_cat blogs',
-        populate: {
-            path: 'blogs',
-            model: 'blog',
-            select:'blog_img name discription'
-        }
-    }]).exec((err,resp)=>{
+    const cate_list = await blogCat.findOne({_id:req.params.catName})
+    console.log(cate_list,"jkjji")
+    blog_data.find({blog_cat_name:cate_list.blog_cat_name})
+    .exec((err,resp)=>{
         if(err){
             res.json({code:400,msg:'blog info not found'})
         }else{
-            const blog_categ = resp.blog_subcategory
-            Promise.all(blog_categ.map((items)=>{
-                const blog = items.blogs
-                console.log(blog,"s 88888888888888888888888hinaaaaaaaa")
-                if(blog.length !=0){
-                    arr.push(...blog);
-                    console.log(items,"shinaaaaaaaa")
-                }
-            }))
-            res.json({code:200,msg:arr})
+            // const blog_categ = resp.blog_subcategory
+            // Promise.all(blog_categ.map((items)=>{
+            //     const blog = items.blogs
+            //     console.log(blog,"s 88888888888888888888888hinaaaaaaaa")
+            //     if(blog.length !=0){
+            //         arr.push(...blog);
+            //         console.log(items,"shinaaaaaaaa")
+            //     }
+            // }))
+            res.json({code:200,msg:resp})
         }
     })
   

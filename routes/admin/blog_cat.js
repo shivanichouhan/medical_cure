@@ -9,7 +9,7 @@ router.post("/admin/add_blog_category",create_cat_blog)
 router.put("/admin/edit_blog_category/:catId",edit_cat_blog)
 router.delete("/admin/remove_blog_category/:catId",remove_cat_blog)
 
-router.get("/admin/blog_details/:catId",detail_blog)
+router.get("/admin/blog_details/:catName",detail_blog)
 
 
 
