@@ -16,11 +16,11 @@ function otp(){
       "senderid": "XPCURE",
       "msg": `Please do not share this OTP ${OTP}`,
       });
- 
+
      req.headers({
         "cache-control": "no-cache"
      });
- 
+
     req.end(function(resp){
       console.log('run',resp.raw_body)
       if(resp.raw_body == 'ERR: INVALID ROUTE ID SUPPLIED.'){
@@ -32,18 +32,18 @@ function otp(){
       });
     })  
   }
-  
+
 // home page suscribe function
   this.suscribe_mail = (email)=>{
       return new Promise((resolve,reject)=>{
-      
+
         const mailOptions = {
           sendgrid_key: process.env.EMAIL_KEY,
           from_email: 'info.xpresscure@gmail.com',
           from_name: 'kumar saurabh',
           to: email // REQUIRED: `string` email
       };
-      
+
       mailOptions.subject = 'Suscribe Mail';
       mailOptions.content = `<p><b>Dear Patron</b>,</p>
       <p>Thank You for subscribing with XpressCure.<br>
@@ -73,14 +73,14 @@ function otp(){
 // doctor mitra suscribe function
 this.suscribe_doctor_mitra = (email)=>{
   return new Promise((resolve,reject)=>{
-  
+
     const mailOptions = {
       sendgrid_key: process.env.EMAIL_KEY,
       from_email: 'info.xpresscure@gmail.com',
       from_name: 'kumar saurabh',
       to: email // REQUIRED: `string` email
   };
-  
+
   mailOptions.subject = 'Suscribe Mail Doctor Mitra';
   mailOptions.content = `<p>Dear Health Guardian, <br>
   Thank You for registering with XpressCure.<br>
@@ -109,14 +109,14 @@ this.suscribe_doctor_mitra = (email)=>{
 // doctor mitra suscribe function
 this.suscribe_doctor = (email)=>{
   return new Promise((resolve,reject)=>{
-  
+
     const mailOptions = {
       sendgrid_key: process.env.EMAIL_KEY,
       from_email: 'info.xpresscure@gmail.com',
       from_name: 'kumar saurabh',
       to: email // REQUIRED: `string` email
   };
-  
+
   mailOptions.subject = 'Suscribe Mail Doctor';
   mailOptions.content = `<p>Dear Doctor,<br>
   Thank You for registering with XpressCure.<br>
@@ -166,3 +166,4 @@ sendgrid.send_via_sendgrid(mailOptions).then(resp=>{
 }
 
 module.exports = new otp()
+

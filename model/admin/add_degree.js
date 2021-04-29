@@ -5,10 +5,9 @@ const collageSchema = new schema(
     dgree_name:{
           type:String
       }
-      
   },  
   { timestamps: true }
  
 )
 
-module.exports = mongoose.model('collage_list', collageSchema)
+module.exports = mongoose.model('dgree_list', collageSchema)

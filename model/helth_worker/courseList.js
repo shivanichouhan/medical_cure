@@ -6,7 +6,6 @@ const courseSchema = new schema(
     degree_name:{
         type:String
     }
-
   }
 ,
   { timestamps: true }

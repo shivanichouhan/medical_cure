@@ -1,3 +1,7 @@
+const Socket = require("websocket").server
+
+
+
 var express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -7,6 +11,8 @@ var expressValidator = require('express-validator')
 var path = require('path')
 const cors = require('cors')
 const morgan = require('morgan')
+
+
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
 const http = require('http').Server(app)
@@ -14,6 +20,9 @@ const io = require('socket.io')(http);
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
 app.set("views", path.join(__dirname, "views"));
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/sender'));
+app.use(express.static(__dirname + '/receiver'));
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
@@ -22,8 +31,22 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 //email
 const mail = require("./routes/admin/suscribe")
 
+const cloudenary = require('cloudinary').v2
+const dotenv = require('dotenv')
+dotenv.config()
+
+cloudenary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.cloud_api_key,
+  api_secret: process.env.cloud_api_secret
+});
+
+
+
+const chat_msg = require("./model/chat_msg")
+
 //user routes
-const payment =require('./routes/helth_worker/payment')
+const payment = require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
@@ -96,10 +119,12 @@ const Comission = require("./routes/admin/comission")
 //
 
 const contact_us = require('./routes/admin/contact_us')
+const Feedbacks = require("./routes/helth_worker/feedback")
 
 
 //Patient
 const patients = require("./routes/patient/patient_signin")
+
 
 
 mongoose.Promise = global.Promise
@@ -130,6 +155,21 @@ app.use(morgan('dev'))
 app.use(express.json());
 
 
+app.get("/sender_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/sender/sender.html')
+  )
+}
+)
+
+app.get("/recieve_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/receiver/receiver.html')
+  )
+}
+)
+
+
 app.get("/demo", (req, res) => {
   res.send("good shivani")
 })
@@ -138,6 +178,7 @@ app.use('/api', mail)
 
 
 //helthworker middleware
+app.use("/api", Feedbacks)
 app.use('/api', dashboard_img)
 app.use('/api', product)
 app.use('/api', Users)
@@ -184,7 +225,7 @@ app.use('/api', inspire)
 app.use('/api', cureBlogs)
 app.use('/api', cityAdd)
 app.use('/api', Prescription)
-app.use('/api',contact_us)
+app.use('/api', contact_us)
 app.use('/api', Comission)
 //
 
@@ -203,9 +244,9 @@ app.use('/api', push_notification)
 //
 app.use('/api', doctor_reg)
 app.use('/api', Phone_varify)
-
-app.use('/api',Review)
-app.use('/api',appoinement_list)
+app.use('/api', Phone_varify)
+app.use('/api', Review)
+app.use('/api', appoinement_list)
 
 
 
@@ -238,6 +279,60 @@ app.use('/api', appoinment)
 app.use('/api', department)
 //
 
+app.post('/all_msg', async (req, res) => {
+  //find chats between two users
+  const { room_id } = req.body
+  console.log(req.body)
+  chat_msg.find({ rooms_name: room_id })
+    .sort({ createdAt: 1 })
+    .then(messages => {
+      res.json({ code: 200, msg: messages })
+      console.log(messages, "shivani messages")
+    });
+});
+
+function randomString(len, charSet) {
+  charSet = charSet || '0123456789'
+  var randomString = ''
+  for (var i = 0; i < len; i++) {
+      var randomPoz = Math.floor(Math.random() * charSet.length)
+      randomString += charSet.substring(randomPoz, randomPoz + 1)
+  }
+  return randomString
+}
+
+
+const chat_room = require("./model/chat_room")
+app.post("/chat_room", (req, res) => {
+  const { user_one, user_two } = req.body;
+  console.log(req.body)
+  var otps = randomString(10, '123456abcdefghijklmnopqrstuvwxyz7890')
+  chat_room.findOne({ $and: [{ user_one: user_one, user_two: user_two }] })
+    .then(async (resp) => {
+      if (resp) {
+        console.log(resp)
+        res.json({ code: 200, msg: { room: resp.room, status: "room already exist" } })
+      } else {
+        const store_datas = await chat_room.findOne({ $and: [{ user_two: user_one, user_one: user_two }] })
+        if (store_datas) {
+          res.json({ code: 200, msg: { room: store_datas.room, status: "room already exist" } })
+        } else {
+          const video_store = new chat_room({
+            user_one: user_one,
+            user_two: user_two,
+            room: otps
+          })
+          video_store.save()
+            .then((responce) => {
+              console.log(responce)
+              res.json({ code: 200, msg: { room: responce.room, status: "chat room created" } })
+
+            })
+        }
+      }
+
+    })
+})
 
 // var socket = io.connect();
 console.log("shivani socket connected")
@@ -245,18 +340,86 @@ io.on('connection', function (socket) {
   console.log("shivani socket is connected")
   console.log('User Conncetion');
   socket.on('connect user', async function (user) {
+    console.log(user, "user details");
     io.emit('connect user', user);
+    console.log(user, "user fffffff   details");
+    socket.join(user.room_id);
+    console.log('check 2', socket.connected);
+    console.log(socket.id, "this is connected iiiii uuuuusssseeeerrr ")
+    console.log("join in room")
+
+    // var clients = io.sockets.clients('chatroom1');
+    // console.log(clients, "connected user on room......................")
+    var clientsList = io.sockets.adapter.rooms["chatroom1"];
+    var numClients = clientsList;
+    console.log(numClients, "shivaniiihhygyggiiiiiiiiiiiiiiiiiiiiiii")
 
   });
-  socket.on("reconnect", () => {
-    io.emit('user-reconnected', username);
-  });
+
   socket.on('on typing', function (typing) {
-    console.log("Typing.... ");
+    console.log("Typing.... ", typing);
     io.emit('on typing', typing);
   });
-  socket.on("accept_petient",async function(datas){
-    if(datas.type == "1"){
+
+  // {
+  //   0 | app | message: 'roeyoeeyo',
+  //     0 | app | drId: '6068453d8a864506bebe73f9',
+  //       0 | app | dataURI: '',
+  //         0 | app | pid: '605ebed767359f123cb168d2',
+  //           0 | app | h_name: 'Sonu Sahu',
+  //             0 | app | currentTime: 'Tue Apr 27 15:57:45 GMT+05:30 2021',
+  //               0 | app | room_id: 123,
+  //                 0 | app | username: 'Sonu Sahu'
+  //   0 | app | }
+
+
+
+  socket.on('new message', async function (username) {
+    console.log("new msg", username)
+
+    var dataURI = username.dataURI;
+    if (dataURI) {
+      const chatdata = new chat_msg({
+        msg: username.message,
+        drId: username.drId,
+        pid: username.pid,
+        h_name: username.h_name,
+        currentTime: username.currentTime,
+        rooms_name: username.room_id,
+        username: username.username
+      })
+      var uploadStr = 'data:image/jpeg;base64,' + dataURI;
+
+      cloudenary.uploader.upload(uploadStr, {
+        overwrite: true,
+        invalidate: true,
+        width: 810, height: 456, crop: "fill"
+      },
+        async function (error, result) {
+          console.log(result, "image urls")
+          username.dataURI = result.secure_url
+          chatdata.chat_image = result.secure_url
+          chatdata.save()
+          io.emit('new message', username);
+        });
+    } else {
+      const chatdata = new chat_msg({
+        msg: username.message,
+        drId: username.drId,
+        pid: username.pid,
+        h_name: username.h_name,
+        currentTime: username.currentTime,
+        rooms_name: username.room_id,
+        username: username.username
+      })
+      chatdata.save()
+      io.emit('new message', username);
+    }
+
+  });
+
+  socket.on("accept_petient", async function (datas) {
+    if (datas.type == "1") {
       socket.join(datas.p_id);
       socket.join(datas.d_id);
     }
@@ -266,7 +429,6 @@ io.on('connection', function (socket) {
     console.log("Message " + msg['message']);
     io.emit('chat message', msg);
     //   io.emit('chat message', msg);
-
   });
 });
 
@@ -275,7 +437,114 @@ io.on('connection', function (socket) {
 app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
+// const server = http.createServer(app)
+
 http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
+
+
+const webSocket = new Socket({ httpServer: http })
+
+let users = []
+
+webSocket.on('request', (req) => {
+  const connection = req.accept()
+
+  connection.on('message', (message) => {
+    const data = JSON.parse(message.utf8Data)
+
+    const user = findUser(data.username)
+
+    switch (data.type) {
+      case "store_user":
+
+        if (user != null) {
+          return
+        }
+
+        const newUser = {
+          conn: connection,
+          username: data.username
+        }
+
+        users.push(newUser)
+        console.log(newUser.username)
+        break
+      case "store_offer":
+        if (user == null)
+          return
+        user.offer = data.offer
+        break
+
+      case "store_candidate":
+        if (user == null) {
+          return
+        }
+        if (user.candidates == null)
+          user.candidates = []
+
+        user.candidates.push(data.candidate)
+        break
+      case "send_answer":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "answer",
+          answer: data.answer
+        }, user.conn)
+        break
+      case "send_candidate":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "candidate",
+          candidate: data.candidate
+        }, user.conn)
+        break
+      case "join_call":
+        if (user == null) {
+          return
+        }
+
+        sendData({
+          type: "offer",
+          offer: user.offer
+        }, connection)
+
+        user.candidates.forEach(candidate => {
+          sendData({
+            type: "candidate",
+            candidate: candidate
+          }, connection)
+        })
+
+        break
+    }
+  })
+
+  connection.on('close', (reason, description) => {
+    users.forEach(user => {
+      if (user.conn == connection) {
+        users.splice(users.indexOf(user), 1)
+        return
+      }
+    })
+  })
+})
+
+function sendData(data, conn) {
+  conn.send(JSON.stringify(data))
+}
+
+function findUser(username) {
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].username == username)
+      return users[i]
+  }
+}

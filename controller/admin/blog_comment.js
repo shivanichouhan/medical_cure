@@ -25,7 +25,7 @@ exports.add_comment = (req,res)=>{
             res.json({code:400,msg:'comment is not add'})
         }
         else{
-            blog.updateOne({_id:req.body.blogId},{$push:{comment:resp._id},$inc:{comment_count:1}},(err,resp)=>{
+            blog.updateOne({_id:req.params.blogId},{$push:{comment:resp._id},$inc:{comment_count:1}},(err,resp)=>{
                 if(err){
                     res.json({code:400,msg:'comment not add in blog'})
                     console.log(err)
