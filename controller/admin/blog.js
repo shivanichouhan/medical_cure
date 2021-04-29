@@ -21,10 +21,11 @@ exports.blogInfo = (req, res) => {
         .populate('comment')
         .exec((err, resp) => {
             if (err) {
-                res.json({ code: 400, msg: "blog info not get" })
+                res.send({error:'blog details not found'})
             }
             else {
-                res.json({ code: 200, msg: resp })
+                
+                res.send(resp)
             }
         })
 }

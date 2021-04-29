@@ -1,7 +1,5 @@
 const Socket = require("websocket").server
 
-
-
 var express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -44,6 +42,7 @@ cloudenary.config({
 
 
 const chat_msg = require("./model/chat_msg")
+
 
 //user routes
 const payment = require('./routes/helth_worker/payment')
@@ -416,16 +415,58 @@ io.on('connection', function (socket) {
       io.emit('new message', username);
     }
 
-  });
+ });
 
-  socket.on("accept_petient", async function (datas) {
+ //prescription start path
+const patient_pres = require("./prescription_pdf")
+const Prescription = require("./model/Doctor/prescription")
+const cloud = require("./cloudinary")
+const Patient = require("./model/helth_worker/patient_registration")
+const Fs = require('fs')
+//prescription end path
+
+ socket.on("prescription", async function(patDetail) {
+   console.log('prescription',patDetail)
+   var patientInfo = await Patient.findOne({_id:req.body.patientId}) 
+   var preObj = new Prescription(req.body)
+    preObj.save((err,resp)=>{
+        if(err){
+            console.log('prescription not add')
+        }else{
+            console.log(resp)
+            patient_pres.patPrescription(resp,patientInfo).then((filePath)=>{
+            console.log(filePath)
+            var sp = filePath.split('/')
+            console.log(sp)
+            var lst = sp.slice(-1).pop()
+            console.log(lst,'last')
+
+            cloud.prescription_patient(lst).then((pdf)=>{
+                console.log(pdf)
+                Fs.unlinkSync(pdf.fileP)
+                Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id,prescription_url:pdf.url}},(err,resp)=>{
+                if(err){
+                    console.log('prescription not add in patient')
+                }else{
+                    // res.json({code:200,msg:'prescription add successfully'})
+                    io.emit("prescription",patDetail)
+                }
+              })
+            })
+         })
+       }
+    })
+ })
+
+
+socket.on("accept_petient", async function (datas) {
     if (datas.type == "1") {
       socket.join(datas.p_id);
       socket.join(datas.d_id);
     }
-  })
+ })
 
-  socket.on('chat message', async function (msg) {
+socket.on('chat message', async function (msg) {
     console.log("Message " + msg['message']);
     io.emit('chat message', msg);
     //   io.emit('chat message', msg);
@@ -442,8 +483,6 @@ const port = process.env.PORT || 8000
 http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
-
-
 
 const webSocket = new Socket({ httpServer: http })
 
@@ -526,7 +565,7 @@ webSocket.on('request', (req) => {
 
         break
     }
-  })
+})
 
   connection.on('close', (reason, description) => {
     users.forEach(user => {

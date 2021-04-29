@@ -1,7 +1,7 @@
 
 function Prescription() {
-  
-this.patPrescription = (patData)=>{
+ 
+this.patPrescription = (patpreData,patientInfo)=>{
 return new Promise((resolve,reject)=>{  
 var pdf = require("pdf-creator-node");
 var fs = require("fs");
