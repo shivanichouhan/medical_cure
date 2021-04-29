@@ -28,6 +28,7 @@ exports.clinic_otp = async (req, res) => {
     var result = await User.findOne({ mobile: str })
     const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     if (result) {
+        var result = await User.updateOne({ mobile: str },{$set:{otp:OTP}})
         otp.send_otp(str, OTP).then((resp) => {
             res.json({
                 code: 200,
