@@ -19,42 +19,51 @@ async function validatePassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
+
+
+
+
 exports.clinic_otp = async (req, res) => {
     var str = req.body.mobile
-    User.findOne({ _id: req.params.userId }).exec((err, resp) => {
-        if (err) {
-            res.json({ code: 400, msg: 'data not found' })
-        }
-        else {
-            if (resp.register == 1) {
-                const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-                otp.send_otp(str, OTP).then((resp) => {
-                    console.log(req.params.userId)
-                    User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
-                        // res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
-                        res.json({ code: 400, msg: 'this user already register', otp: OTP })
-
-                    }).catch((err) => {
-                        res.json({ code: 400, msg: 'otp not set in user' })
-                    })
-                })
-            }
-            else {
-                const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-                otp.send_otp(str, OTP).then((resp) => {
-                    console.log(req.params.userId)
-                    User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
-                        res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
-
-                    }).catch((err) => {
-                        res.json({ code: 400, msg: 'otp not set in user' })
-                    })
-                }).catch((err) => {
-                    res.json({ code: 400, msg: 'otp not sent' })
-                })
-            }
-        }
+    const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+    otp.send_otp(str, OTP).then((resp) => {
+        res.json({
+            code: 200,
+            otp: `${OTP}`,
+            msg: "OTP sent successfully"
+        })
+    }).catch((err) => {
+        res.json({
+            code: 400,
+            otp: `${OTP}`,
+            msg: "something went wrong"
+        })
     })
+
+    // User.findOne({ _id: req.params.userId }).exec((err, resp) => {
+    //     if (err) {
+    //         res.json({ code: 400, msg: 'data not found' })
+    //     }
+    //     else {
+    //         if (resp.register == 1) {
+
+    //         }
+    //         else {
+    //             const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+    //             otp.send_otp(str, OTP).then((resp) => {
+    //                 console.log(req.params.userId)
+    //                 User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
+    //                     res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
+
+    //                 }).catch((err) => {
+    //                     res.json({ code: 400, msg: 'otp not set in user' })
+    //                 })
+    //             }).catch((err) => {
+    //                 res.json({ code: 400, msg: 'otp not sent' })
+    //             })
+    //         }
+    //     }
+    // })
 
 }
 
