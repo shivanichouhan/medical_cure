@@ -3,16 +3,23 @@ const schema = mongoose.Schema
 const EventSchema = new schema(
   {
     gmailId: {
-      type: String
+      type: String,
+      default:""
+
     },
     username: {
-      type: String
+      type: String,
+      default:""
+
     },
     email: {
-      type: String
+      type: String,
+      default:""
     },
     password: {
-      type: String
+      type: String,
+      default:""
+
     },
     mobile:{
       type:String,
@@ -31,61 +38,95 @@ const EventSchema = new schema(
       default:"Inactive"
     },
     health_worker_course:{
-      type:String
+      type:String,
+      default:""
+
     },
     certificate_img:{
       type: Array
     },
     experience:{
-      type: String
+      type: String,
+      default:""
+
     },
     state: {
-      type: String
+      type: String,
+      default:""
+
     },
     city: {
-      type: String
+      type: String,
+      default:""
+
     },
     pincode: {
-      type: String
+      type: String,
+      default:""
+
     },
     address: {
-      type: String
+      type: String,
+      default:""
+
     },
     clinic_img: {
       type: Array
     },
     dob: {
-      type: String
+      type: String,
+      default:""
+
     },
     gender: {
-      type: String
+      type: String,
+      default:""
+
     },
     blood_group: {
-      type: String
+      type: String,
+      default:""
+
     },
     adhar_no: {
-      type: String
+      type: String,
+      default:""
+
     },
     account_no: {
-      type: String
+      type: String,
+      default:""
+
     },
     ifsc_code: {
-      type: String
+      type: String,
+      default:""
+
     },
     phone:{
-      type:String
+      type:String,
+      default:""
+
     },
     bearer_token: {
-      type: String
+      type: String,
+      default:""
+
     },
     photo:{
-      type: String
+      type: String,
+      default:""
+
     },
    imgId: {
-      type: String
+      type: String,
+      default:""
+
     },
     mobile: {
-      type: String
+      type: String,
+      default:""
+
     },
     mobile_verfiy:{
       type:Number,

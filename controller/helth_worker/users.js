@@ -27,7 +27,17 @@ exports.clinic_otp = async (req, res) => {
         }
         else {
             if (resp.register == 1) {
-                res.json({ code: 400, msg: 'this user already register' })
+                const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+                otp.send_otp(str, OTP).then((resp) => {
+                    console.log(req.params.userId)
+                    User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
+                        // res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
+                        res.json({ code: 400, msg: 'this user already register', otp: OTP })
+
+                    }).catch((err) => {
+                        res.json({ code: 400, msg: 'otp not set in user' })
+                    })
+                })
             }
             else {
                 const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
@@ -302,8 +312,8 @@ exports.clinic_reg = async (req, res) => {
     }
     // console.log(urlsF,"certificate", urlsS)
 
-    URL.register= "1"
-    
+    URL.register = "1"
+
 
     const obj = {};
     if (username) {
