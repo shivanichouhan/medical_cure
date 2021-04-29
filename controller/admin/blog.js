@@ -140,7 +140,7 @@ exports.edit_blog = (req, res) => {
                     cloud.uploads(path).then((resp) => {
                         console.log(resp,"images")
                         console.log(resp,"images")
-                        const data = [resp]
+                        const data = resp
                         blogModal.updateOne({ _id: req.params.blogId }, { $set:{blog_img:data } })
                             .exec((err, blogUpdte) => {
                                 if (err) {
