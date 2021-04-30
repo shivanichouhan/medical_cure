@@ -2,10 +2,11 @@ const med = require("../../model/admin/pharmacy/medicine")
 const labTest = require("../../model/admin/investigation_daignosic/lab_test")
 const alergis = require("../../model/admin/alergies")
 const daignos = require("../../model/Doctor/daignosis")
-const Prescription = require("../../model/Doctor/prescription")
-const Patient = require("../../model/helth_worker/patient_registration")
+
 const patient_pres = require("../../prescription_pdf")
+const Prescription = require("../../model/Doctor/prescription")
 const cloud = require("../../cloudinary")
+const Patient = require("../../model/helth_worker/patient_registration")
 const Fs = require('fs')
 
 exports.list_daignosis =(req,res)=>{
