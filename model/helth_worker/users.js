@@ -88,7 +88,7 @@ const EventSchema = new schema(
       default:""
 
     },
-    adhar_no: {
+    card_name: {
       type: String,
       default:""
 
