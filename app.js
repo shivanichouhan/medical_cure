@@ -442,14 +442,15 @@ const Fs = require('fs')
             console.log(lst,'last')
 
             cloud.prescription_patient(lst).then((pdf)=>{
-                console.log(pdf)
+                console.log(pdf,'url')
                 Fs.unlinkSync(pdf.fileP)
+                
                 Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id,prescription_url:pdf.url}},(err,resp)=>{
                 if(err){
                     console.log('prescription not add in patient')
                 }else{
-                    // res.json({code:200,msg:'prescription add successfully'})
-                    io.emit("prescription",patDetail)
+                    console.log('prescription add successfully')
+                    io.emit("prescription",{url:pdf.url})
                 }
               })
             })
