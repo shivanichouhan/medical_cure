@@ -5,10 +5,10 @@ const fs = require("fs")
 exports.list_emp = (req, res) => {
     emp.find().exec((err, list) => {
         if (err) {
-            res.json(err)
+            res.send(err)
         }
         else {
-            res.json({ data: list })
+            res.send(list)
         }
     })
 }

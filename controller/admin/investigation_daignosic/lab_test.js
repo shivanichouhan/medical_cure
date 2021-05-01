@@ -3,9 +3,9 @@ const Lab = require("../../../model/admin/investigation_daignosic/lab")
 
 exports.list_test =(req,res)=>{
     labTest.find().then((resp)=>{
-        res.json({code:200,msg:resp})
+        res.send(resp)
     }).catch((err)=>{
-        res.json({code:400,msg:'lab test not found'})
+        res.send('lab test not found')
     })
 }
 

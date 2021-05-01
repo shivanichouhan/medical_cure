@@ -2,6 +2,18 @@ const medicine = require("../../../model/admin/pharmacy/medicine")
 const cloud = require("../../../cloudinary")
 const fs = require('fs')
 
+//for admin
+exports.meds_lists = (req,res)=>{ 
+    medicine.find().exec((err,Lists_meds)=>{
+        if(err){
+            res.json(err)
+        }
+        else{
+            res.send(List_med)
+        }
+    })
+}
+
 exports.med_list =(req,res)=>{
     medicine.find().exec((err,List_med)=>{
         if(err){

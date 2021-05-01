@@ -2,6 +2,7 @@ const blogModal = require("../../model/admin/blog")
 const blogsubcat = require("../../model/admin/blog_sub_cat")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
+const url = require('url')
 
 exports.blog_search = (req, res) => {
     console.log(req.body)
@@ -17,7 +18,8 @@ exports.blog_search = (req, res) => {
 }
 
 exports.blogInfo = (req, res) => {
-    blogModal.findOne({ _id: req.params.blogId })
+    const info = url.parse(req.url, true).query
+    blogModal.findOne({ _id: info.blogId })
         .populate('comment')
         .exec((err, resp) => {
             if (err) {
@@ -37,6 +39,17 @@ exports.list_blog = (req, res) => {
         }
         else {
             res.json({ data: blogList })
+        }
+    });
+}
+//for admin
+exports.lists_blogs = (req, res) => {
+    blogModal.find().exec((err, blogList) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            res.send(blogList)
         }
     });
 }

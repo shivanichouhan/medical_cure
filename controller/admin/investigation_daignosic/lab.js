@@ -14,10 +14,10 @@ exports.active_lab =(req,res)=>{
 exports.list_lab =(req,res)=>{
     lab.find().exec((err,lab_list)=>{
         if(err){
-            res.json({code:400,msg:'lab list not found'})
+            res.send('lab list not found')
         }
         else{
-            res.json({code:200,msg:lab_list})
+            res.send(lab_list)
         }
     })
 }
