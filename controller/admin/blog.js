@@ -19,11 +19,12 @@ exports.blog_search = (req, res) => {
 
 exports.blogInfo = (req, res) => {
     const info = url.parse(req.url, true).query
+    console.log(info)
     blogModal.findOne({ _id: info.blogId })
         .populate('comment')
         .exec((err, resp) => {
             if (err) {
-                res.send({error:'blog details not found'})
+                res.send('blog details not found')
             }
             else {
                 
@@ -139,9 +140,11 @@ exports.create_blog = (req, res) => {
 }
 
 exports.edit_blog = (req, res) => {
-    console.log(req.files)
-    blogModal.findByIdAndUpdate(req.params.blogId, req.body)
-        .exec((err, updteBlog) => {
+    blogModal.findOneAndUpdate({_id:req.params.blogId},{
+        name:req.body.name,
+        status:req.body.status,
+        discription:req.body.discription
+    }).exec((err, updteBlog) => {
             if (err) {
                 res.json(err)
             }
