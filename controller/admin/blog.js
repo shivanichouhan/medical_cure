@@ -146,7 +146,7 @@ exports.edit_blog = (req, res) => {
         discription:req.body.discription
     }).exec((err, updteBlog) => {
             if (err) {
-                res.json(err)
+                res.send({code:400,msg:'blog details not update'})
             }
             else {
                 if (req.files) {
@@ -172,7 +172,7 @@ exports.edit_blog = (req, res) => {
                     })
                 }
                 else {
-                    res.json({ msg: 'blog details update successfully' })
+                    res.send({code:200,msg:'blog details update successfully'})
                 }
             }
         })
