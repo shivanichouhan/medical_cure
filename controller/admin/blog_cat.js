@@ -13,10 +13,13 @@ exports.list_cat_blog = (req, res) => {
         }
         else{
             const array =[]
-            await Promise.all(catList.map((item)=>{
-                const datablog =await blog.findOne({blog_cat_name:item.blog_cat_name})
-                item.total_blog = datablog.length
-                array.push(item)
+            await Promise.all(catList.map(async(item)=>{
+                const obj = {}
+                obj._id = item._id
+                obj.blog_cat_name = item.blog_cat_name
+                const datablog =await blog.find({blog_cat_name:item.blog_cat_name})
+                obj.total_blog = datablog.length
+                array.push(obj)
             }))
             res.json({code:200,msg:array})
         }
