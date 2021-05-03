@@ -88,15 +88,18 @@ const EventSchema = new schema(
       default:""
 
     },
-    adhar_no: {
+    card_name: {
       type: String,
       default:""
 
     },
+    card_no:{
+      type:String,
+      default:""
+    },
     account_no: {
       type: String,
       default:""
-
     },
     ifsc_code: {
       type: String,

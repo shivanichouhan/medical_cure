@@ -128,7 +128,7 @@ exports.list_doctor =(req,res)=>{
             res.json({code:400,msg:'doctor list not found'})
         }
         else{
-            res.json({code:200,msg:doctor_list})
+            res.send(doctor_list)
         }
     })
 }

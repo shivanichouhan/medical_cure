@@ -427,21 +427,25 @@ io.on('connection', function (socket) {
           console.log(lst, 'last')
 
           cloud.prescription_patient(lst).then((pdf) => {
-            console.log(pdf)
+            console.log(pdf, 'url')
             Fs.unlinkSync(pdf.fileP)
+
             Patient.updateOne({ _id: req.body.patientId }, { $push: { prescription: resp.id, prescription_url: pdf.url } }, (err, resp) => {
               if (err) {
                 console.log('prescription not add in patient')
               } else {
-                // res.json({code:200,msg:'prescription add successfully'})
-                io.emit("prescription", patDetail)
+                console.log('prescription add successfully')
+                io.emit("prescription", { url: pdf.url })
               }
             })
           })
+
         })
       }
     })
+    // }
   })
+  // })
 
 
   socket.on("accept_petient", async function (datas) {
@@ -454,7 +458,7 @@ io.on('connection', function (socket) {
   // socket.on('chat message', async function (msg) {
   //   console.log("Message " + msg['message']);
   //   io.emit('chat message', msg);
-    //   io.emit('chat message', msg);
+  //   io.emit('chat message', msg);
   // });
 });
 

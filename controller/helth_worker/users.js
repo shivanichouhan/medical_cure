@@ -321,7 +321,7 @@ exports.clinic_reg = async (req, res) => {
 
     const { username, email, mobile, status, health_worker_course, experience,
         state, city, pincode, address,
-        dob, gender, blood_group, adhar_no,
+        dob, gender, blood_group, card_name,card_no,
         account_no, ifsc_code,
         phone,
 
@@ -390,9 +390,13 @@ exports.clinic_reg = async (req, res) => {
     }
     if (blood_group) {
         obj.blood_group = blood_group
-    } if (adhar_no) {
-        obj.adhar_no = adhar_no
-    } if (account_no) {
+    } if (card_name) {
+        obj.card_name = card_name
+    } 
+    if (card_no) {
+        obj.card_no = card_no
+    }
+    if (account_no) {
         obj.account_no = account_no
     } if (ifsc_code) {
         obj.ifsc_code = ifsc_code

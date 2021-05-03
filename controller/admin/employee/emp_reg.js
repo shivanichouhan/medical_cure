@@ -8,7 +8,7 @@ exports.list_emp = (req, res) => {
             res.json(err)
         }
         else {
-            res.json({ data: list })
+            res.send(list)
         }
     })
 }
