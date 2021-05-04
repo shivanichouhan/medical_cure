@@ -115,6 +115,7 @@ const inspire = require("./routes/admin/inspire")
 const cureBlogs = require("./routes/admin/marketing/cure_blog")
 const cityAdd = require("./routes/admin/state_city/add_city")
 const Comission = require("./routes/admin/comission")
+const rechargePoint = require("./routes/admin/recharge_point")
 //
 
 const contact_us = require('./routes/admin/contact_us')
@@ -226,6 +227,7 @@ app.use('/api', cityAdd)
 app.use('/api', Prescription)
 app.use('/api', contact_us)
 app.use('/api', Comission)
+app.use('/api', rechargePoint)
 //
 
 //doctor
