@@ -68,3 +68,15 @@ exports.recharge_verify = async(req, res) => {
         })
     }
 }
+
+
+exports.recharge_history = (req,res)=>{
+    const { helthworker_id } = req.body;
+    helthWorkers.findOne({helthworker_id:helthworker_id})
+    .then((resp)=>{
+        res.json({code:200,msg:resp})
+    }).catch((err)=>{
+        res.json({code:400,msg:"something went wrong"})
+    })
+
+}
