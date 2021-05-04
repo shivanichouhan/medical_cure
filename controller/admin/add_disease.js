@@ -3,6 +3,18 @@ const disease = require("../../model/admin/add_disease")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
 
+exports.lists_diseases = (req,res)=>{
+    disease.find()
+    .exec((err, resp) => {
+        if (err) {
+            res.send('disease list not found')
+        }
+        else {
+            res.send(resp)
+        }
+    })
+}
+
 exports.list_disease = (req, res) => {
     disease.find()
         .exec((err, resp) => {

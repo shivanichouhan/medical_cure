@@ -5,7 +5,7 @@ const fs = require("fs")
 exports.list_emp = (req, res) => {
     emp.find().exec((err, list) => {
         if (err) {
-            res.json(err)
+            res.send(err)
         }
         else {
             res.send(list)

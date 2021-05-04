@@ -22,7 +22,6 @@ exports.doctor_info =(req,res)=>{
           res.json({code:400,msg:'doctor info not find'})
       }
       else{ 
-
           res.json({code:200,msg:resp})
       }
   })

@@ -125,7 +125,7 @@ exports.reg_doctor = async(req,res)=>{
 exports.list_doctor =(req,res)=>{
     docReg.find({register:1}).exec((err,doctor_list)=>{
         if(err){
-            res.json({code:400,msg:'doctor list not found'})
+            res.send('doctor list not found')
         }
         else{
             res.send(doctor_list)

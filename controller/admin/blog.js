@@ -2,6 +2,7 @@ const blogModal = require("../../model/admin/blog")
 const blogsubcat = require("../../model/admin/blog_sub_cat")
 const cloud = require("../../cloudinary")
 const fs = require('fs')
+const url = require('url')
 
 exports.blog_search = (req, res) => {
     console.log(req.body)
@@ -17,11 +18,13 @@ exports.blog_search = (req, res) => {
 }
 
 exports.blogInfo = (req, res) => {
-    blogModal.findOne({ _id: req.params.blogId })
+    const info = url.parse(req.url, true).query
+    console.log(info)
+    blogModal.findOne({ _id: info.blogId })
         .populate('comment')
         .exec((err, resp) => {
             if (err) {
-                res.send({error:'blog details not found'})
+                res.send('blog details not found')
             }
             else {
                 
@@ -37,6 +40,17 @@ exports.list_blog = (req, res) => {
         }
         else {
             res.json({ data: blogList })
+        }
+    });
+}
+//for admin
+exports.lists_blogs = (req, res) => {
+    blogModal.find().exec((err, blogList) => {
+        if (err) {
+            res.json(err)
+        }
+        else {
+            res.send(blogList)
         }
     });
 }
@@ -126,11 +140,13 @@ exports.create_blog = (req, res) => {
 }
 
 exports.edit_blog = (req, res) => {
-    console.log(req.files)
-    blogModal.findByIdAndUpdate(req.params.blogId, req.body)
-        .exec((err, updteBlog) => {
+    blogModal.findOneAndUpdate({_id:req.params.blogId},{
+        name:req.body.name,
+        status:req.body.status,
+        discription:req.body.discription
+    }).exec((err, updteBlog) => {
             if (err) {
-                res.json(err)
+                res.send({code:400,msg:'blog details not update'})
             }
             else {
                 if (req.files) {
@@ -156,7 +172,7 @@ exports.edit_blog = (req, res) => {
                     })
                 }
                 else {
-                    res.json({ msg: 'blog details update successfully' })
+                    res.send({code:200,msg:'blog details update successfully'})
                 }
             }
         })

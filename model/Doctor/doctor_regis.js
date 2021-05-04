@@ -236,6 +236,10 @@ const EventSchema = new mongoose.Schema(
         },rating:{
             type:Number,
             default:4
+        },
+        notification_count:{
+            type:Number,
+            default:0
         }
     })
 

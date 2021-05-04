@@ -25,6 +25,19 @@ exports.listDeg =(req,res)=>{
     })
 }
 
+
+//for admin
+exports.listClgs =(req,res)=>{
+    clg.find().exec((err,clgList)=>{
+        if(err){
+            res.json({code:400,msg:'collage list not found'})
+        }
+        else{
+            res.send(clgList)
+        }
+    })
+}
+
 exports.listClg =(req,res)=>{
     clg.find().exec((err,clgList)=>{
         if(err){

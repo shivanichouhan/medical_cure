@@ -5,12 +5,14 @@ const Suscribe_mitra = require("../../model/admin/suscribe_doc_mitra")
 const Suscribe_doctor = require("../../model/admin/suscribe_doctor")
 
 exports.sendEmail = async(req,res)=>{
+    console.log(req.body)
     var userEmail = await Suscribe.findOne({suscribe_email:req.body.suscribe_email})
     if(userEmail){
         res.json({code:400,msg:'this email id already suscribe '})
     }
     else{
         email.suscribe_mail(req.body.suscribe_email).then(async(Result)=>{
+            
             var suscribeObj = new Suscribe(req.body)
             suscribeObj.suscribe_from = 'home'
             var data = await suscribeObj.save()
@@ -22,7 +24,8 @@ exports.sendEmail = async(req,res)=>{
             }
     
         }).catch((error)=>{
-            res.json({code:200,msg:'email not sent'})
+            console.log(error)
+            res.json({code:400,msg:'email not sent'})
         })
     }
 }
