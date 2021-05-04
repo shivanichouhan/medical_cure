@@ -8,7 +8,7 @@ const commisionSchema = new schema(
             type: String
         },
         amount: {
-            type: double,
+            type: Number,
             default: 0
         },
         status: {

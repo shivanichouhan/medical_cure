@@ -74,7 +74,7 @@ exports.recharge_verify = async (req, res) => {
                     res.send({ code: 400, msg: 'payment failure' })
                 })
         }
-    }else{
+    } else {
         res.send({ code: 400, msg: 'helthworker not exist' })
 
     }
@@ -89,5 +89,29 @@ exports.recharge_history = (req, res) => {
         }).catch((err) => {
             res.json({ code: 400, msg: "something went wrong" })
         })
+}
 
+exports.helthworkerwallet =async (req, res) => {
+    const { helthworker_id } = req.body;
+    helthWorkers.find({ helthworker_id: helthworker_id }).sort({ createdAt: -1 })
+        .then(async(resp) => {
+            const obj = {}
+            let count_price = 0
+            console.log("resp",resp)
+            await Promise.all(resp.map(items => {
+                console.log(items)
+                if (items) {
+                    var jj = items.amount
+                    var price = parseInt(jj)
+                    count_price = count_price + price
+                }else{
+                    console.log("something went wrong ")
+                }
+            })).then((resped)=>{
+                obj.wallet = count_price
+                obj.last_transaction = resp[0]
+                obj.helthworker_id = helthworker_id
+                res.json({code:200,msg:obj})
+            })
+        })
 }
