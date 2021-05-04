@@ -6,7 +6,7 @@ const Doctor_data = require("../../model/Doctor/doctor_regis")
 const patient_data = require("../../model/helth_worker/patient_registration")
 const helth_workers = require("../../model/helth_worker/users")
 const doctor_patientChat = require("../../model/Doctor/doctor_patient_chat")
-
+const Jiaquestion = require("../../model/admin/question_add")
 
 const greeting_time = (today) => {
     var curHr = today.getHours()
@@ -28,6 +28,8 @@ exports.greetings = async (req, res) => {
     const patients = await patient_name.findOne({ _id: patient_id })
     const depart_data = await desease_name.find({ department_name: depart_name }, { department_name: 1, disease_name: 1 })
     const update_desease = await patient_data.updateOne({ _id: patient_id }, { disease: disease_name })
+    const my_question =await Jiaquestion.findOne({_id:"609132894d19905b5761bf97"})
+    console.log(my_question,"queeeeeeeeeee")
     let greet = '';
     const details = {}
     if (patients.gender == "Male") {
@@ -43,9 +45,9 @@ exports.greetings = async (req, res) => {
     const gree_time = greeting_time(today)
     const mornings = chalk.blue(gree_time)
     console.log(mornings)
-    const texts = `${mornings} ${greet}. ${patients.patient_name} Namaste! Welcome to tele-consultation by XpressCure. I am Jia. I shall get the best treatment for you. Please provide your chief complaint.`
+    const texts = `${mornings} ${greet}. ${patients.patient_name} ${my_question.text}`
     details.text = texts;
-    const texts2 = `${greet}. ${patients.patient_name}, since how long has this problem troubled you?`
+    const texts2 = `${greet}. ${patients.patient_name}, ${my_question.text2}`
     details.texts = texts2;
     const dats = ["1Week", "1Month", "2Month", "1Year"]
     details.problem_time = dats
@@ -57,6 +59,7 @@ exports.greetings = async (req, res) => {
 exports.greetings1 = async (req, res) => {
     const { patient_id, disease_id, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
+    const my_question =await Jiaquestion.findOne({_id:"609132894d19905b5761bf97"})
 
     let greet = '';
     const details = {}
@@ -65,7 +68,7 @@ exports.greetings1 = async (req, res) => {
     } else {
         greet = "Miss"
     }
-    const texts = `Alright ${greet}. ${patients.patient_name}, since how long has this problem troubled you?`
+    const texts = `Alright ${greet}. ${patients.patient_name}, ${my_question.text2}`
     details.text = texts;
     const dats = ["1Week", "1Month", "2Month", "1Year"]
     details.problem_time = dats
@@ -104,6 +107,8 @@ exports.greetings4 = async (req, res) => {
     let greet = '';
     const patients = await patient_name.findOne({ _id: patient_id })
     const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { disease_id: disease_id } })
+    
+    const my_question =await Jiaquestion.findOne({_id:"6091395c2440c212efd0ea78"})
 
     const details = {}
     if (patients.gender == "Male") {
@@ -111,7 +116,7 @@ exports.greetings4 = async (req, res) => {
     } else {
         greet = "Miss."
     }
-    const texts = `Thank you. ${greet} ${patients.patient_name}.We are finding the most suitable doctor for you. `
+    const texts = `${greet} ${patients.patient_name} ${my_question.text}  `
     details.text = texts
     res.json({ code: 200, msg: details })
 }
@@ -129,13 +134,15 @@ exports.greetings5 = async (req, res) => {
 exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id, department_name } = req.body;
     const doctor_find = await Doctor_data.findOne({ _id: "6068453d8a864506bebe73f9" });
+    const my_question =await Jiaquestion.findOne({_id:"60913aad10daa714512132e4"})
+
     const details = {}
     if (doctor_find) {
-        const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
+        const text_data = `Dr. ${doctor_find.username} ${my_question.text}`
         details.doctor_detail = doctor_find
         details.text = text_data;
     } else {
-        details.text = "now There is no doctor available if you want to checkup anathor then say yes."
+        details.text = my_question.text
         details.doctor_detail = {}
     }
     res.json({ code: 200, msg: details })
@@ -144,17 +151,18 @@ exports.doctor_sagastion = async (req, res) => {
 exports.anathor_doctor = async (req, res) => {
     const { responce, disease_id, patient_id, department_name } = req.body;
     const details = {}
+    const my_question =await Jiaquestion.findOne({_id:"60913b9a39e957156226364e"})
 
     if (responce == "Yes") {
 
         const doctor_find = await Doctor_data.findOne({ Specialization: department_name });
         if (doctor_find) {
-            const text_data = `Dr. ${doctor_find.username} shall take up your case. Book your consultation now.`
+            const text_data = `Dr. ${doctor_find.username} ${my_question.text}`
             details.doctor_detail = doctor_find
             details.text = text_data;
         }
     } else {
-        details.text = "Thank You for using app.";
+        details.text = my_question.text2;
     }
     res.json({ code: 200, msg: details })
 }

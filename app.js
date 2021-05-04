@@ -89,6 +89,7 @@ const appoinement_list = require("./routes/Doctor/appointment_lists")
 
 
 //admin routes 
+const add_question = require("./routes/admin/question_add")
 const addClg = require("./routes/admin/add_clg")
 const comment = require("./routes/admin/blog_comment")
 const adminReg = require("./routes/admin/admin_login")
@@ -200,6 +201,7 @@ app.use("/api",rechargewallet)
 //
 
 //admin middleware
+app.use("/api",add_question)
 app.use('/api', addClg)
 app.use('/api', adminReg)
 app.use('/api', comment)
