@@ -13,6 +13,7 @@ exports.add_test =(req,res)=>{
     var labObj = new labTest(req.body)
     labObj.save((err,resp)=>{
         if(err){
+            console.log(err)
             res.json({code:400, msg:'lab test not add'})
         }
         else{
@@ -28,6 +29,13 @@ exports.add_test =(req,res)=>{
         }
     })
 }
+
+// https:///
+
+
+// https://www.xpresscure.com/
+
+// https://184.168.122.191:5000/sender_call
 
 exports.edit_test =(req,res)=>{
     labTest.updateOne({_id:req.params.testId},req.body,(err,testUpdate)=>{

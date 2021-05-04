@@ -52,6 +52,7 @@ const list_state_district = require('./routes/helth_worker/city_list')
 
 // const Doctors = require('./routes/register_doctors')
 const Contact = require('./routes/helth_worker/Contacts')
+const rechargewallet = require("./routes/helth_worker/recharge_wallet")
 const Health_Worker = require('./routes/admin/Admin_add_healthworker')
 const Admin_approve = require('./routes/admin/Admin_approve')
 const Block_Worker = require('./routes/helth_worker/BlockWorker')
@@ -194,6 +195,7 @@ app.use('/api', states);
 app.use('/api', dep_health)
 app.use("/api", conversation)
 app.use('/api', payment)
+app.use("/api",rechargewallet)
 //
 
 //admin middleware
