@@ -6,17 +6,18 @@ const paymentSchema = new schema(
     health_workerId:{
         type:String
     },
-    patient_id:{
-        type:String
-    },
     doctor_id:{
         type:String
     },
-    msg:{
+    status:{
         type:String
+    },
+    amount:{
+      type:Number,
+      default:0
     }
   },
   { timestamps: true }
 )
 
-module.exports = mongoose.model('Product', eventSchema)
+module.exports = mongoose.model('Credit', paymentSchema)
