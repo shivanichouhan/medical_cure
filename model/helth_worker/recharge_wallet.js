@@ -4,16 +4,23 @@ const double = require('mongoose-double')(mongoose)
 
 const commisionSchema = new schema(
     {
-        helthworker_id:{
+        helthworker_id: {
             type: String
         },
-        amount:{
+        amount: {
             type: double,
-            default:0
+            default: 0
         },
-        status:{
-            type:String
-        }
+        status: {
+            type: String
+        }, 
+        email: {
+            type: String,
+            default: ""
+        },
+        username: { type: String },
+        photo: { type: String },
+        mobile: { type: String }
     },
     { timestamps: true }
 )
