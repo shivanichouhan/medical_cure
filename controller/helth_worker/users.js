@@ -284,8 +284,8 @@ exports.normal_signup = async (req, res) => {
 
 exports.normal_signin = async (req, res) => {
 
-    const { email, password } = req.body
-    console.log(email, password)
+    const { email, password ,firebase_token} = req.body
+    console.log(email, password,firebase_token)
     const user = await User.findOne({ email: email })
     console.log(user)
     if (!user) {
@@ -303,7 +303,7 @@ exports.normal_signin = async (req, res) => {
         else {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
             console.log(token)
-            const ss = await User.updateOne({ bearer_token: token })
+            const ss = await User.updateOne({ _id: user._id},{$set:{ bearer_token: token ,firebase_token:firebase_token}})
             user.bearer_token = token
             res.json({ code: 200, msg: user })
         }

@@ -450,7 +450,7 @@ exports.accept_patient = (req, res) => {
                     Notification.body = `${doctor_resp.username} Doctor Has accepted your Appointment.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
-                        console.log(resp)
+                        console.log(resp,"ijijjkj")
                         var obj = {}
                         obj.username = doctor_resp.username
                         obj.email = doctor_resp.email
@@ -486,6 +486,9 @@ exports.accept_patient = (req, res) => {
 
                                 })
                         }
+                    }).catch((err)=>{
+                        res.send(err)
+                        console.log(err)
                     })
                 })
         } if (type == "0") {
