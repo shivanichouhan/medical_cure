@@ -177,6 +177,7 @@ exports.sendMsg_to_doctor = async (req, res) => {
     if (patient_id && doctor_id) {
         const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "appoint_requested" } })
         var data = await Doct.findOne({ _id: doctor_id })
+        const patients =await patient_data.findOne({_id:patient_id})
         var msg = {}
         var Notification = {}
         msg.to = data.firebase_token
@@ -188,9 +189,9 @@ exports.sendMsg_to_doctor = async (req, res) => {
         notification_firebase.Notification(msg).then(async (resp) => {
             console.log(resp)
             var obj = {}
-            obj.username = data.username
-            obj.email = data.email
-            obj.profile_pic = data.profile_pic
+            obj.username = patients.username
+            obj.email = patients.email
+            obj.profile_pic = patients.profile_pic
             obj.notification_text = `patient has sent You a appointment request`
             obj.docId = doctor_id
             var notObj = new not(obj)

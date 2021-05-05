@@ -258,7 +258,7 @@ exports.updatePass = async (req, res) => {
 exports.normal_signup = async (req, res) => {
     // try {
     console.log(req.body)
-    const { user_name, email, password, con_password } = req.body;
+    const { user_name, email,firebase_token, password, con_password } = req.body;
     // if (password == con_password) {
     const hashedPassword = await hashPassword(password)
     const data_check = await User.findOne({ email: email })
@@ -266,7 +266,8 @@ exports.normal_signup = async (req, res) => {
         const datas = new User({
             username: user_name,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            firebase_token:firebase_token
 
         })
         datas.save()
@@ -370,7 +371,7 @@ exports.clinic_reg = async (req, res) => {
     if(firebase_token){
         obj.firebase_token = firebase_token
     }
-    
+
     if (status) {
         obj.status = status
     } if (health_worker_course) {
@@ -475,14 +476,14 @@ exports.edit_profile = (req, res) => {
 }
 
 exports.gmail_signin = (req, res) => {
-    const { email, gmailId, username, photo, login_type } = req.body
+    const { email, gmailId,firebase_token, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
         User.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
-                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId } }, (err, userUpdate) => {
+                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId,firebase_token:firebase_token } }, (err, userUpdate) => {
                         if (err) {
                             res.json(err)
                         }
@@ -498,7 +499,8 @@ exports.gmail_signin = (req, res) => {
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
-                        photo: photo
+                        photo: photo,
+                        firebase_token:firebase_token
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
@@ -521,7 +523,7 @@ exports.gmail_signin = (req, res) => {
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
-                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId } }, (err, userUpdate) => {
+                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId,firebase_token:firebase_token } }, (err, userUpdate) => {
                         if (err) {
                             res.json(err)
                         }
@@ -537,7 +539,8 @@ exports.gmail_signin = (req, res) => {
                         email: req.body.email,
                         gmailId: req.body.gmailId,
                         username: username,
-                        photo: photo
+                        photo: photo,
+                        firebase_token:firebase_token
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
