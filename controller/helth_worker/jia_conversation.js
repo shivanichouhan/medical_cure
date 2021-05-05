@@ -184,15 +184,15 @@ exports.sendMsg_to_doctor = async (req, res) => {
         msg.collapse_key = 'XXX'
         msg.data = { my_key: 'my value', contents: "abcv/" }
         Notification.title = `${data.username} Title of the notification`
-        Notification.body = `patient has sent You a appointment request`
+        Notification.body = `${patients.patient_name} patient has sent You a appointment request`
         msg.notification = Notification
         notification_firebase.Notification(msg).then(async (resp) => {
             console.log(resp)
             var obj = {}
-            obj.username = patients.username
-            obj.email = patients.email
-            obj.profile_pic = patients.profile_pic
-            obj.notification_text = `patient has sent You a appointment request`
+            obj.username = patients.patient_name
+            obj.email = patients.mobile
+            obj.profile_pic = patients.patient_img
+            obj.notification_text = `${patients.patient_name} patient has sent You a appointment request`
             obj.docId = doctor_id
             var notObj = new not(obj)
             var notData = await notObj.save()
@@ -278,23 +278,24 @@ exports.chatAccepted_by_Doctor = (req, res) => {
             doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
+                    var doctor_resp = await Doct.findOne({ _id: doctor_id })
+
                     var msg = {}
                     var Notification = {}
                     msg.to = data.firebase_token
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
                     Notification.title = `${datas.username} Title of the notification`
-                    Notification.body = `Doctor Has accepted your chat request.`
+                    Notification.body = `${doctor_resp.username} Doctor Has accepted your chat request.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
                         console.log(resp)
                         var obj = {}
-                        obj.username = datas.username
-                        obj.email = datas.email
-                        obj.profile_pic = datas.profile_pic
-                        obj.notification_text = `Doctor Has accepted your chat request.`
+                        obj.username = doctor_resp.username
+                        obj.email = doctor_resp.email
+                        obj.profile_pic = doctor_resp.profile_pic
+                        obj.notification_text = `${doctor_resp.username} Doctor Has accepted your chat request.`
                         obj.healthworker_id = health_worker_id
-                        obj.docId = doctor_id;
                         var notObj = new not(obj)
                         var notData = await notObj.save()
                         if (response) {
@@ -327,23 +328,25 @@ exports.chatAccepted_by_Doctor = (req, res) => {
             doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
+                    var doctor_resp = await Doct.findOne({ _id: doctor_id })
+
                     var msg = {}
                     var Notification = {}
                     msg.to = data.firebase_token
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
                     Notification.title = `${datas.username} Title of the notification`
-                    Notification.body = `Doctor Has rejected your chat request.`
+                    Notification.body = `${doctor_resp.username} Doctor Has rejected your chat request.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
                         console.log(resp)
                         var obj = {}
-                        obj.username = datas.username
-                        obj.email = datas.email
-                        obj.profile_pic = datas.profile_pic
+                        obj.username = doctor_resp.username
+                        obj.email = doctor_resp.email
+                        obj.profile_pic = doctor_resp.profile_pic
                         obj.notification_text = `Doctor Has rejected your chat request.`
                         obj.healthworker_id = health_worker_id
-                        obj.docId = doctor_id;
+                        // obj.docId = doctor_id;
                         var notObj = new not(obj)
                         var notData = await notObj.save()
                         if (response) {
@@ -435,6 +438,8 @@ exports.accept_patient = (req, res) => {
             doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
+                    var doctor_resp = await Doct.findOne({ _id: doctor_id })
+
                     var msg = {}
                     var Notification = {}
                     console.log(datas)
@@ -442,17 +447,16 @@ exports.accept_patient = (req, res) => {
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
                     Notification.title = `${datas.username} Title of the notification`
-                    Notification.body = `Doctor Has accepted your Appointment.`
+                    Notification.body = `${doctor_resp.username} Doctor Has accepted your Appointment.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
                         console.log(resp)
                         var obj = {}
-                        obj.username = datas.username
-                        obj.email = datas.email
-                        obj.profile_pic = datas.profile_pic
-                        obj.notification_text = `Doctor Has accepted your Appointment.`
+                        obj.username = doctor_resp.username
+                        obj.email = doctor_resp.email
+                        obj.profile_pic = doctor_resp.profile_pic
+                        obj.notification_text = `${doctor_resp.username} Doctor Has accepted your Appointment.`
                         obj.healthworker_id = health_worker_id
-                        obj.docId = doctor_id;
                         var notObj = new not(obj)
                         var notData = await notObj.save()
                         // if (notData) {
@@ -488,23 +492,25 @@ exports.accept_patient = (req, res) => {
             doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
+                    var doctor_resp = await Doct.findOne({ _id: doctor_id })
+
                     var msg = {}
                     var Notification = {}
                     msg.to = data.firebase_token
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
                     Notification.title = `${datas.username} Title of the notification`
-                    Notification.body = `Doctor Has rejected your Appointment.`
+                    Notification.body = `${doctor_resp.username} Doctor Has rejected your Appointment.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
                         console.log(resp)
                         var obj = {}
-                        obj.username = datas.username
-                        obj.email = datas.email
-                        obj.profile_pic = datas.profile_pic
-                        obj.notification_text = `Doctor Has rejected your Appointment.`
+                        obj.username = doctor_resp.username
+                        obj.email = doctor_resp.email
+                        obj.profile_pic = doctor_resp.profile_pic
+                        obj.notification_text = `${doctor_resp.username} Doctor Has rejected your Appointment.`
                         obj.healthworker_id = health_worker_id
-                        obj.docId = doctor_id;
+                        // obj.docId = doctor_id;
                         var notObj = new not(obj)
                         var notData = await notObj.save()
                         if (response) {
