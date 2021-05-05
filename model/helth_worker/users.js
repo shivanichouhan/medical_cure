@@ -133,6 +133,8 @@ const EventSchema = new schema(
     },
     mobile_verfiy:{
       type:Number,
+    },firebase_token:{
+      type:String
     }
   })
 

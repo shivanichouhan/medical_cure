@@ -436,7 +436,8 @@ exports.accept_patient = (req, res) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
                     var msg = {}
                     var Notification = {}
-                    msg.to = data.firebase_token
+                    console.log(datas)
+                    msg.to = datas.firebase_token
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
                     Notification.title = `${datas.username} Title of the notification`

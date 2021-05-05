@@ -198,11 +198,11 @@ app.use('/api', states);
 app.use('/api', dep_health)
 app.use("/api", conversation)
 app.use('/api', payment)
-app.use("/api",rechargewallet)
+app.use("/api", rechargewallet)
 //
 
 //admin middleware
-app.use("/api",add_question)
+app.use("/api", add_question)
 app.use('/api', addClg)
 app.use('/api', adminReg)
 app.use('/api', comment)
@@ -416,6 +416,10 @@ io.on('connection', function (socket) {
   const cloud = require("./cloudinary")
   const Patient = require("./model/helth_worker/patient_registration")
   const Fs = require('fs')
+  const Doct = require("./model/Doctor/doctor_regis")
+  const not = require("./model/Doctor/notification")
+  var notification_firebase = require("./firebase_notification")
+  var helth_workers = require("./model/helth_worker/users")
   //prescription end path
 
   socket.on("prescription", async function (patDetail) {
@@ -442,8 +446,30 @@ io.on('connection', function (socket) {
               if (err) {
                 console.log('prescription not add in patient')
               } else {
-                console.log('prescription add successfully')
-                io.emit("prescription", { url: pdf.url })
+                // var datas = await helth_workers.findOne({ _id: health_worker_id })
+                //        const datadoctor =await Doct.findOne({_id:patDetail.})
+                // var msg = {}
+                // var Notification = {}
+                // msg.to = data.firebase_token
+                // msg.collapse_key = 'XXX'
+                // msg.data = { my_key: 'my value', contents: "abcv/" }
+                // Notification.title = `${datas.username} Title of the notification`
+                // Notification.body = `Doctor Has Send prescription To you.`
+                // msg.notification = Notification
+                // notification_firebase.Notification(msg).then(async (resp) => {
+                //   console.log(resp)
+                //   var obj = {}
+                //   obj.username = datas.username
+                //   obj.email = datas.email
+                //   obj.profile_pic = datas.profile_pic
+                //   obj.notification_text = `Doctor Has Send prescription To you.`
+                //   obj.healthworker_id = health_worker_id
+                //   obj.docId = doctor_id;
+                //   var notObj = new not(obj)
+                //   var notData = await notObj.save()
+                  console.log('prescription add successfully')
+                  io.emit("prescription", { url: pdf.url })
+                // })
               }
             })
           })

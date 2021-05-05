@@ -91,12 +91,13 @@ exports.clinic_otp = async (req, res) => {
 }
 
 exports.clinic_otp_verify = async (req, res) => {
+    const {firebase_token}=req.body
     var result = await User.findOne({ mobile: req.body.mobile })
     if (result) {
         console.log(req.body)
         if (result.otp == req.body.otp) {
             console.log("otp confirm")
-            User.findOneAndUpdate({ mobile: req.body.mobile }, { $set: { mobile_verfiy: 1, otp: '' } },
+            User.findOneAndUpdate({ mobile: req.body.mobile }, { $set: { mobile_verfiy: 1, otp: '',firebase_token:firebase_token } },
                 (err, resp) => {
                     if (err) {
                         res.json({ code: 400, msg: 'mobile no not verfiy' })
@@ -323,7 +324,7 @@ exports.clinic_reg = async (req, res) => {
         state, city, pincode, address,
         dob, gender, blood_group, card_name,card_no,
         account_no, ifsc_code,
-        phone,
+        phone,firebase_token
 
     } = req.body
 
@@ -366,7 +367,10 @@ exports.clinic_reg = async (req, res) => {
     } if (mobile) {
         obj.mobile = mobile
     }
-
+    if(firebase_token){
+        obj.firebase_token = firebase_token
+    }
+    
     if (status) {
         obj.status = status
     } if (health_worker_course) {
