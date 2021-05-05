@@ -16,7 +16,7 @@ const notificationSchema = new schema(
     },
     docId:{
         type:String
-    }
+    },healthworker_id:{type:String}
   },  
   { timestamps: true }
  
