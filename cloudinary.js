@@ -58,6 +58,16 @@ exports.prescription_patient = (file) => {
     })
 }
 
+exports.xpost = (file) => {
+    return new Promise(resolve => {
+        var uniqueFilename = Date.now()
+        cloudenary.uploader.upload(file, { public_id: `xpost/${uniqueFilename}`, tags: `xpost` }, (err, result) => {
+            console.log(result)
+            resolve({ url: result.url, imgId: result.asset_id })
+        })
+    })
+}
+
 exports.Blogs = (file) => {
     return new Promise(resolve => {
         var uniqueFilename = Date.now()
