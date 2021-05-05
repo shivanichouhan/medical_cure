@@ -15,8 +15,9 @@ exports.add_comment = (req,res)=>{
    }
    var Result =timeZone()
    console.log(Result)
-
-    var commentObj = new commentBlog(req.body)
+   console.log(req.body)
+   console.log(req.params)
+   var commentObj = new commentBlog(req.body)
     commentObj.date = Result.date
     commentObj.time = Result.time
     console.log(commentObj)
