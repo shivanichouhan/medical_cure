@@ -39,31 +39,31 @@ exports.signup = async (req, res) => {
           }
 };
 
-exports.signin = async (req, res) => {
+exports.signin = async(req, res) => {
     const { email, password } = req.body
-    const admin = await Admin.findOne({email:email})
+    const admin = await Admin.findOne({ email: email })
     if (!admin) {
-        res.json({
-            code: 400,
-            msg: 'email id is wrong'
-        })
-    }
-    else{
+    return res.status(400).json({
+    error: 'User with that email does not exist. Please Register first'
+    })
+  
+    } else {
     const validPassword = await validatePassword(password, admin.password)
     if (!validPassword) {
-        res.json({ code: 400, msg: 'Password is not correct' })
-    }
-    else{
-    const token = jwt.sign({ _id: admin._id,role:admin.role }, process.env.JWT_SECRET,{expiresIn:'24h'} )
-
-    localStorage.setItem('token',token)
-     const Doc = await Admin.findByIdAndUpdate({_id:admin._id},{$set:{ bearer_token: token} })
-     res.cookie('token', token, { expire: new Date() + 9999 })
+    return res.status(401).json({
+    error: 'Email and password dont match'
+    })
+    } else {
+    const token = jwt.sign({ _id: admin._id, role: admin.role }, process.env.JWT_SECRET, { expiresIn: '24h' })
+    localStorage.setItem('token', token)
+    const Doc = await Admin.findByIdAndUpdate({ _id: admin._id }, { $set: { bearer_token: token } })
+    res.cookie('token', token, { expire: new Date() + 9999 })
     //res.redirect("/deshboard")
-     return res.json({ token, data: {_id:admin._id,name:admin.username,email:admin.email,password:admin.password}});
+    //return res.json({ code: 200, token, msg: { _id: admin._id, name: admin.username, email: admin.email, password: admin.password } });
+    return res.json({ user: admin });
     }
-  }
-}
+    }
+    }
 
 
 
