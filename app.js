@@ -119,6 +119,7 @@ const cityAdd = require("./routes/admin/state_city/add_city")
 const Comission = require("./routes/admin/comission")
 const rechargePoint = require("./routes/admin/recharge_point")
 const Xpost = require("./routes/admin/xpost")
+const MyPost = require("./routes/admin/mypost")
 //
 
 const contact_us = require('./routes/admin/contact_us')
@@ -234,6 +235,7 @@ app.use('/api', contact_us)
 app.use('/api', Comission)
 app.use('/api', rechargePoint)
 app.use('/api', Xpost)
+app.use('/api', MyPost)
 //
 
 //doctor

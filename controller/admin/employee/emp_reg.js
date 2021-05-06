@@ -1,4 +1,4 @@
-const emp = require('../../../model/admin/employee/emp_reg')
+const emp = require('../../../model/admin/admin_login')
 const cloud = require('../../../cloudinary')
 const fs = require("fs")
 
