@@ -13,7 +13,7 @@ const morgan = require('morgan')
 
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
-const http = require('http').Server(app)
+const http = require('https').Server(app)
 const io = require('socket.io')(http);
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
@@ -511,11 +511,8 @@ io.on('connection', function (socket) {
 app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
-// const server = http.createServer(app)
+const server = http.createServer(app)
 
-http.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
 
 
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
@@ -623,3 +620,8 @@ function findUser(username) {
       return users[i]
   }
 }
+
+
+http.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})
