@@ -13,7 +13,7 @@ const morgan = require('morgan')
 
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
-const http = require('https').Server(app)
+const http = require('http').Server(app)
 const io = require('socket.io')(http);
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
