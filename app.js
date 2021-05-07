@@ -13,8 +13,8 @@ const morgan = require('morgan')
 
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
-const https = require('http').createServer(app)
-const io = require('socket.io')(https);
+const http = require('http').createServer(app)
+const io = require('socket.io')(http);
 
 
 
@@ -563,7 +563,7 @@ io.on('connection', socket => {
 // const server = http1.createServer(app)
 
 
-https.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
