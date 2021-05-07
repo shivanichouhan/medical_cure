@@ -22,6 +22,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/sender'));
 app.use(express.static(__dirname + '/receiver'));
 app.use(express.static(__dirname + '/server'));
+app.use(express.static('public'))
 
 
 if (typeof localStorage === "undefined" || localStorage === null) {
@@ -496,9 +497,40 @@ const port = process.env.PORT || 8000
 
 
 
+
+
+
+
+function create_UUID(){
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}
+
+app.get('/', (req, res) => {
+  res.redirect(`/${create_UUID()}`)
+})
+
+app.get('/:room', (req, res) => {
+  res.render('room', { roomId: req.params.room })
+})
+
+io.on('connection', socket => {
+  socket.on('join-room', (roomId, userId) => {
+      console.log(roomId, userId)
+      socket.join(roomId)
+      socket.to(roomId).broadcast.emit('user-connected', userId)
+  })
+})
+
+
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
-var https = require('http');
-var Server = https.createServer(app);
+// var https = require('http');
+// var Server = https.createServer(app);
 app.get("/sender_call", (req, res) => {
   res.sendFile(
     path.join(__dirname + '/sender/sender.html')
