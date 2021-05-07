@@ -538,9 +538,6 @@ app.get("/start_call", (req, res) => {
   )
 })
 
-const Socket1 = require("websocket").server
-const http1 = require("http")
-const server = http1.createServer(app)
 app.get("/sender_call", (req, res) => {
   res.sendFile(
     path.join(__dirname + '/sender/sender.html')
@@ -554,6 +551,10 @@ app.get("/recieve_call", (req, res) => {
   )
 }
 )
+const Socket1 = require("websocket").server
+const http1 = require("http")
+const server = http1.createServer(app)
+
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`)
