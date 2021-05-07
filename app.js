@@ -518,9 +518,9 @@ http.listen(port, () => {
 })
 
 
-var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+// var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
 
-// const webSocket = new Socket({ httpServer: http })
+const webSocket = new Socket({ httpServer: http })
 
 let users = []
 
