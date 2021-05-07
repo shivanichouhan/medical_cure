@@ -1,4 +1,4 @@
-const Socket = require("websocket").server
+const Socket = require("websocket").server;
 
 var express = require('express')
 const mongoose = require('mongoose')
@@ -519,6 +519,12 @@ app.get("/start_call", (req, res) => {
   )
 })
 
+
+http.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})
+
+
 const webSocket = new Socket({ httpServer: http, autoAcceptConnections: false })
 
 let users = []
@@ -623,7 +629,3 @@ function findUser(username) {
   }
 }
 
-
-http.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
