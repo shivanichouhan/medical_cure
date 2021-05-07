@@ -519,7 +519,7 @@ app.get("/start_call", (req, res) => {
   )
 })
 
-const webSocket = new Socket({ httpServer: http, autoAcceptConnections: true })
+const webSocket = new Socket({ httpServer: http, autoAcceptConnections: false })
 
 let users = []
 
@@ -624,6 +624,6 @@ function findUser(username) {
 }
 
 
-Server.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
