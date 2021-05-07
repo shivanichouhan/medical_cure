@@ -9,8 +9,9 @@ remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
 let peer
 function init(userId) {
+    console.log(userId)
     peer = new Peer(userId, {
-        host: '184.168.122.191',
+        host: 'https://backend.xpresscure.com',
         port: 9000,
         path: '/videocallapp'
     })
@@ -21,7 +22,7 @@ function init(userId) {
 let localStream
 function listen() {
     peer.on('call', (call) => {
-
+        console.log("calllllllll",call)
         navigator.getUserMedia({
             audio: true,
             video: true
