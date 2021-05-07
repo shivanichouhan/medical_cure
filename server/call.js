@@ -9,7 +9,7 @@ remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
 let peer
 function init(userId) {
-    peer = new Peer(userId, { host: "wss://backend.xpresscure.com/videocallapp", key: userId, secure: true } )
+    peer = new Peer(userId, { host: "backend.xpresscure.com/videocallapp", key: userId, secure: true } )
 
     // console.log(userId)
     // peer = new Peer(userId, {
