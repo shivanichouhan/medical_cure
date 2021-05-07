@@ -517,7 +517,7 @@ const server = http.createServer(app)
 
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
 
-const webSocket = new Socket({ httpServer: http })
+const webSocket = new Socket({ httpServer: server })
 
 let users = []
 
@@ -622,6 +622,6 @@ function findUser(username) {
 }
 
 
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
