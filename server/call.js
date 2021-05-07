@@ -9,12 +9,14 @@ remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
 let peer
 function init(userId) {
-    console.log(userId)
-    peer = new Peer(userId, {
-        host: 'https://backend.xpresscure.com',
-        port: 9000,
-        path: '/videocallapp'
-    })
+    peer = new Peer(userId, { host: "https://backend.xpresscure.com/videocallapp", key: "natuskey2", secure: true } )
+
+    // console.log(userId)
+    // peer = new Peer(userId, {
+    //     host: 'https://backend.xpresscure.com/videocallapp',
+    //     port: 9000,
+    //     path: '/videocallapp'
+    // })
 
     listen()
 }
