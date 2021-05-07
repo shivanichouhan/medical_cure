@@ -1,4 +1,4 @@
-const Socket = require("websocket").server;
+const Socket1 = require("websocket").server;
 
 var express = require('express')
 const mongoose = require('mongoose')
@@ -13,8 +13,11 @@ const morgan = require('morgan')
 
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
-const http = require('http').Server(app)
+const http = require('http').createServer(app)
 const io = require('socket.io')(http);
+
+
+
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
 app.set("views", path.join(__dirname, "views"));
@@ -551,12 +554,13 @@ app.get("/recieve_call", (req, res) => {
   )
 }
 )
-const Socket1 = require("websocket").server
-const http1 = require("http")
-const server = http1.createServer(app)
+// const Socket1 = require("websocket").server
+// const http1 = require("http")
+// .Server(app)
+// const server = http1.createServer(app)
 
 
-server.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
