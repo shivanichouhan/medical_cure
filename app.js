@@ -501,12 +501,12 @@ const port = process.env.PORT || 8000
 
 
 
-function create_UUID(){
+function create_UUID() {
   var dt = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = (dt + Math.random()*16)%16 | 0;
-      dt = Math.floor(dt/16);
-      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
   return uuid;
 }
@@ -521,9 +521,9 @@ app.get('/:room', (req, res) => {
 
 io.on('connection', socket => {
   socket.on('join-room', (roomId, userId) => {
-      console.log(roomId, userId)
-      socket.join(roomId)
-      socket.to(roomId).broadcast.emit('user-connected', userId)
+    console.log(roomId, userId)
+    socket.join(roomId)
+    socket.to(roomId).broadcast.emit('user-connected', userId)
   })
 })
 
@@ -531,6 +531,16 @@ io.on('connection', socket => {
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
 // var https = require('http');
 // var Server = https.createServer(app);
+
+app.get("/start_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/server/call.html')
+  )
+})
+
+const Socket1 = require("websocket").server
+const http1 = require("http")
+const server = http1.createServer(app)
 app.get("/sender_call", (req, res) => {
   res.sendFile(
     path.join(__dirname + '/sender/sender.html')
@@ -545,19 +555,16 @@ app.get("/recieve_call", (req, res) => {
 }
 )
 
-app.get("/start_call", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + '/server/call.html')
-  )
-})
-
-
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
+// http.listen(port, () => {
+//   console.log(`Server is running on port ${port}`)
+// })
 
-const webSocket = new Socket({ httpServer: http, autoAcceptConnections: false })
+
+const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })
 
 let users = []
 
