@@ -3,7 +3,7 @@
 
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
 
-var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", ["protocolOne", "protocolTwo"]);
+var webSocket = new WebSocket("wss://backend.xpresscure.com/", ["protocolOne", "protocolTwo"]);
 
 
 
