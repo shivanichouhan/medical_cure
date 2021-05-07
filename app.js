@@ -161,25 +161,6 @@ app.use(morgan('dev'))
 app.use(express.json());
 
 
-app.get("/sender_call", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + '/sender/sender.html')
-  )
-}
-)
-
-app.get("/recieve_call", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + '/receiver/receiver.html')
-  )
-}
-)
-
-app.get("/start_call",(req,res)=>{
-  res.sendFile(
-    path.join(__dirname + '/server/call.html')
-  )
-})
 
 
 app.get("/demo", (req, res) => {
@@ -477,8 +458,8 @@ io.on('connection', function (socket) {
                 //   obj.docId = doctor_id;
                 //   var notObj = new not(obj)
                 //   var notData = await notObj.save()
-                  console.log('prescription add successfully')
-                  io.emit("prescription", { url: pdf.url })
+                console.log('prescription add successfully')
+                io.emit("prescription", { url: pdf.url })
                 // })
               }
             })
@@ -516,8 +497,29 @@ const port = process.env.PORT || 8000
 
 
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+var https = require('https');
+var Server = https.createServer(app);
+app.get("/sender_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/sender/sender.html')
+  )
+}
+)
 
-const webSocket = new Socket({ httpServer: http })
+app.get("/recieve_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/receiver/receiver.html')
+  )
+}
+)
+
+app.get("/start_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/server/call.html')
+  )
+})
+
+const webSocket = new Socket({ httpServer: http, autoAcceptConnections: true })
 
 let users = []
 
@@ -622,6 +624,6 @@ function findUser(username) {
 }
 
 
-http.listen(port, () => {
+Server.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
