@@ -1,5 +1,5 @@
 
-var webSocket = new WebSocket("wss://backend.xpresscure.com/", ["protocolOne", "protocolTwo"]);
+var webSocket = new WebSocket("wss://localhost:5000/", ["protocolOne", "protocolTwo"]);
 
 // const webSocket = new WebSocket("wss://backend.xpresscure.com/")
 
