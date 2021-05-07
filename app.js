@@ -511,13 +511,13 @@ io.on('connection', function (socket) {
 app.use('/api', doctor_reg)
 
 const port = process.env.PORT || 8000
-const server = http.createServer(app)
+// const server = http.createServer(app)
 
 
 
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
 
-const webSocket = new Socket({ httpServer: server })
+const webSocket = new Socket({ httpServer: http })
 
 let users = []
 
@@ -622,6 +622,6 @@ function findUser(username) {
 }
 
 
-server.listen(port, () => {
+http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
