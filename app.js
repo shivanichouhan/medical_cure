@@ -21,6 +21,8 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/sender'));
 app.use(express.static(__dirname + '/receiver'));
+app.use(express.static(__dirname + '/server'));
+
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
@@ -172,6 +174,12 @@ app.get("/recieve_call", (req, res) => {
   )
 }
 )
+
+app.get("/start_call",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname + '/server/call.html')
+  )
+})
 
 
 app.get("/demo", (req, res) => {
