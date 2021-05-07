@@ -1,4 +1,4 @@
-const webSocket = new WebSocket("wss://backend.xpresscure.com/")
+const webSocket = new WebSocket("wss://backend.xpresscure.com:5000/")
 
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
