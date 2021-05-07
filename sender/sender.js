@@ -1,4 +1,12 @@
-var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+// 184.168.122.191
+
+
+// var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+
+var exampleSocket = new WebSocket("wss://xpresscure.com/socketserver", ["protocolOne", "protocolTwo"]);
+
+
+
 
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
