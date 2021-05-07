@@ -23,7 +23,7 @@ function listen() {
     peer.on('call', (call) => {
 
         navigator.getUserMedia({
-            audio: true, 
+            audio: true,
             video: true
         }, (stream) => {
             localVideo.srcObject = stream
@@ -39,7 +39,7 @@ function listen() {
             })
 
         })
-        
+
     })
 }
 
@@ -48,11 +48,12 @@ function startCall(otherUserId) {
         audio: true,
         video: true
     }, (stream) => {
-
+        console.log(stream, "streammmmmmmmmmmmmmmmmmmmmm")
         localVideo.srcObject = stream
         localStream = stream
 
         const call = peer.call(otherUserId, stream)
+        console.log(call)
         call.on('stream', (remoteStream) => {
             remoteVideo.srcObject = remoteStream
 
@@ -69,7 +70,7 @@ function toggleVideo(b) {
     } else {
         localStream.getVideoTracks()[0].enabled = false
     }
-} 
+}
 
 function toggleAudio(b) {
     if (b == "true") {
@@ -77,4 +78,4 @@ function toggleAudio(b) {
     } else {
         localStream.getAudioTracks()[0].enabled = false
     }
-} 
+}
