@@ -14,14 +14,14 @@ function init(userId) {
         port: 3000,
         path: '/myapp'
     })
-
+    console.log(userId)
     listen() 
 }
 
 let localStream
 function listen() {
     peer.on('call', (call) => {
-
+        console.log("calllllllllll",call)
         navigator.getUserMedia({
             audio: true, 
             video: true
@@ -48,7 +48,7 @@ function startCall(otherUserId) {
         audio: true,
         video: true
     }, (stream) => {
-
+        console.log("start callllllll",stream,"CALLLLLLLLLLLLLLLLLLLLLL")
         localVideo.srcObject = stream
         localStream = stream
 
