@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/shivanichouhan/medical_cure/issues"
   },
-  "homepage": "https://github.com/shivanichouhan/medical_cure#readme"
+  "homepage": "https://github.com/shivanichouhan/medical_cure#readme",
+  "dependencies": {
+    "firebase": "^8.5.0"
+  }
 }

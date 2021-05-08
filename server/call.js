@@ -9,24 +9,21 @@ remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
 let peer
 function init(userId) {
-    peer = new Peer(userId, { host: "backend.xpresscure.com/videocallapp", key: userId, secure: true } )
+    peer = new Peer(userId, {
+        host: '192.168.72.127',
+        port: 3000,
+        path: '/myapp'
+    })
 
-    // console.log(userId)
-    // peer = new Peer(userId, {
-    //     host: 'https://backend.xpresscure.com/videocallapp',
-    //     port: 9000,
-    //     path: '/videocallapp'
-    // })
-
-    listen()
+    listen() 
 }
 
 let localStream
 function listen() {
     peer.on('call', (call) => {
-        console.log("calllllllll",call)
+
         navigator.getUserMedia({
-            audio: true,
+            audio: true, 
             video: true
         }, (stream) => {
             localVideo.srcObject = stream
@@ -42,7 +39,7 @@ function listen() {
             })
 
         })
-
+        
     })
 }
 
@@ -51,12 +48,11 @@ function startCall(otherUserId) {
         audio: true,
         video: true
     }, (stream) => {
-        console.log(stream, "streammmmmmmmmmmmmmmmmmmmmm")
+
         localVideo.srcObject = stream
         localStream = stream
 
         const call = peer.call(otherUserId, stream)
-        console.log(call)
         call.on('stream', (remoteStream) => {
             remoteVideo.srcObject = remoteStream
 
@@ -73,7 +69,7 @@ function toggleVideo(b) {
     } else {
         localStream.getVideoTracks()[0].enabled = false
     }
-}
+} 
 
 function toggleAudio(b) {
     if (b == "true") {
@@ -81,4 +77,6 @@ function toggleAudio(b) {
     } else {
         localStream.getAudioTracks()[0].enabled = false
     }
-}
+} 
+
+//run server --   peerjs --port 9000 --key peerjs --path /myapp

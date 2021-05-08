@@ -1,5 +1,14 @@
 const Socket1 = require("websocket").server;
 
+
+var firebase = require("firebase/app");
+
+// Add the Firebase products that you want to use
+require("firebase/auth");
+require("firebase/firestore");
+
+
+
 var express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
