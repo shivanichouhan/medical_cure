@@ -7354,7 +7354,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
       _this._disconnected = true;
       _this._messagesQueue = [];
       var wsProtocol = secure ? "wss://" : "ws://";
-      _this._baseUrl = wsProtocol + host + ":" + port + path + "peerjs?key=" + key;
+      _this._baseUrl = wsProtocol + host + ":" + path + "peerjs?key=" + key;
       return _this;
     }
   
