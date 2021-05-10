@@ -573,7 +573,7 @@ io.on('connection', socket => {
 // const server = http1.createServer(app)
 
 
-http.listen(port, () => {
+const data_res = http.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
 
@@ -582,12 +582,12 @@ http.listen(port, () => {
 // })
 
 
-const peerServer = ExpressPeerServer(http, {
+const peerServer = ExpressPeerServer(data_res, {
   debug: true,
   path: '/myapp'
 });
 
-app.use('/peerjs', peerServer);
+app.use('/', peerServer);
 
 
 const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })

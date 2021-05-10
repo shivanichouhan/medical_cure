@@ -11,7 +11,7 @@ let peer
 function init(userId) {
     peer = new Peer(userId, {
         host: '/',
-        path: '/peerjs/myapp'
+        path: '/myapp'
     })
     console.log(userId)
     listen() 
