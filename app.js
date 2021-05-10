@@ -7,6 +7,7 @@ const Socket1 = require("websocket").server;
 // require("firebase/auth");
 // require("firebase/firestore");
 
+const { ExpressPeerServer } = require("peer");
 
 
 var express = require('express')
@@ -579,6 +580,14 @@ http.listen(port, () => {
 // http.listen(port, () => {
 //   console.log(`Server is running on port ${port}`)
 // })
+
+
+const peerServer = ExpressPeerServer(http, {
+  debug: true,
+  path: '/myapp'
+});
+
+app.use('/peerjs', peerServer);
 
 
 const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })

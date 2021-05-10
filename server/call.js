@@ -10,9 +10,8 @@ remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 let peer
 function init(userId) {
     peer = new Peer(userId, {
-        host: 'backend.xpresscure',
-        port: 3000,
-        path: '/myapp'
+        host: '/',
+        path: '/peerjs/myapp'
     })
     console.log(userId)
     listen() 
