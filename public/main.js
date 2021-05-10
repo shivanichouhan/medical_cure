@@ -20,7 +20,7 @@ let renderVideo = (stream) => {
 // Register with the peer server
 let peer = new Peer({
   host: '/',
-  port:4000,
+  port:5000,
   path: '/peerjs/myapp'
 });
 peer.on('open', (id) => {
