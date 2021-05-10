@@ -17,8 +17,7 @@ function init(userId) {
     //     path: '/myapp'
     // })
     // console.log(userId)
-
-    peer = new Peer({
+    peer = new Peer(userId,{
         host: '/',
         port: 5000,
         path: '/peerjs/myapp'
