@@ -9200,7 +9200,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
     API.prototype._buildUrl = function (method) {
         console.log("hii shivani this is option", this._options)
       var protocol = this._options.secure ? "https://" : "http://";
-      var url = protocol + this._options.host + ":" + this._options.port + this._options.path + this._options.key + "/" + method;
+      var url = protocol + this._options.host + ":" + this._options.path + this._options.key + "/" + method;
       var queryString = "?ts=" + new Date().getTime() + "" + Math.random();
       url += queryString;
       return url;
