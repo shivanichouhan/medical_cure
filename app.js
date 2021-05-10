@@ -307,7 +307,7 @@ app.get("/sender_call", (req, res) => {
 
 app.get("/anathor_call", (req, res) => {
   res.sendFile(
-    path.join(__dirname + '/sender/index.html')
+    path.join(__dirname + '/views/index.html')
   )
 }
 )
@@ -580,16 +580,16 @@ io.on('connection', socket => {
 // const server = http1.createServer(app)
 
 
-const data_res = http.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+const listener = app.listen(5000, () => {
+  console.log("Your app is listening on port " + 5000);
+});
 
 // http.listen(port, () => {
 //   console.log(`Server is running on port ${port}`)
 // })
 
 
-const peerServer = ExpressPeerServer(data_res, {
+const peerServer = ExpressPeerServer(listener, {
   debug: true,
   path: '/myapp',
   port: 5000,
