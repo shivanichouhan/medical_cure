@@ -1,5 +1,5 @@
 
-const webSocket = new WebSocket("wss://backend.xpresscure.com",["protocolOne", "protocolTwo"])
+const webSocket = new WebSocket("wss://backend.xpresscure",["protocolOne", "protocolTwo"])
 
 // const webSocket = new WebSocket("wss://backend.xpresscure.com/")
 
