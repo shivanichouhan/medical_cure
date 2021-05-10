@@ -584,10 +584,12 @@ const data_res = http.listen(port, () => {
 
 const peerServer = ExpressPeerServer(data_res, {
   debug: true,
-  path: '/myapp'
+  path: '/myapp',
+  port: 5000,
+  secure: true,
 });
 
-app.use('/', peerServer);
+app.use('/peerjs', peerServer);
 
 
 const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })

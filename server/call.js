@@ -7,22 +7,35 @@ remoteVideo.style.opacity = 0
 localVideo.onplaying = () => { localVideo.style.opacity = 1 }
 remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
+
+
+
 let peer
 function init(userId) {
-    peer = new Peer(userId, {
+    // peer = new Peer(userId, {
+    //     host: '/',
+    //     path: '/myapp'
+    // })
+    // console.log(userId)
+
+    const peerObj = {
         host: '/',
-        path: '/myapp'
-    })
+        port:5000,
+        path: '/peerjs/myapp'
+    }
+
+    peer = new Peer(userId, peerObj)
     console.log(userId)
-    listen() 
+
+    listen()
 }
 
 let localStream
 function listen() {
     peer.on('call', (call) => {
-        console.log("calllllllllll",call)
+        console.log("calllllllllll", call)
         navigator.getUserMedia({
-            audio: true, 
+            audio: true,
             video: true
         }, (stream) => {
             localVideo.srcObject = stream
@@ -38,7 +51,7 @@ function listen() {
             })
 
         })
-        
+
     })
 }
 
@@ -47,7 +60,7 @@ function startCall(otherUserId) {
         audio: true,
         video: true
     }, (stream) => {
-        console.log("start callllllll",stream,"CALLLLLLLLLLLLLLLLLLLLLL")
+        console.log("start callllllll", stream, "CALLLLLLLLLLLLLLLLLLLLLL")
         localVideo.srcObject = stream
         localStream = stream
 
@@ -68,7 +81,7 @@ function toggleVideo(b) {
     } else {
         localStream.getVideoTracks()[0].enabled = false
     }
-} 
+}
 
 function toggleAudio(b) {
     if (b == "true") {
@@ -76,6 +89,6 @@ function toggleAudio(b) {
     } else {
         localStream.getAudioTracks()[0].enabled = false
     }
-} 
+}
 
 //run server --   peerjs --port 9000 --key peerjs --path /myapp
