@@ -588,7 +588,6 @@ const listener = app.listen(5000, () => {
 //   console.log(`Server is running on port ${port}`)
 // })
 
-
 const peerServer = ExpressPeerServer(listener, {
   debug: true,
   path: '/myapp',

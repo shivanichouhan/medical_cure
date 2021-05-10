@@ -18,13 +18,13 @@ function init(userId) {
     // })
     // console.log(userId)
 
-    const peerObj = {
+    peer = new Peer({
         host: '/',
-        port:5000,
+        port: 5000,
         path: '/peerjs/myapp'
-    }
+    });
 
-    peer = new Peer(userId, peerObj)
+    // peer = new Peer(userId, peerObj)
     console.log(userId)
 
     listen()

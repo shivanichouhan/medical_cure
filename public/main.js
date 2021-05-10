@@ -17,6 +17,8 @@ let renderVideo = (stream) => {
   videoEl.srcObject = stream;
 };
 
+
+
 // Register with the peer server
 let peer = new Peer({
   host: '/',
