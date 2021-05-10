@@ -6,7 +6,7 @@
 // var webSocket = new WebSocket("wss://backend.xpresscure.com/", ["protocolOne", "protocolTwo"]);
 
 // const webSocket = new WebSocket("wss://backend.xpresscure",["protocolOne", "protocolTwo"])
-var webSocket = new WebSocket("wss://" + location.host + "/whatever");
+var webSocket = new WebSocket("wss://" + location.host + "/");
 
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
