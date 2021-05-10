@@ -7367,7 +7367,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
       if (!!this._socket || !this._disconnected) {
         return;
       }
-  
+      console.log("Server message received:",wsUrl)
       this._socket = new WebSocket(wsUrl);
       this._disconnected = false;
   
