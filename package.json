@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/shivanichouhan/medical_cure#readme",
   "dependencies": {
-    "firebase": "^8.5.0"
+    "firebase": "^8.5.0",
+    "websocket": "^1.0.34"
   }
 }
