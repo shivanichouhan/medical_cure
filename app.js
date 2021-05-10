@@ -305,6 +305,13 @@ app.get("/sender_call", (req, res) => {
 }
 )
 
+app.get("/anathor_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/sender/index.html')
+  )
+}
+)
+
 app.get("/recieve_call", (req, res) => {
   res.sendFile(
     path.join(__dirname + '/receiver/receiver.html')
