@@ -10140,4 +10140,3 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   
   window.Peer = peer_1.Peer;
   },{"./util":"BHXf","./peer":"Hxpd"}]},{},["iTK6"], null)
-  //# sourceMappingURL=/peerjs.js.map
