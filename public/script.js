@@ -58,20 +58,38 @@ const user = prompt("Enter your name");
 
 // var peer1 =  {
 //     path: "/peerjs",
-//     host: "/",
+//     host: "127.1.1",
 //     debug: 3,
+//     port:2222,
 //     config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
 
 // }
 // var peer = new Peer(undefined,peer1);
 
 
+var peer = new Peer(undefined,{
+    host: "localhost",
+    port: 2222,
+    path: '/peerjs',
+    debug: 3,
+    config: {
+        'iceServers': [
+            { url: 'stun:stun1.l.google.com:2222' },
+            {
+                url: 'turn:numb.viagenie.ca',
+                credential: 'password',
+                username: 'username'
+            }
+        ]
+    }
+});
 
-var peer = new Peer({
-	host: location.hostname,
-	port: location.port || (location.protocol === 'https:' ? 443 : 80),
-	path: '/peerjs'
-})
+
+// var peer = new Peer({
+// 	host: location.hostname,
+// 	port: location.port || (location.protocol === 'https:' ? 443 : 80),
+// 	path: '/peerjs'
+// })
 var conn = peer.connect("ssss")
 conn.send('hello shivani I am working')
 
