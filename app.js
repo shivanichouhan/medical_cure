@@ -23,8 +23,16 @@ const morgan = require('morgan')
 
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http);
+const http = require('http').Server(app)
+// const server = require("http").Server(app);
+const { v4: uuidv4 } = require("uuid");
+
+const io = require('socket.io')(http,
+  {
+    cors: {
+      origin: '*'
+    }
+  });
 
 
 
@@ -552,7 +560,7 @@ function create_UUID() {
   return uuid;
 }
 
-app.get('/', (req, res) => {
+app.get('/s', (req, res) => {
   res.redirect(`/${create_UUID()}`)
 })
 
@@ -580,22 +588,27 @@ io.on('connection', socket => {
 // const server = http1.createServer(app)
 
 
-const listener = app.listen(5000, () => {
-  console.log("Your app is listening on port " + 5000);
-});
 
 // http.listen(port, () => {
 //   console.log(`Server is running on port ${port}`)
 // })
 
-const peerServer = ExpressPeerServer(listener, {
+
+const peerServer = ExpressPeerServer(http, {
   debug: true,
-  path: '/myapp',
+  path: '/',
+  host:5000,
   secure: true,
 });
 
 app.use('/peerjs', peerServer);
 
+
+
+
+const listener = http.listen(5000, () => {
+  console.log("Your app is listening on port " + 5000);
+});
 
 const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })
 
