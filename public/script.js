@@ -53,7 +53,7 @@ const user = prompt("Enter your name");
 //         }
 //     ]
 // }
-var peer = new Peer({host:'backend.xpresscure.com', debug: 3, path: "/peerjs", secure:true, port:443})
+// var peer = new Peer({host:'backend.xpresscure.com', debug: 3, path: "/peerjs", secure:true, port:443})
 
 
 // var peer1 =  {
@@ -64,6 +64,16 @@ var peer = new Peer({host:'backend.xpresscure.com', debug: 3, path: "/peerjs", s
 
 // }
 // var peer = new Peer(undefined,peer1);
+
+
+
+var peer = new Peer({
+	host: location.hostname,
+	port: location.port || (location.protocol === 'https:' ? 443 : 80),
+	path: '/peerjs'
+})
+var conn = peer.connect(destId)
+conn.send('hello shivani I am working')
 
 
 let myVideoStream;
