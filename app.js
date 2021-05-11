@@ -606,7 +606,7 @@ var certificate = fs.readFileSync('./ssl/cert.pem',"utf-8") ;;
 
 var server = PeerServer({
   port: 8000,
-  path: '/peerjs',
+  path: '/',
   ssl: {
     key: privateKey,
     cert:certificate
