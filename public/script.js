@@ -53,16 +53,17 @@ const user = prompt("Enter your name");
 //         }
 //     ]
 // }
+var peer = new Peer({host:'backend.xpresscure.com', debug: 3, path: "/peerjs", secure:true, port:443})
 
 
-var peer1 =  {
-    path: "/peerjs",
-    host: "/",
-    debug: 3,
-    config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
+// var peer1 =  {
+//     path: "/peerjs",
+//     host: "/",
+//     debug: 3,
+//     config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
 
-}
-var peer = new Peer(undefined,peer1);
+// }
+// var peer = new Peer(undefined,peer1);
 
 
 let myVideoStream;
