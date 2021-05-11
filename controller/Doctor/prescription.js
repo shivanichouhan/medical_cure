@@ -2,6 +2,8 @@ const med = require("../../model/admin/pharmacy/medicine")
 const labTest = require("../../model/admin/investigation_daignosic/lab_test")
 const alergis = require("../../model/admin/alergies")
 const daignos = require("../../model/Doctor/daignosis")
+const pres_med = require("../../model/Doctor/prescription_med")
+const pres_lab = require("../../model/Doctor/prescription_lab_ins")
 
 const patient_pres = require("../../prescription_pdf")
 const Prescription = require("../../model/Doctor/prescription")
@@ -114,4 +116,48 @@ exports.add_prescription =async (req,res)=>{
       }
     })
 
+}
+
+exports.med_info = (req,res)=>{
+    var preMedObj = new pres_med(req.body)
+    console.log(preMedObj)
+    preMedObj.save((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'medicine info not add'})
+        }else{
+            res.json({code:200,msg:'medicine info add successfully'})
+        }
+    })
+}
+
+exports.list_med_info = (req,res)=>{
+    pres_med.find({docId:req.body.docId}).exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'prescritpion medicine not not get'})
+        }else{
+            res.json({code:200,msg:resp})
+        }
+    })
+}
+
+exports.lab_info = (req,res)=>{
+    var labObj = new pres_lab(req.body)
+    console.log(labObj)
+    labObj.save((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'lab info not add'})
+        }else{
+            res.json({code:200,msg:'lab info add'})
+        }
+    })
+}
+
+exports.list_lab_info = (req,res)=>{
+    pres_lab.find({docId:req.body.docId}).exec((err,resp)=>{
+        if(err){
+            res.json({code:400,msg:'lab test info not get'})
+        }else{
+            res.json({code:200,msg:resp})
+        }
+    })
 }

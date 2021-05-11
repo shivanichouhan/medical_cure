@@ -9,17 +9,20 @@ const prescriptionSchema = new schema(
         alergies:{
             type:String
         },
+        // medicine:{
+        //     type:String
+        // },
+        // dosage:{
+        //     type:String
+        // },
+        // duration:{
+        //     type:String
+        // },
+        // instruction:{
+        //     type:String
+        // },
         medicine:{
-            type:String
-        },
-        dosage:{
-            type:String
-        },
-        duration:{
-            type:String
-        },
-        instruction:{
-            type:String
+            type:Array
         },
         lab_test:{
             type:String
