@@ -63,7 +63,7 @@ var peer1 =  {
     config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
 
 }
-var peer = new RTCPeerConnection(peer1);
+var peer = new Peer(undefined,peer1);
 
 
 let myVideoStream;
