@@ -12,16 +12,16 @@ exports.sendEmail = async(req,res)=>{
     }
     else{
         email.suscribe_mail(req.body.suscribe_email).then(async(Result)=>{
-            
-            var suscribeObj = new Suscribe(req.body)
-            suscribeObj.suscribe_from = 'home'
-            var data = await suscribeObj.save()
-            if(data){
-                res.json({code:200,msg:'suscribe successfully'})
-            }
-            else{
-                res.json({code:400,msg:'suscribe not save'})
-            }
+            console.log(Result)
+            // var suscribeObj = new Suscribe(req.body)
+            // suscribeObj.suscribe_from = 'home'
+            // var data = await suscribeObj.save()
+            // if(data){
+            //     res.json({code:200,msg:'suscribe successfully'})
+            // }
+            // else{
+            //     res.json({code:400,msg:'suscribe not save'})
+            // }
     
         }).catch((error)=>{
             console.log(error)

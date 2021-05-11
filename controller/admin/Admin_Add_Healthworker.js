@@ -9,8 +9,7 @@ async function hashPassword(password) {
 }
 
 exports.health_signup = async(req,res)=>{
-
-    const { first_name,mobile,email,password,course } = req.body;
+    const { first_name, mobile, email, password, course } = req.body;
     const hashedPassword = await hashPassword(password)
     const data_check = await HealthWorker.findOne({email: email})
     if (!data_check) {

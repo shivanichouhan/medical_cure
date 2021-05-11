@@ -63,6 +63,7 @@ function otp(){
       </p>
       `;
       sendgrid.send_via_sendgrid(mailOptions).then(resp=>{
+        console.log(resp)
         resolve('success')
       }).catch(error=>{
         reject('fail')
