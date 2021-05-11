@@ -72,7 +72,7 @@ var peer = new Peer({
 	port: location.port || (location.protocol === 'https:' ? 443 : 80),
 	path: '/peerjs'
 })
-var conn = peer.connect(destId)
+var conn = peer.connect("ssss")
 conn.send('hello shivani I am working')
 
 
