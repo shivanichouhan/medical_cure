@@ -20,12 +20,15 @@ var path = require('path')
 const cors = require('cors')
 const morgan = require('morgan')
 
-
+const fs = require("fs")
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
 const http = require('http').Server(app)
+var https = require('https');
+
 // const server = require("http").Server(app);
 const { v4: uuidv4 } = require("uuid");
+var PeerServer = require('peer').PeerServer;
 
 const io = require('socket.io')(http,
   {
@@ -34,6 +37,8 @@ const io = require('socket.io')(http,
     }
   });
 
+
+// var httpsServer = https.createServer(credentials, app);
 
 
 app.set('view engine', 'ejs')
@@ -593,15 +598,29 @@ io.on('connection', socket => {
 //   console.log(`Server is running on port ${port}`)
 // })
 
+var privateKey =fs.readFileSync('./ssl/key.pem',"utf-8") ;
+// console.log(privateKey,"kkkkkk")
+var certificate = fs.readFileSync('./ssl/cert.pem',"utf-8") ;;
 
-const peerServer = ExpressPeerServer(http, {
-  debug: true,
-  path: '/',
-  host:5000,
-  secure: true,
+// var credentials = { key: privateKey, cert: certificate };
+
+var server = PeerServer({
+  port: 8000,
+  path: '/peerjs',
+  ssl: {
+    key: privateKey,
+    cert:certificate
+  }
 });
 
-app.use('/peerjs', peerServer);
+// const peerServer = ExpressPeerServer(http, {
+//   debug: true,
+//   path: '/',
+//   host: 5000,
+//   secure: true,
+// });
+
+app.use('/peerjs', server);
 
 
 
