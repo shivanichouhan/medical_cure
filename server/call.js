@@ -17,12 +17,29 @@ function init(userId) {
     //     path: '/myapp'
     // })
     // console.log(userId)
-    peer = new Peer(userId,{
-        host: '/',
-        port: 5000,
-        path: '/peerjs/myapp'
-    });
+    // peer = new Peer(userId,{
+    //     host: '/',
+    //     port: 5000,
+    //     path: '/peerjs/myapp'
+    // });
 
+    peer = new Peer(userId,{
+        host: "localhost",
+        port: 2222,
+        path: '/peerjs',
+        debug: 3,
+        config: {
+            'iceServers': [
+                { url: 'stun:stun1.l.google.com:2222' },
+                {
+                    url: 'turn:numb.viagenie.ca',
+                    credential: 'password',
+                    username: 'username'
+                }
+            ]
+        }
+    });
+    
     // peer = new Peer(userId, peerObj)
     console.log(userId)
 
