@@ -57,8 +57,7 @@ const user = prompt("Enter your name");
 
 var peer1 =  {
     path: "/peerjs",
-    host: "184.168.122.191:5000",
-    // port:5000,
+    host: "/",
     debug: 3,
     config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
 
