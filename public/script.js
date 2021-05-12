@@ -67,29 +67,19 @@ const user = prompt("Enter your name");
 // var peer = new Peer(undefined,peer1);
 
 
+const iceConfiguration = {
+    iceServers: [
+        {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'username',
+            credentials: 'password'
+        }
+    ]
+}
 
-var peer = new Peer(undefined, {
-    host: "127.1.1",
-    port: 2222,
-    path: '/peerjs',
-    debug: 3,
-    config: {
-        'iceServers': [
-            { url: 'stun:stun1.l.google.com:2222' },
-            {
-                url: 'turn:numb.viagenie.ca',
-                credential: 'password',
-                username: 'username'
-            }
-        ]
-    }
-});
+const peerConnection = new RTCPeerConnection(iceConfiguration);
 
-
-
-var conn = peer.connect("ssss")
-conn.send('hello shivani I am working')
-
+console.log("connection stablise",peerConnection,"kkkkkkkk")
 
 let myVideoStream;
 navigator.mediaDevices
@@ -98,7 +88,7 @@ navigator.mediaDevices
         video: true,
     })
     .then((stream) => {
-        console.log(stream)
+        console.log(stream,"stremingggggggggggggggggggg")
         myVideoStream = stream;
         addVideoStream(myVideo, stream);
 
