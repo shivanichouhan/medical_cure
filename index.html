@@ -5,31 +5,42 @@
     <title>Hello world!</title>
   </head>
   <body>
-    <!-- <img src="./logo/xpress.png"><br> -->
-    {{#each users}}
-    <img height="70" width="70" src="{{this.img}}" alt=>
-    <h5>Prescription</h5>
-    <ul>
-      <li>Name: {{this.name}}</li>
-      <li>Age: {{this.age}}</li>
-      <li>Height: {{this.height}}</li>
-      <li>Weight: {{this.weight}}</li>
-      <li>Disease: {{this.disease}}</li>
-      <br />
-      {{/each}}
-    </ul>
-
+    <img src="./logo/xpress.png",alt='hello'><br>
     {{#each users1}}
-    <img height="70" width="70" src="{{this.img}}" alt=>
-    <h5>Prescription1</h5>
-    <ol>
+    
+    <!-- <img width="50" hidden="50" src="{{this.imgurl}}" alt=""> -->
+    <p>{{this.name}}</p>
+    {{/each}}
+    <h5>Prescription</h5>
+    
+    <!-- <ul>
       <li>Name: {{this.name}}</li>
       <li>Age: {{this.age}}</li>
       <li>Height: {{this.height}}</li>
       <li>Weight: {{this.weight}}</li>
       <li>Disease: {{this.disease}}</li>
       <br />
-      {{/each}}
-    </ol>
+    
+    </ul> -->
+     
+    <table>
+      <tr>
+      <th>name</th>
+      <th>age</th>
+      <th>weight</th>
+      <th>height</th>
+      <th>disease</th>
+    </tr>
+    {{#each users}}
+    <tr>
+      <td>{{this.name}}</td>
+      <td>{{this.age}}</td>
+      <td>{{this.height}}</td>
+      <td>{{this.weight}}</td>
+      <td>{{this.disease}}</td>
+    </tr>
+    </table>
+    {{/each}}
+    
   </body>
 </html>

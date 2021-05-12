@@ -1,11 +1,21 @@
 
 function Prescription() {
  
-this.patPrescription = (patpreData,patientInfo)=>{
+this.patPrescription = (presInfo,patientInfo,docInfo)=>{
 return new Promise((resolve,reject)=>{  
 var pdf = require("pdf-creator-node");
+function TimeZone(){
+    const str = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    const date_time =str.split(',')
+    console.log(date_time)
+    const date = date_time[0]
+    const time = date_time[1]
+    return ({Date:date,Time:time})
+  }
+  
+var time_date =  TimeZone()
 var fs = require("fs");
-var html = fs.readFileSync("pre.html", "utf8");
+var html = fs.readFileSync("index.html", "utf8");
 
 var options = {
   format: "A3",
@@ -25,30 +35,45 @@ var options = {
       }
   }
 };
-var users = [
-  {
-    name:"",
-    age:"26",
-    height:"6.1",
-    weight:"70kg",
-    disease:"harniya",
-  },
-];
+
+// var docInfo = [
+//   {
+
+//   }
+// ]
+
+// var patInfo = [
+//   {
+//     patId:patientInfo._id,
+//     name:patientInfo.patient_name,
+//     age:patientInfo.age,
+//     height:patientInfo.height,
+//     weight:patientInfo.weight,
+//     gender:patientInfo.gender,
+//     diagnosis:presInfo.daignosis,
+//     alergies:presInfo.alergies,
+//     date_of_consult:time_date.Date
+//   },
+
+// ];
+var path = require('path')
+var img = path.join(__dirname,'./logo/xpressimg.png')
+console.log(img,'mfd')
 var users1 = [
   {
-    name:"11",
-    age:"12",
-    height:"13",
-    weight:"14",
-    disease:"15",
-  },
-];
+    imgurl:img,
+    name:'myworkd'
+  }
+]
 var dt = '.pdf'
 var document = {
   html: html,
   data: {
-    users: users,
     users1:users1
+    // medicine_info: presInfo.medicine,
+    // patInfo: patInfo,
+    // doctor_info:,
+
   },
   path: "./uploads/output"+`${dt}`,
   type: "",
@@ -58,7 +83,7 @@ pdf
   .create(document,options,)
   .then((resp) => {
     console.log(resp);
-    resolve(resp.filename)
+    // resolve(resp.filename)
   })
   .catch((error) => {
     console.error(error);
