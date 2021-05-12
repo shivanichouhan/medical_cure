@@ -70,7 +70,7 @@ const user = prompt("Enter your name");
 const iceConfiguration = {
     iceServers: [
         {
-            urls: 'turn:numb.viagenie.ca',
+            urls: 'turn:xpresscure.com:9000',
             username: 'username',
             credentials: 'password'
         }
