@@ -18,14 +18,20 @@ const prescriptionSchema = new schema(
         // duration:{
         //     type:String
         // },
-        // instruction:{
+        // med_instruction:{
         //     type:String
         // },
         medicine:{
             type:Array
         },
+        // lab_name:{
+        //     type:String
+        // },
+        // lab_instruction:{
+        //     type:String
+        // },
         lab_test:{
-            type:String
+          type:Array
         },
         dr_advice:{
             type:String

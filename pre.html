@@ -96,13 +96,16 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
+
+	<!--patient info start-->
+	{{#each patInfo}}
 	<tr>
-		<td height="20" align="left" valign=bottom><b><font color="#000000">Name :</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">Rahul</font></td>
+		<td height="20" align="left" valign=bottom><b><font color="#000000">Name:</font></b></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.name}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Diagnosis</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">Tinea Corporis</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.diagnosis}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -113,11 +116,11 @@
 	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Age :</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">52 Years</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.age}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Date of Consultation</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">21-05-2020</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.date_of_consult}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -128,11 +131,11 @@
 	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Gender :</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">Male</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.gender}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Drug Allergies</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">No known allergies</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.alergies}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -143,19 +146,21 @@
 	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Patient Id :</font></b></td>
-		<td align="right" valign=bottom sdval="123456789" sdnum="1033;"><font color="#000000">123456789</font></td>
+		<td align="right" valign=bottom sdval="123456789" sdnum="1033;"><font color="#000000">{{this.patId}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Height</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">179 cm</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.height}}</font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Weight</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">72 kg</font></td>
+		<td align="left" valign=bottom><font color="#000000">{{this.weight}}</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
+	{{/each}}
+	<!--patient info end-->
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>

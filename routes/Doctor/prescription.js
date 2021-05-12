@@ -17,7 +17,4 @@ router.post("/doctor/add_medicine_info",med_info)
 router.post("/doctor/list_lab_test_info",list_lab_info)
 router.post("/doctor/add_lab_test_info",lab_info)
 
-
-
-
 module.exports = router;
