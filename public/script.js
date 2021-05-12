@@ -17,6 +17,24 @@
 //     console.log('User id: ' + userId)
 // })
 
+// Oncology
+// Cardiology
+// Neurology
+// Psychiatry
+// Endocrinology
+// Gastroenterology
+// Nephrology
+// Pulmonology
+// Urology
+
+
+// Dermatology, Venerology and Leprosy
+// Paediatrics
+// Gynaecology
+//  General Medicine
+// Family Medicine
+// Ear, Nose and Throat
+// Orthopaedics
 
 
 const socket = io("/");
@@ -70,7 +88,7 @@ const user = prompt("Enter your name");
 const iceConfiguration = {
     iceServers: [
         {
-            urls: 'turn:xpresscure.com:9000',
+            urls: 'turn:turn.xpresscure.com:36217',
             username: 'username',
             credentials: 'password'
         }

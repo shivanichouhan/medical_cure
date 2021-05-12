@@ -240,6 +240,8 @@ const EventSchema = new mongoose.Schema(
         notification_count:{
             type:Number,
             default:0
+        },category:{
+            type:String
         }
     })
 

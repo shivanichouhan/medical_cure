@@ -80,6 +80,7 @@ const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
 
 // const Doctors = require('./routes/register_doctors')
+const categories = require("./routes/Doctor/doctor_category")
 const Contact = require('./routes/helth_worker/Contacts')
 const rechargewallet = require("./routes/helth_worker/recharge_wallet")
 const Health_Worker = require('./routes/admin/Admin_add_healthworker')
@@ -256,6 +257,7 @@ app.use('/api', MyPost)
 
 //doctor
 // app.use('/api', Doctor)
+app.use("/api", categories)
 app.use('/api', Educational)
 app.use('/api', Professional)
 app.use('/api', Identity)
@@ -598,9 +600,9 @@ io.on('connection', socket => {
 //   console.log(`Server is running on port ${port}`)
 // })
 
-var privateKey =fs.readFileSync('./ssl/key.pem',"utf-8") ;
+var privateKey = fs.readFileSync('./ssl/key.pem', "utf-8");
 // console.log(privateKey,"kkkkkk")
-var certificate = fs.readFileSync('./ssl/cert.pem',"utf-8") ;;
+var certificate = fs.readFileSync('./ssl/cert.pem', "utf-8");;
 
 // var credentials = { key: privateKey, cert: certificate };
 
@@ -609,7 +611,7 @@ var server = PeerServer({
   path: '/',
   ssl: {
     key: privateKey,
-    cert:certificate
+    cert: certificate
   }
 });
 
