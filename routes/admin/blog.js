@@ -4,7 +4,7 @@ const { create_blog, list_blog,home_pageBlog, remove_blog, edit_blog, blog_statu
 const { checkLogin } = require("../../auth")
 const upload = require("../../handler/multer")
 
-router.post("/admin/blog_info/:blog_id",blogInfo)
+router.post("/admin/blog_info",blogInfo)
 
 router.get("/admin/blogs_lists", lists_blogs)//for admin
 router.get("/admin/blog_list", list_blog)
