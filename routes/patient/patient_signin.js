@@ -10,7 +10,8 @@ const{ patient_signup,
        reg_otpVerify,
        reg_patient,
        edit_patient,
-       other_patient } = require("../../controller/patient/patient_signin")
+       other_patient,
+       rating  } = require("../../controller/patient/patient_signin")
 const upload = require("../../handler/multer")       
 
 router.post("/patient/signup_patient",patient_signup)
@@ -27,6 +28,8 @@ router.post("/patient/registration",reg_patient)
 
 router.put("/patient/edit_profile",upload.single('patient_img'),edit_patient)
 router.get("/patient/list_other_patient/:patient_id",other_patient)
+
+router.post("/patient/rating",rating)
 
 
 

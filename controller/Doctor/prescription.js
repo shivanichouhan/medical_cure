@@ -7,7 +7,6 @@ const pres_lab = require("../../model/Doctor/prescription_lab_ins")
 const pres_dai = require("../../model/Doctor/prescription_dai")
 const pres_alergies = require("../../model/Doctor/prescription_alergis")
 
-
 const patient_pres = require("../../prescription_pdf")
 const Prescription = require("../../model/Doctor/prescription")
 const cloud = require("../../cloudinary")
@@ -15,6 +14,7 @@ const doc = require("../../model/Doctor/doctor_regis")
 const Patient = require("../../model/helth_worker/patient_registration")
 const Fs = require('fs')
 const { promises } = require("dns")
+
 
 exports.list_daignosis =(req,res)=>{
     // var daignosis = new RegExp('^'+req.body.search,'i');
