@@ -10,6 +10,7 @@ const Jiaquestion = require("../../model/admin/question_add")
 const Doct = require("../../model/Doctor/doctor_regis")
 const not = require("../../model/Doctor/notification")
 var notification_firebase = require("../../firebase_notification")
+var responseTimes = require("../../model/Doctor/responce_time")
 
 
 const greeting_time = (today) => {
@@ -177,7 +178,7 @@ exports.sendMsg_to_doctor = async (req, res) => {
     if (patient_id && doctor_id) {
         const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { doctor_id: doctor_id, status: "appoint_requested" } })
         var data = await Doct.findOne({ _id: doctor_id })
-        const patients =await patient_data.findOne({_id:patient_id})
+        const patients = await patient_data.findOne({ _id: patient_id })
         var msg = {}
         var Notification = {}
         msg.to = data.firebase_token
@@ -279,6 +280,10 @@ exports.chatAccepted_by_Doctor = (req, res) => {
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
                     var doctor_resp = await Doct.findOne({ _id: doctor_id })
+                    const respon = await responseTimes.updateOne({
+                        doctor_id: doctor_id,
+                        patient_id: patient_id,
+                    }, { $set: { ongoing_time: new Date() } })
 
                     var msg = {}
                     var Notification = {}
@@ -439,10 +444,16 @@ exports.accept_patient = (req, res) => {
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
                     var doctor_resp = await Doct.findOne({ _id: doctor_id })
+                    const respon = new responseTimes({
+                        doctor_id: doctor_id,
+                        patient_id: patient_id,
+                        accepted_time: new Date()
+                    })
+                    const dd = await respon.save()
 
                     var msg = {}
                     var Notification = {}
-                    console.log(datas)
+                    // console.log(datas)
                     msg.to = datas.firebase_token
                     msg.collapse_key = 'XXX'
                     msg.data = { my_key: 'my value', contents: "abcv/" }
@@ -450,7 +461,7 @@ exports.accept_patient = (req, res) => {
                     Notification.body = `${doctor_resp.username} Doctor Has accepted your Appointment.`
                     msg.notification = Notification
                     notification_firebase.Notification(msg).then(async (resp) => {
-                        console.log(resp,"ijijjkj")
+                        console.log(resp, "ijijjkj")
                         var obj = {}
                         obj.username = doctor_resp.username
                         obj.email = doctor_resp.email
@@ -459,34 +470,33 @@ exports.accept_patient = (req, res) => {
                         obj.healthworker_id = health_worker_id
                         var notObj = new not(obj)
                         var notData = await notObj.save()
-                        // if (notData) {
                         if (response) {
                             const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                             )
-                            const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "appoint_accepted" } })
+                            const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
                             console.log(update_patient)
 
-                            res.json({ code: 200, msg: response })
-                            //     }
-                            // })
+                            res.json({ code: 200, msg: "patient change status" })
+
                         } else {
                             const data_resp = new doctor_patientChat({
                                 doctor_id: doctor_id,
                                 patient_id: patient_id,
                                 room: otp,
-                                status: "appoint_accepted"
+                                status: "accepted"
                             })
                             data_resp.save()
                                 .then((resp) => {
-                                    patient_data.updateOne({ _id: patient_id }, { $set: { status: "appoint_accepted" } })
+                                    patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
                                     console.log(patient_data)
                                     res.json({ code: 200, msg: resp })
                                 }).catch((err) => {
+                                    console.log(err)
                                     res.json({ code: 400, msg: "something went wrong" })
 
                                 })
                         }
-                    }).catch((err)=>{
+                    }).catch((err) => {
                         res.send(err)
                         console.log(err)
                     })
@@ -496,7 +506,6 @@ exports.accept_patient = (req, res) => {
                 .then(async (response) => {
                     var datas = await helth_workers.findOne({ _id: health_worker_id })
                     var doctor_resp = await Doct.findOne({ _id: doctor_id })
-
                     var msg = {}
                     var Notification = {}
                     msg.to = data.firebase_token
@@ -521,7 +530,7 @@ exports.accept_patient = (req, res) => {
                             )
                             const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
                             console.log(update_patient)
-                            res.json({ code: 200, msg: response })
+                            res.json({ code: 200, msg: "patient change status" })
                         } else {
                             const data_resp = new doctor_patientChat({
                                 doctor_id: doctor_id,
@@ -534,7 +543,7 @@ exports.accept_patient = (req, res) => {
                                     patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
                                     console.log(patient_data)
 
-                                    res.json({ code: 200, msg: resp })
+                                    res.json({ code: 200, msg: "patient change status" })
                                 }).catch((err) => {
                                     res.json({ code: 400, msg: "something went wrong" })
 
@@ -545,7 +554,6 @@ exports.accept_patient = (req, res) => {
         }
     } else {
         res.json({ code: 400, msg: "something went wrong" })
-
     }
 }
 

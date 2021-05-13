@@ -88,57 +88,13 @@ exports.reg_from = async (req, res) => {
                     if (err) {
                         res.send({ code: 400, msg: 'images not add in doctor' })
                         console.log(err, 'doc_img')
-                    }
-                    else {
-                        // if (req.body.Courses && doc_cer.length != 0) {
-                        //     console.log("D1 category me aaya hu")
-                        //     const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "D1" } })
-                        //     subCategories.updateOne({ _id: "609ccdce54298e19d7ccd9a4" }, { $push: { DoctorList: req.params.docId } })
-                        // .then((response) => {
+                    }else {
                         res.send({ code: 200, msg: 'success with img' })
-                        // })
-                        // } 
                     }
                 })
             }
             else {
-                if (req.body.super_course) {
-                    console.log("E1 category me")
-                    const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "E1" } })
-                    subCategories.updateOne({ _id: "609bc93ac1fe1147aede5453" }, { $push: { DoctorList: req.params.docId } })
-                        .then((response) => {
-                            res.send({ code: 200, msg: 'success' })
-                        })
-
-                } else if (req.body.certificate_course && req.body.Courses) {
-                    console.log("D1 category me aaya hu")
-                    const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "D1" } })
-                    subCategories.updateOne({ _id: "609ccdce54298e19d7ccd9a4" }, { $push: { DoctorList: req.params.docId } })
-                        .then((response) => {
-                            res.send({ code: 200, msg: 'success with img' })
-                        })
-                }
-                else if (req.body.Course && req.body.Courses) {
-                    console.log("C1 category me aaya hu")
-                    const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "C1" } })
-
-                    subCategories.updateOne({ _id: "609bc8d2c1fe1147aede5449" }, { $push: { DoctorList: req.params.docId } })
-                        .then((response) => {
-                            res.send({ code: 200, msg: 'success with img' })
-                        })
-                } else
-                    if (req.body.Course) {
-                        console.log("A1 category me aaya hu")
-                        const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "A1" } })
-
-                        subCategories.updateOne({ _id: "609bc72d94aeeb45c68636b4" }, { $push: { DoctorList: req.params.docId } })
-                            .then((response) => {
-                                res.send({ code: 200, msg: 'success' })
-                            })
-                    } else {
-                        res.send({ code: 200, msg: 'something went wrong' })
-                    }
-
+                res.send({ code: 200, msg: 'success' })
             }
         }
     })
@@ -377,15 +333,15 @@ exports.otpVerify = (req, res) => {
         })
 }
 
-exports.doctorOnline_status = (req,res)=>{
-    const {doctorId , type}=req.body;
-    doc.updateOne({_id:doctorId},{$set:{online_status:type}})
-    .then((resp)=>{
-        res.json({code:200,msg:"doctor status change successfully"})
-    }).catch((err)=>{
-        res.json({code:400,msg:"something went wrong"})
+exports.doctorOnline_status = (req, res) => {
+    const { doctorId, type } = req.body;
+    doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
+        .then((resp) => {
+            res.json({ code: 200, msg: "doctor status change successfully" })
+        }).catch((err) => {
+            res.json({ code: 400, msg: "something went wrong" })
 
-    })
+        })
 }
 
 exports.passupdate = async (req, res) => {

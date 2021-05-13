@@ -4,81 +4,81 @@ require('mongoose-double')(mongoose)
 var SchemaTypes = mongoose.Schema.Types
 const EventSchema = new mongoose.Schema(
     {
-        first_name:{
-            type:String,
-            default:" "
+        first_name: {
+            type: String,
+            default: " "
         },
-        last_name:{
-            type:String,
-            default:" "
+        last_name: {
+            type: String,
+            default: " "
         },
         Gender: {
             type: String,
-            default:" "
+            default: " "
         },
         DOB: {
             type: String,
-            default:" "
+            default: " "
         },
         Blood_group: {
             type: String,
-            default:" "
+            default: " "
         },
         UGCollege_University: {
             type: String,
-            default:" "
+            default: " "
         },
-        ug_clg:{
-            type:String,
-            default:" "
+        ug_clg: {
+            type: String,
+            default: " "
         },
         Course: {
             type: String,
-            default:" "
+            default: " "
         },
         u_pass_year: {
             type: String,
-            default:" "
+            default: " "
         },
         PGCollege_or_University: {
             type: String,
-            default:" "
+            default: " "
         },
-        pg_clg:{
-            type:String,
-            default:" "
+        pg_clg: {
+            type: String,
+            default: " "
         },
         Courses: {
             type: String,
-            default:" "
+            default: " "
         },
         p_pass_year: {
             type: String,
-            default:" "
+            default: " "
         },
         Certificate_University: {
             type: String,
-            default:" "
+            default: " "
         },
-        certificate_course:{
-            type:String,
-            default:" "
+        certificate_course: {
+            type: String,
+            default: " "
         },
-        c_pass_year:{
-            type:String,
-            default:" "
+        c_pass_year: {
+            type: String,
+            default: " "
         },
-        super_clg:{
-            type:String,
-            default:" "
+        super_clg: {
+            type: String,
+            default: " "
         },
-        super_course:{
-            type:String,
-            default:" "
+        super_course: {
+            type: String,
+            default: " "
         },
-        super_pass_year:{
-            type:String,
-            default:" "
+        super_pass_year: {
+            type: String,
+            default: " "
         },
         certificate_Img: {
             type: Array,
@@ -86,47 +86,47 @@ const EventSchema = new mongoose.Schema(
         },
         Employment_status: {
             type: String,
-            default:" "
+            default: " "
         },
         Specialization: {
             type: String,
-            default:" "
+            default: " "
         },
-        area_of_interest:{
-            type:Array,
-            default:" "
+        area_of_interest: {
+            type: Array,
+            default: " "
         },
         Experience: {
             type: String,
-            default:" "
+            default: " "
         },
         State: {
             type: String,
-            default:" "
+            default: " "
         },
         City: {
             type: String,
-            default:" "
+            default: " "
         },
         Address: {
             type: String,
-            default:" "
+            default: " "
         },
         pincode: {
             type: String,
-            default:" "
+            default: " "
         },
         Lincense_no: {
             type: String,
-            default:" "
+            default: " "
         },
         issued_date: {
             type: String,
-            default:" "
+            default: " "
         },
-        issue_auth:{
-            type:String,
-            default:" "
+        issue_auth: {
+            type: String,
+            default: " "
         },
         License_img_front_side: {
             type: Array
@@ -136,11 +136,11 @@ const EventSchema = new mongoose.Schema(
         },
         select_identity: {
             type: String,
-            default:" "
+            default: " "
         },
         identity_Number: {
             type: String,
-            default:" "
+            default: " "
         },
         identity_back_side_img: {
             type: Array
@@ -150,48 +150,48 @@ const EventSchema = new mongoose.Schema(
         },
         select_bank: {
             type: String,
-            default:" "
+            default: " "
         },
         Account_No: {
             type: String,
-            default:" "
+            default: " "
         },
         IFSC_Code: {
             type: String,
-            default:" "
+            default: " "
         },
-        phone_number:{
-            type:String,
-            default:" "
+        phone_number: {
+            type: String,
+            default: " "
         },
         mobile_number: {
             type: String,
-            default:" "
+            default: " "
         },
         Account_holder_name: {
             type: String,
-            default:" "
+            default: " "
         },
         status: {
             type: String,
-            default:" "
+            default: " "
         },
         otp: {
             type: String,
-            default:" "
+            default: " "
         },
         otp_verify: {
             type: Number.toString,
-            default:" "
+            default: " "
 
         },
-        present_place:{
-            type:String,
-            default:" "
+        present_place: {
+            type: String,
+            default: " "
         },
-        register:{
-            type:String,
-            default:"0"
+        register: {
+            type: String,
+            default: "0"
         },
         gmailId: {
             type: String
@@ -208,10 +208,10 @@ const EventSchema = new mongoose.Schema(
         bearer_token: {
             type: String
         },
-        firebase_token:{
-            type:String
+        firebase_token: {
+            type: String
         },
-        profile_pic:{
+        profile_pic: {
             type: String,
             default: "https://image.freepik.com/free-vector/doctor-character-background_1270-84.jpg"
         }, user_id:
@@ -229,23 +229,28 @@ const EventSchema = new mongoose.Schema(
         },
         otp_verify: {
             type: Number
-        },fees:{
-            type:Number,
-            default:200
+        }, fees: {
+            type: Number,
+            default: 200
 
-        },rating:{
-            type:Number,
-            default:4
+        }, rating: {
+            type: Number,
+            default: 4
         },
-        notification_count:{
-            type:Number,
-            default:0
-        },category:{
-            type:String
-        },online_status:{
-            type:String,
-            default:0
+        notification_count: {
+            type: Number,
+            default: 0
+        }, category: {
+            type: String
+        }, online_status: {
+            type: String,
+            default: 0
         }
+    },
+    {
+        timestamps: true
+
+
     })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)
