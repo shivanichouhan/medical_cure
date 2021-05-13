@@ -113,7 +113,6 @@ exports.reg_from = async (req, res) => {
                 } else if (req.body.certificate_course && req.body.Courses) {
                     console.log("D1 category me aaya hu")
                     const doct_cat = await doc.findByIdAndUpdate(resp._id, { $set: { category: "D1" } })
-
                     subCategories.updateOne({ _id: "609ccdce54298e19d7ccd9a4" }, { $push: { DoctorList: req.params.docId } })
                         .then((response) => {
                             res.send({ code: 200, msg: 'success with img' })
@@ -376,6 +375,17 @@ exports.otpVerify = (req, res) => {
                 }
             }
         })
+}
+
+exports.doctorOnline_status = (req,res)=>{
+    const {doctorId , type}=req.body;
+    doc.updateOne({_id:doctorId},{$set:{online_status:type}})
+    .then((resp)=>{
+        res.json({code:200,msg:"doctor status change successfully"})
+    }).catch((err)=>{
+        res.json({code:400,msg:"something went wrong"})
+
+    })
 }
 
 exports.passupdate = async (req, res) => {

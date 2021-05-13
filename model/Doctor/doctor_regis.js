@@ -242,6 +242,9 @@ const EventSchema = new mongoose.Schema(
             default:0
         },category:{
             type:String
+        },online_status:{
+            type:String,
+            default:0
         }
     })
 
