@@ -31,7 +31,7 @@ exports.createSubCategory = (req, res) => {
 }
 
 exports.all_category = (req,res)=>{
-    doctor_category.findOne({}).populate("subCategory")
+    subCategories.find({}).populate("DoctorList")
     .then((resp)=>{
         res.send(resp)
     })
