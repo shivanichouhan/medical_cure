@@ -15,7 +15,7 @@ const labInstruction = new schema(
         docId:{
             type:String
         }
-    }
+    },{timestamps:true}
 )
 
 module.exports = mongoose.model('pres_lab_instruction', labInstruction)

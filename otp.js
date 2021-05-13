@@ -24,6 +24,7 @@ function otp(){
     req.end(function(resp){
       var str = resp.raw_body
       console.log('run',str,resp.code)
+     
       if(str.match(/SMS-SHOOT-ID/g)){
         console.log('match')
         resolve('success')
