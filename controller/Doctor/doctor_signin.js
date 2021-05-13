@@ -105,13 +105,18 @@ exports.reg_from = async (req, res) => {
                         .then((response) => {
                             res.send({ code: 200, msg: 'success with img' })
                         })
-
                 } else
                     if (req.body.Course) {
                         subCategories.updateOne({ subCategory: "A1" }, { $push: { DoctorList: req.params.docId } })
                             .then((response) => {
                                 res.send({ code: 200, msg: 'success' })
                             })
+                    } else if (req.body.super_course) {
+                        subCategories.updateOne({ subCategory: "E1" }, { $push: { DoctorList: req.params.docId } })
+                            .then((response) => {
+                                res.send({ code: 200, msg: 'success' })
+                            })
+
                     } else {
                         res.send({ code: 200, msg: 'something went wrong' })
                     }
