@@ -21,7 +21,7 @@ const prescriptionSchema = new schema(
         // med_instruction:{
         //     type:String
         // },
-        medicine:{
+        medicine_details:{
             type:Array
         },
         // lab_name:{
@@ -30,7 +30,7 @@ const prescriptionSchema = new schema(
         // lab_instruction:{
         //     type:String
         // },
-        lab_test:{
+        lab_test_details:{
           type:Array
         },
         dr_advice:{

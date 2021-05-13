@@ -89,7 +89,12 @@ const EventSchema = new schema(
     },
     mobile_verfiy:{
       type:Number,
-    }
+    },
+    fees:{
+      type:Number,
+      default:""
+
+  }
   })
 
 

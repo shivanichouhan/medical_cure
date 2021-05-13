@@ -31,7 +31,7 @@ exports.sent_Otp = (req, res) => {
             }
             else {
                 console.log(data)
-                if(data.register == true){
+                if(data.register == "1"){
                     res.json({ code: 400, error: 'doctor already register' })  
                 }
                 else{
@@ -42,8 +42,7 @@ exports.sent_Otp = (req, res) => {
                     })
                 }).catch((err) => {
                     res.json({code:400,msg:"something went wrong"})
-
-                    // res.send(err)
+                    console.log(err)
                 })
                 }
                 
