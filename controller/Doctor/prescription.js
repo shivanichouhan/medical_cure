@@ -18,8 +18,11 @@ const { promises } = require("dns")
 
 exports.list_daignosis =(req,res)=>{
     // var daignosis = new RegExp('^'+req.body.search,'i');
-    daignos.find().exec((err,resp)=>{
+    daignos.find()
+    .limit(500)
+    .exec((err,resp)=>{
         if(err){
+            console.log(err)
             res.json({code:400,msg:'daignosis list not found'})
         }
         else{
