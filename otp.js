@@ -22,13 +22,22 @@ function otp(){
      });
 
     req.end(function(resp){
-      console.log('run',resp.raw_body)
-      if(resp.raw_body == 'ERR: INVALID ROUTE ID SUPPLIED.'){
-      console.log('reject')
-        reject('error')
+      var str = resp.raw_body
+      console.log('run',str,resp.code)
+      if(str.match(/SMS-SHOOT-ID/g)){
+        console.log('match')
+        resolve('success')
       }else{
-      resolve('success')
+        console.log('not match')
+        reject('error')
       }
+      
+      // if(resp.raw_body == 'ERR: INVALID ROUTE ID SUPPLIED.'){
+      // console.log('reject')
+      //   reject('error')
+      // }else{
+      // resolve('success')
+      // }
       });
     })  
   }

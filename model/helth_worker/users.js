@@ -4,70 +4,70 @@ const EventSchema = new schema(
   {
     gmailId: {
       type: String,
-      default:""
+      default: ""
 
     },
     username: {
       type: String,
-      default:""
+      default: ""
 
     },
     email: {
       type: String,
-      default:""
+      default: ""
     },
     password: {
       type: String,
-      default:""
+      default: ""
 
     },
-    mobile:{
-      type:String,
-      unique:true
+    mobile: {
+      type: String,
+      unique: true
     },
-    otp:{
-      type:String,
-      default:""
+    otp: {
+      type: String,
+      default: ""
     },
-    register:{
-      type:String,
-      default:"0"
+    register: {
+      type: String,
+      default: "0"
     },
-    status:{
-      type:String,
-      default:"Inactive"
+    status: {
+      type: String,
+      default: "Inactive"
     },
-    health_worker_course:{
-      type:String,
-      default:""
+    health_worker_course: {
+      type: String,
+      default: ""
 
     },
-    certificate_img:{
+    certificate_img: {
       type: Array
     },
-    experience:{
+    experience: {
       type: String,
-      default:""
+      default: ""
 
     },
     state: {
       type: String,
-      default:""
+      default: ""
 
     },
     city: {
       type: String,
-      default:""
+      default: ""
 
     },
     pincode: {
       type: String,
-      default:""
+      default: ""
 
     },
     address: {
       type: String,
-      default:""
+      default: ""
 
     },
     clinic_img: {
@@ -75,66 +75,72 @@ const EventSchema = new schema(
     },
     dob: {
       type: String,
-      default:""
+      default: ""
 
     },
     gender: {
       type: String,
-      default:""
+      default: ""
 
     },
     blood_group: {
       type: String,
-      default:""
+      default: ""
 
     },
     card_name: {
       type: String,
-      default:""
+      default: ""
 
     },
-    card_no:{
-      type:String,
-      default:""
+    card_no: {
+      type: String,
+      default: ""
     },
     account_no: {
       type: String,
-      default:""
+      default: ""
     },
     ifsc_code: {
       type: String,
-      default:""
+      default: ""
 
     },
-    phone:{
-      type:String,
-      default:""
+    phone: {
+      type: String,
+      default: ""
 
     },
     bearer_token: {
       type: String,
-      default:""
+      default: ""
 
     },
-    photo:{
+    photo: {
       type: String,
-      default:""
+      default: ""
 
     },
-   imgId: {
+    imgId: {
       type: String,
-      default:""
+      default: ""
 
     },
     mobile: {
       type: String,
-      default:""
+      default: ""
 
     },
-    mobile_verfiy:{
-      type:Number,
-    },firebase_token:{
-      type:String
+    mobile_verfiy: {
+      type: Number,
+    }, firebase_token: {
+      type: String
+    },
+
+    fees: {
+      type: Number,
+      default: ""
+
     }
   })
 

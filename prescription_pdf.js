@@ -15,7 +15,11 @@ function TimeZone(){
   
 var time_date =  TimeZone()
 var fs = require("fs");
-var html = fs.readFileSync("index.html", "utf8");
+var html = fs.readFileSync("index1.html", "utf8");
+
+var path = require('path')  
+var Pa = path.join('logo','xpressimg.png')
+console.log(Pa,'filepath')
 
 var options = {
   format: "A3",
@@ -23,7 +27,7 @@ var options = {
   border: "10mm",
   header: {
       height: "10mm",
-      contents: `<div style="text-align:center"><h2>Xpress Cure</h2></div>`
+      
   },
   footer: {
       height: "28mm",
@@ -36,9 +40,10 @@ var options = {
   }
 };
 
-// var docInfo = [
+// var DocInfo = [
 //   {
-
+//     doc_name: docInfo.username,
+//     course: docInfo.Course
 //   }
 // ]
 
@@ -56,34 +61,63 @@ var options = {
 //   },
 
 // ];
-var path = require('path')
-var img = path.join(__dirname,'./logo/xpressimg.png')
-console.log(img,'mfd')
+
+// var ary1 = []
+// var ary2 = [] 
+
+// var medicines = presInfo.medicine_details
+// var labTest = presInfo.lab_test_details
+
+//  medicines.forEach((ele,index) => {
+//    console.log('indexing',index)
+//     const detail = {
+//       medicine:ele.medicine,
+//       dosage:ele.dosage,
+//       duration:ele.duration,
+//       med_instruction:ele.med_instruction,
+//       sno:index+1
+//     }
+//     ary1.push(detail)
+//  });
+
+//  labTest.forEach((elem,index) =>{
+//    const lab_detail = {
+//     lab_test:elem.lab_test,
+//     // sno:index+1
+//    }
+//    ary2.push(lab_detail)
+//  })
+
+// var followUp = [{follow:presInfo.follow_up}]
+// var docAdvice = [{drAdvice:presInfo.dr_advice}]
+
+// console.log('new arrays',ary1,ary2)
 var users1 = [
-  {
-    imgurl:img,
-    name:'myworkd'
-  }
-]
+              {daignos:'a0001 first daignosis'},
+              {daignos:'a0002 second daignosis'},
+              {daignos:'a0003 third daignosis'},
+            ]
 var dt = '.pdf'
 var document = {
   html: html,
   data: {
-    users1:users1
-    // medicine_info: presInfo.medicine,
+    users:users1
+    // med: ary1,
+    // lab:ary2,
+    // DocInfo:DocInfo,
     // patInfo: patInfo,
-    // doctor_info:,
-
+    // followUp:followUp,
+    // docAdvice:docAdvice
   },
   path: "./uploads/output"+`${dt}`,
   type: "",
 };
 
 pdf
-  .create(document,options,)
+  .create(document,options)
   .then((resp) => {
     console.log(resp);
-    // resolve(resp.filename)
+    //  
   })
   .catch((error) => {
     console.error(error);

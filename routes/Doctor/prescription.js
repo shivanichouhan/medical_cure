@@ -7,7 +7,7 @@ router.get("/doctor/medicine_list",medicine_list)
 router.get("/doctor/lab_test",lab_test_list)
 router.get("/doctor/list_alergies",list_alergies)
 router.post("/doctor/add_alergies",add_alergies)
-router.post("/doctor/filter_daignosis",list_daignosis)
+router.get("/doctor/filter_daignosis",list_daignosis)
 router.post("/doctor/add_daignosis",add_daignosis)
 router.post("/doctor/add_prescription",add_prescription)
 

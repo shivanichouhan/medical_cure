@@ -4,13 +4,12 @@
 <html>
 <head>
 	
-	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<title></title>
-	<meta name="generator" content="LibreOffice 5.4.7.2 (Linux)"/>
+	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
 	<meta name="author" content="Windows User"/>
 	<meta name="created" content="2020-05-21T10:46:20"/>
-	<meta name="changedby" content="Windows User"/>
-	<meta name="changed" content="2020-05-21T11:49:00"/>
+	<meta name="changed" content="2021-05-12T14:16:55.601431433"/>
 	<meta name="AppVersion" content="12.0000"/>
 	<meta name="DocSecurity" content="0"/>
 	<meta name="HyperlinksChanged" content="false"/>
@@ -29,31 +28,30 @@
 
 <body>
 <table cellspacing="0" border="0">
-	<colgroup width="90"></colgroup>
-	<colgroup width="97"></colgroup>
-	<colgroup width="179"></colgroup>
-	<colgroup width="68"></colgroup>
-	<colgroup width="156"></colgroup>
-	<colgroup width="72"></colgroup>
-	<colgroup width="74"></colgroup>
-	<colgroup span="2" width="64"></colgroup>
-	<colgroup width="119"></colgroup>
-	<colgroup span="3" width="64"></colgroup>
-	<!--doctor info start-->
-	{{#each DocInfo}}
+	<colgroup width="113"></colgroup>
+	<colgroup width="123"></colgroup>
+	<colgroup width="225"></colgroup>
+	<colgroup width="85"></colgroup>
+	<colgroup width="196"></colgroup>
+	<colgroup width="91"></colgroup>
+	<colgroup width="93"></colgroup>
+	<colgroup span="2" width="80"></colgroup>
+	<colgroup width="149"></colgroup>
+	<colgroup span="3" width="80"></colgroup>
 	<tr>
-		<td colspan=2 rowspan=4 height="80" align="left" valign=middle><font size=7 color="#000000">Rx</font></td>
-		<td align="left" valign=bottom><font color="#000000">Dr.{{this.doc_name}}</font></td>
+		<td colspan=2 rowspan=4 height="80" align="center" valign=middle><font size=7 color="#000000">Rx</font></td>
+		<td align="left" valign=bottom><font color="#000000">Dr. Pawan Kumar Singh</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td colspan=4 rowspan=3 align="center" valign=middle><font size=6 color="#000000">XpressCure Logo</font></td>
+		<td colspan=4 rowspan=9 align="center" valign=bottom><font size=6 color="#000000"><br><img src="Prescription%20Format1_htm_d4382069da5ef3c3.png" width=165 height=160 hspace=33 vspace=13>
+		</font></td>
 		</tr>
 	<tr>
-		<td align="left" valign=bottom><font color="#000000">{{this.course}}, DNB(Medicine)</font></td>
+		<td align="left" valign=bottom><font color="#000000">MBBS, DNB(Medicine)</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -80,13 +78,9 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
 	<tr>
-		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		<td height="18" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -98,35 +92,32 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{/each}}
-	<!--doctor info start-->
 	
-	<!--patient info start-->
-	{{#each patInfo}}
 	<tr>
-		<td height="20" align="left" valign=bottom><b><font color="#000000">Name:</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.name}}</font></td>
+		<td height="20" align="left" valign=bottom><b><font color="#000000">Name :</font></b></td>
+		<td align="left" valign=bottom><font color="#000000">Rahul Maurya</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		
 		<td align="left" valign=bottom><b><font color="#000000">Diagnosis</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.diagnosis}}</font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		{{#each users}}	<td align="left"  valign=bottom><font color="#000000">
+			<div  style="border: 1px solid black; width: 100px;">{{this.daignos}}</div>
+			
+		</font></td>{{/each}}
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
+	
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Age :</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.age}} Years</font></td>
+		<td align="left" valign=bottom><font color="#000000">52 Years</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Date of Consultation</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.date_of_consult}}</font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		<td align="left" valign=bottom><font color="#000000">21-05-2020</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -135,13 +126,11 @@
 	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Gender :</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.gender}}</font></td>
+		<td align="left" valign=bottom><font color="#000000">Male</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Drug Allergies</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.alergies}}</font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		<td align="left" valign=bottom><font color="#000000">No known allergies</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -150,21 +139,17 @@
 	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><b><font color="#000000">Patient Id :</font></b></td>
-		<td align="right" valign=bottom sdval="123456789" sdnum="1033;"><font color="#000000">{{this.patId}}</font></td>
+		<td align="right" valign=bottom sdval="123456789" sdnum="16393;"><font color="#000000">123456789</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Height</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.height}}</font></td>
+		<td align="left" valign=bottom><font color="#000000">179 cm</font></td>
 		<td align="left" valign=bottom><b><font color="#000000">Weight</font></b></td>
-		<td align="left" valign=bottom><font color="#000000">{{this.weight}}</font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td align="left" valign=bottom><font color="#000000"><br></font></td>
+		<td align="left" valign=bottom><font color="#000000">72 kg</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{/each}}
-	<!--patient info end-->
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -181,39 +166,34 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
 	<tr>
-		<td height="20" align="center" valign=bottom bgcolor="#2FF1B5"><b>S.No.</b></td>
+		<td height="20" align="center" valign=bottom bgcolor="#2FF1B5"><b>S. No.</b></td>
 		<td colspan=2 align="center" valign=bottom bgcolor="#2FF1B5"><b>Prescribed Medicines</b></td>
 		<td colspan=2 align="center" valign=bottom bgcolor="#2FF1B5"><b>Dosage</b></td>
 		<td colspan=2 align="center" valign=middle bgcolor="#2FF1B5"><b>Duration</b></td>
 		<td colspan=6 align="center" valign=middle bgcolor="#2FF1B5"><b>Instructions</b></td>
 		</tr>
-		<!--medicine info start-->
-		{{#each med}}		
 	<tr>
-		<td height="20" align="center" valign=middle sdval="1" sdnum="1033;"><font color="#000000">{{this.sno}}</font></td>
-		<td colspan=2 align="center" valign=bottom><font color="#000000">{{this.medicine}}</font></td>
-		<td colspan=2 align="center" valign=bottom><font color="#000000">{{this.dosage}}</font></td>
-		<td colspan=2 align="center" valign=bottom><font color="#000000">{{this.duration}}</font></td>
-		<td colspan=6 align="center" valign=bottom><font color="#000000">{{this.med_instruction}}</font></td>
+		<td height="20" align="center" valign=middle sdval="1" sdnum="16393;"><font color="#000000">1</font></td>
+		<td colspan=2 align="center" valign=bottom><font color="#000000">Capsule ITYZA ITRACONAZOLE(200 MG)</font></td>
+		<td colspan=2 align="center" valign=bottom><font color="#000000">1-0-1</font></td>
+		<td colspan=2 align="center" valign=bottom><font color="#000000">4 weeks</font></td>
+		<td colspan=6 align="center" valign=bottom><font color="#000000">After Meal</font></td>
 		</tr>
-		{{/each}}
-	<!-- <tr>
-		<td height="20" align="center" valign=middle sdval="2" sdnum="1033;"><font color="#000000">2</font></td>
+	<tr>
+		<td height="20" align="center" valign=middle sdval="2" sdnum="16393;"><font color="#000000">2</font></td>
 		<td colspan=2 align="center" valign=bottom><font color="#000000">Tablet VOZET LEVOCITRAZINE(5 MG)</font></td>
 		<td colspan=2 align="center" valign=bottom><font color="#000000">0-0-1</font></td>
 		<td colspan=2 align="center" valign=bottom><font color="#000000">3 Weeks</font></td>
 		<td colspan=6 align="center" valign=bottom><font color="#000000">After Meal</font></td>
 		</tr>
 	<tr>
-		<td height="44" align="center" valign=middle sdval="3" sdnum="1033;"><font color="#000000">3</font></td>
+		<td height="44" align="center" valign=middle sdval="3" sdnum="16393;"><font color="#000000">3</font></td>
 		<td colspan=2 align="center" valign=bottom><font color="#000000">CREAM Cetaphil Lotion 100 GM CETYL ALCOHOL</font></td>
-		<td colspan=2 align="center" valign=middle sdnum="1033;1033;M/D/YYYY"><font color="#000000">0-0-1</font></td>
+		<td colspan=2 align="center" valign=middle sdnum="16393;0;DD/MM/YYYY"><font color="#000000">0-0-1</font></td>
 		<td colspan=2 align="center" valign=middle><font color="#000000">1 Month</font></td>
 		<td colspan=6 align="center" valign=middle><font color="#000000">Apply after cleaning the skin properly.</font></td>
 		</tr>
-	<tr> -->
-		
-		<!--medicine info end-->
+	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -228,9 +208,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-
-	<!--lab test info start-->
-		
 	<tr>
 		<td colspan=3 height="20" align="center" valign=bottom bgcolor="#2FF1B5"><b><font color="#000000">Suggested Investigations</font></b></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -244,9 +221,8 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{#each lab}}
 	<tr>
-		<td colspan=3 height="20" align="left" valign=middle><font color="#000000">{{this.lab_test}}</font></td>
+		<td colspan=3 height="20" align="left" valign=middle><font color="#000000">Complete Blood Count</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -258,8 +234,7 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{/each}}
-	<!-- <tr>
+	<tr>
 		<td colspan=3 height="20" align="left" valign=middle><font color="#000000">Kidney Function Test</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -271,9 +246,7 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-	</tr> -->
-	
-	<!--lab test info end-->
+	</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -289,8 +262,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-<!--follow up start-->
-	
 	<tr>
 		<td colspan=3 height="20" align="center" valign=bottom bgcolor="#2FF1B5"><b><font color="#000000">Follow-Up</font></b></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -304,9 +275,8 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{#each followUp}}
 	<tr>
-		<td height="20" align="left" valign=bottom><font color="#000000">{{this.follow}}</font></td>
+		<td height="20" align="left" valign=bottom><font color="#000000">1 month</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -320,8 +290,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{/each}}
-<!--follow up end-->
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -337,8 +305,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	<!--doctor advice start-->
-	
 	<tr>
 		<td colspan=3 height="20" align="center" valign=bottom bgcolor="#2FF1B5"><b><font color="#000000">Doctor's Advice</font></b></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -352,9 +318,8 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{#each docAdvice}}	
 	<tr>
-		<td colspan=3 height="20" align="left" valign=middle><font color="#000000">{{drAdvice}}</font></td>
+		<td colspan=3 height="20" align="left" valign=middle><font color="#000000">Follow up with all reports.</font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -366,11 +331,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 	</tr>
-	{{/each}}
-	<!--doctor advice start-->
-
-	<!--doctor info footer start-->
-	{{#each DocInfo}}	
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -407,7 +367,7 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td colspan=3 align="center" valign=middle><font color="#000000">Dr.{{this.doc_name}}</font></td>
+		<td colspan=3 align="center" valign=middle><font color="#000000">Dr. Pawan Kumar Singh</font></td>
 		</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -420,7 +380,7 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
-		<td colspan=3 align="center" valign=middle><font color="#000000">{{this.course}}, DNB(Medicine)</font></td>
+		<td colspan=3 align="center" valign=middle><font color="#000000">MBBS, DNB(Medicine)</font></td>
 		</tr>
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -435,7 +395,6 @@
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td colspan=3 align="center" valign=bottom><font color="#000000"> 1800-313-8898</font></td>
 		</tr>
-		{{/each}}
 	<tr>
 		<td height="20" align="left" valign=bottom><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom><font color="#000000"><br></font></td>
@@ -464,8 +423,6 @@
 		<td align="left" valign=bottom bgcolor="#2FF1B5"><font color="#000000"><br></font></td>
 		<td align="left" valign=bottom bgcolor="#2FF1B5"><font color="#000000"><br></font></td>
 	</tr>
-	
-	<!--doctor info footer end-->
 	<tr>
 		<td colspan=13 height="20" align="center" valign=bottom><font color="#000000">Can substitute the medicine brand name unless adviced by the Doctor not to do so.</font></td>
 		</tr>

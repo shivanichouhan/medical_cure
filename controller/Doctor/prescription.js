@@ -14,8 +14,8 @@ const Patient = require("../../model/helth_worker/patient_registration")
 const Fs = require('fs')
 
 exports.list_daignosis =(req,res)=>{
-    var daignosis = new RegExp('^'+req.body.search,'i');
-    daignos.find({daignosis:daignosis}).exec((err,resp)=>{
+    // var daignosis = new RegExp('^'+req.body.search,'i');
+    daignos.find().exec((err,resp)=>{
         if(err){
             res.json({code:400,msg:'daignosis list not found'})
         }
@@ -94,37 +94,36 @@ exports.add_prescription =async (req,res)=>{
     var docInfo = await doc.findOne({_id:req.body.docId},{username:1,Course:1})
     var pat_med_info = await pres_med.find({$and:[{patId:req.body.patId},{docId:req.body.docId}]})
     var pat_lab_info = await pres_lab.find({$and:[{patId:req.body.patId},{docId:req.body.docId}]})
-    preObj.medicine = pat_med_info
-    preObj.lab_test = pat_lab_info
-    console.log('preinfo',preObj)
-    console.log('patinfo',patientInfo)
-    console.log('docInfo',docInfo)
-    // preObj.save((err,presInfo)=>{
-    //     if(err){
-    //         res.json({code:400,msg:'prescription not add'})
-    //     }else{
-    //         console.log('save resp',presInfo)
-        //     patient_pres.patPrescription(presInfo,patientInfo,docInfo).then((filePath)=>{
-        //     console.log(filePath)
-        //     var sp = filePath.split('/')
-        //     console.log(sp)
-        //     var lst = sp.slice(-1).pop()
-        //     console.log(lst,'last')
+  
+    preObj.medicine_details = pat_med_info
+    preObj.lab_test_details = pat_lab_info
+  
+    preObj.save((err,presInfo)=>{
+        if(err){
+            res.json({code:400,msg:'prescription not add'})
+        }else{
+            console.log('save resp',presInfo)
+            patient_pres.patPrescription(presInfo,patientInfo,docInfo).then((filePath)=>{
+            console.log(filePath)
+            var sp = filePath.split('/')
+            console.log(sp)
+            var lst = sp.slice(-1).pop()
+            console.log(lst,'last')
 
-        //     cloud.prescription_patient(lst).then((pdf)=>{
-        //         console.log(pdf)
-        //         Fs.unlinkSync(pdf.fileP)
-        //         Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id,prescription_url:pdf.url}},(err,resp)=>{
-        //         if(err){
-        //             res.json({code:400,msg:'prescription not add in patient'})
-        //         }else{
-        //             res.json({code:200,msg:'prescription add successfully'})
-        //         }
-        //       })
-        //     })
-    //     //  })
-    //   }
-    // })
+            cloud.prescription_patient(lst).then((pdf)=>{
+                console.log(pdf,'pdf url')
+                Fs.unlinkSync(pdf.fileP)
+                Patient.updateOne({_id:req.body.patId},{$push:{prescription:presInfo._id,prescription_url:pdf.url}},(err,resp)=>{
+                if(err){
+                    res.json({code:400,msg:'prescription not add in patient'})
+                }else{
+                    res.json({code:200,msg:'prescription add successfully'})
+                }
+              })
+            })
+         })
+      }
+    })
 
 }
 
