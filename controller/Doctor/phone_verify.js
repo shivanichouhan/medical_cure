@@ -74,3 +74,12 @@ exports.number_verify = (req, res) => {
 
         })
 }
+
+
+
+
+// curedev/.pm2/logs/app-out.log last 15 lines:
+// 0|app      |   password: '123456789',
+// 0|app      |   user_name: 'Shivani Chouhan',
+// 0|app      |   email: 'shina12@gmail.com'
+// 0|app      | }
