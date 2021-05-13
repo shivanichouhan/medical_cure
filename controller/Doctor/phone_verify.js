@@ -42,7 +42,7 @@ exports.sent_Otp = (req, res) => {
                     })
                 }).catch((err) => {
                     res.json({code:400,msg:"something went wrong"})
-                    console.log(err)
+                    console.log('send otp error',err)
                 })
                 }
                 

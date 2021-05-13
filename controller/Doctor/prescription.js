@@ -14,8 +14,8 @@ const Patient = require("../../model/helth_worker/patient_registration")
 const Fs = require('fs')
 
 exports.list_daignosis =(req,res)=>{
-    var daignosis = new RegExp('^'+req.body.search,'i');
-    daignos.find({daignosis:daignosis}).exec((err,resp)=>{
+    // var daignosis = new RegExp('^'+req.body.search,'i');
+    daignos.find().exec((err,resp)=>{
         if(err){
             res.json({code:400,msg:'daignosis list not found'})
         }
