@@ -6,13 +6,13 @@ const blogSchema = new schema(
         name: {
             type: String
         },
-        blog_img: [{
+        blog_img: {
             url: {
                 type: String
             }, imgId: {
                 type: String
             }
-        }],
+        },
         blog_cat_name: {
             type: String
         },

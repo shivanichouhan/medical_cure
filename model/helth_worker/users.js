@@ -3,98 +3,145 @@ const schema = mongoose.Schema
 const EventSchema = new schema(
   {
     gmailId: {
-      type: String
+      type: String,
+      default: ""
+
     },
     username: {
-      type: String
+      type: String,
+      default: ""
+
     },
     email: {
-      type: String
+      type: String,
+      default: ""
     },
     password: {
-      type: String
+      type: String,
+      default: ""
+
     },
-    mobile:{
-      type:String,
-      unique:true
+    mobile: {
+      type: String,
+      unique: true
     },
-    otp:{
-      type:String,
-      default:""
+    otp: {
+      type: String,
+      default: ""
     },
-    register:{
-      type:String,
-      default:"0"
+    register: {
+      type: String,
+      default: "0"
     },
-    status:{
-      type:String,
-      default:"Inactive"
+    status: {
+      type: String,
+      default: "Inactive"
     },
-    health_worker_course:{
-      type:String
+    health_worker_course: {
+      type: String,
+      default: ""
+
     },
-    certificate_img:{
+    certificate_img: {
       type: Array
     },
-    experience:{
-      type: String
+    experience: {
+      type: String,
+      default: ""
+
     },
     state: {
-      type: String
+      type: String,
+      default: ""
+
     },
     city: {
-      type: String
+      type: String,
+      default: ""
+
     },
     pincode: {
-      type: String
+      type: String,
+      default: ""
+
     },
     address: {
-      type: String
+      type: String,
+      default: ""
+
     },
     clinic_img: {
       type: Array
     },
     dob: {
-      type: String
+      type: String,
+      default: ""
+
     },
     gender: {
-      type: String
+      type: String,
+      default: ""
+
     },
     blood_group: {
-      type: String
+      type: String,
+      default: ""
+
     },
-    adhar_no: {
-      type: String
+    card_name: {
+      type: String,
+      default: ""
+
+    },
+    card_no: {
+      type: String,
+      default: ""
     },
     account_no: {
-      type: String
+      type: String,
+      default: ""
     },
     ifsc_code: {
-      type: String
+      type: String,
+      default: ""
+
     },
-    phone:{
-      type:String
+    phone: {
+      type: String,
+      default: ""
+
     },
     bearer_token: {
-      type: String
+      type: String,
+      default: ""
+
     },
-    photo:{
-      type: String
+    photo: {
+      type: String,
+      default: ""
+
     },
-   imgId: {
-      type: String
+    imgId: {
+      type: String,
+      default: ""
+
     },
     mobile: {
+      type: String,
+      default: ""
+
+    },
+    mobile_verfiy: {
+      type: Number,
+    }, firebase_token: {
       type: String
     },
-    mobile_verfiy:{
-      type:Number,
-    },
-    fees:{
-      type:Number,
-      default:""
 
-  }
+    fees: {
+      type: Number,
+      default: ""
+
+    }
   })
 
 

@@ -1,4 +1,12 @@
-const webSocket = new WebSocket("ws://184.168.122.191:5000")
+// 184.168.122.191
+
+
+// var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+
+// var webSocket = new WebSocket("wss://backend.xpresscure.com/", ["protocolOne", "protocolTwo"]);
+
+// const webSocket = new WebSocket("wss://backend.xpresscure",["protocolOne", "protocolTwo"])
+var webSocket = new WebSocket("wss://" + location.host + "/");
 
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
@@ -28,27 +36,32 @@ function sendData(data) {
     webSocket.send(JSON.stringify(data))
 }
 
-// navigator.mediaDevices.getUserMedia({ video: {} }).then((stream) => { video.srcObject = stream; }, (err) => console.error(err));
 
 let localStream
 let peerConn
 function startCall() {
     document.getElementById("video-call-div")
-        .style.display = "inline"
+    .style.display = "inline"
 
-    navigator.mediaDevices.getUserMedia({
-        video: {},
+    navigator.getUserMedia({
+        video: {
+            frameRate: 24,
+            width: {
+                min: 480, ideal: 720, max: 1280
+            },
+            aspectRatio: 1.33333
+        },
         audio: true
-    }).then((stream) => {
+    }, (stream) => {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
 
         let configuration = {
             iceServers: [
                 {
-                    "urls": ["stun:stun.l.google.com:19302",
-                        "stun:stun1.l.google.com:19302",
-                        "stun:stun2.l.google.com:19302"]
+                    "urls": ["stun:stun.l.google.com:19302", 
+                    "stun:stun1.l.google.com:19302", 
+                    "stun:stun2.l.google.com:19302"]
                 }
             ]
         }
@@ -58,7 +71,7 @@ function startCall() {
 
         peerConn.onaddstream = (e) => {
             document.getElementById("remote-video")
-                .srcObject = e.stream
+            .srcObject = e.stream
         }
 
         peerConn.onicecandidate = ((e) => {
@@ -71,7 +84,7 @@ function startCall() {
         })
 
         createAndSendOffer()
-    }).catch((error) => {
+    }, (error) => {
         console.log(error)
     })
 }

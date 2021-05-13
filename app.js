@@ -1,4 +1,14 @@
-const Socket = require("websocket").server
+const Socket1 = require("websocket").server;
+
+
+// var firebase = require("firebase/app");
+
+// Add the Firebase products that you want to use
+// require("firebase/auth");
+// require("firebase/firestore");
+
+const { ExpressPeerServer } = require("peer");
+
 
 var express = require('express')
 const mongoose = require('mongoose')
@@ -10,17 +20,36 @@ var path = require('path')
 const cors = require('cors')
 const morgan = require('morgan')
 
-
+const fs = require("fs")
 // const autoIncrement = require('mongoose-auto-increment');
 const app = express()
 const http = require('http').Server(app)
-const io = require('socket.io')(http);
+var https = require('https');
+
+// const server = require("http").Server(app);
+const { v4: uuidv4 } = require("uuid");
+var PeerServer = require('peer').PeerServer;
+
+const io = require('socket.io')(http,
+  {
+    cors: {
+      origin: '*'
+    }
+  });
+
+
+// var httpsServer = https.createServer(credentials, app);
+
+
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '/public')));
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/sender'));
 app.use(express.static(__dirname + '/receiver'));
+app.use(express.static(__dirname + '/server'));
+app.use(express.static('public'))
+
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
@@ -51,7 +80,9 @@ const Users = require('./routes/helth_worker/users')
 const list_state_district = require('./routes/helth_worker/city_list')
 
 // const Doctors = require('./routes/register_doctors')
+const categories = require("./routes/Doctor/doctor_category")
 const Contact = require('./routes/helth_worker/Contacts')
+const rechargewallet = require("./routes/helth_worker/recharge_wallet")
 const Health_Worker = require('./routes/admin/Admin_add_healthworker')
 const Admin_approve = require('./routes/admin/Admin_approve')
 const Block_Worker = require('./routes/helth_worker/BlockWorker')
@@ -88,6 +119,7 @@ const appoinement_list = require("./routes/Doctor/appointment_lists")
 
 
 //admin routes 
+const add_question = require("./routes/admin/question_add")
 const addClg = require("./routes/admin/add_clg")
 const comment = require("./routes/admin/blog_comment")
 const adminReg = require("./routes/admin/admin_login")
@@ -157,19 +189,6 @@ app.use(morgan('dev'))
 app.use(express.json());
 
 
-app.get("/sender_call", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + '/sender/sender.html')
-  )
-}
-)
-
-app.get("/recieve_call", (req, res) => {
-  res.sendFile(
-    path.join(__dirname + '/receiver/receiver.html')
-  )
-}
-)
 
 
 app.get("/demo", (req, res) => {
@@ -197,9 +216,11 @@ app.use('/api', states);
 app.use('/api', dep_health)
 app.use("/api", conversation)
 app.use('/api', payment)
+app.use("/api", rechargewallet)
 //
 
 //admin middleware
+app.use("/api", add_question)
 app.use('/api', addClg)
 app.use('/api', adminReg)
 app.use('/api', comment)
@@ -214,7 +235,7 @@ app.use('/api', medicine)
 app.use('/api', addsubCategory)
 app.use('/api', disease)
 app.use('/api', blogs)
-app.use('/',    cat_blog)
+app.use('/', cat_blog)
 app.use('/api', subcat_blog)
 app.use('/api', childCat_blog)
 app.use('/api', appoinment)
@@ -236,6 +257,7 @@ app.use('/api', MyPost)
 
 //doctor
 // app.use('/api', Doctor)
+app.use("/api", categories)
 app.use('/api', Educational)
 app.use('/api', Professional)
 app.use('/api', Identity)
@@ -284,6 +306,34 @@ app.use('/api', appoinment)
 app.use('/api', department)
 //
 
+
+app.get("/start_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/server/call.html')
+  )
+})
+
+app.get("/sender_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/sender/sender.html')
+  )
+}
+)
+
+app.get("/anathor_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/views/index.html')
+  )
+}
+)
+
+app.get("/recieve_call", (req, res) => {
+  res.sendFile(
+    path.join(__dirname + '/receiver/receiver.html')
+  )
+}
+)
+
 app.post('/all_msg', async (req, res) => {
   //find chats between two users
   const { room_id } = req.body
@@ -300,8 +350,8 @@ function randomString(len, charSet) {
   charSet = charSet || '0123456789'
   var randomString = ''
   for (var i = 0; i < len; i++) {
-      var randomPoz = Math.floor(Math.random() * charSet.length)
-      randomString += charSet.substring(randomPoz, randomPoz + 1)
+    var randomPoz = Math.floor(Math.random() * charSet.length)
+    randomString += charSet.substring(randomPoz, randomPoz + 1)
   }
   return randomString
 }
@@ -365,23 +415,8 @@ io.on('connection', function (socket) {
     console.log("Typing.... ", typing);
     io.emit('on typing', typing);
   });
-
-  // {
-  //   0 | app | message: 'roeyoeeyo',
-  //     0 | app | drId: '6068453d8a864506bebe73f9',
-  //       0 | app | dataURI: '',
-  //         0 | app | pid: '605ebed767359f123cb168d2',
-  //           0 | app | h_name: 'Sonu Sahu',
-  //             0 | app | currentTime: 'Tue Apr 27 15:57:45 GMT+05:30 2021',
-  //               0 | app | room_id: 123,
-  //                 0 | app | username: 'Sonu Sahu'
-  //   0 | app | }
-
-
-
   socket.on('new message', async function (username) {
     console.log("new msg", username)
-
     var dataURI = username.dataURI;
     if (dataURI) {
       const chatdata = new chat_msg({
@@ -421,62 +456,92 @@ io.on('connection', function (socket) {
       io.emit('new message', username);
     }
 
- });
+  });
 
- //prescription start path
-const patient_pres = require("./prescription_pdf")
-const Prescription = require("./model/Doctor/prescription")
-const cloud = require("./cloudinary")
-const Patient = require("./model/helth_worker/patient_registration")
-const Fs = require('fs')
-//prescription end path
+  //prescription start path
+  const patient_pres = require("./prescription_pdf")
+  const Prescription = require("./model/Doctor/prescription")
+  const cloud = require("./cloudinary")
+  const Patient = require("./model/helth_worker/patient_registration")
+  const Fs = require('fs')
+  const Doct = require("./model/Doctor/doctor_regis")
+  const not = require("./model/Doctor/notification")
+  var notification_firebase = require("./firebase_notification")
+  var helth_workers = require("./model/helth_worker/users")
+  //prescription end path
 
- socket.on("prescription", async function(patDetail) {
-   console.log('prescription',patDetail)
-   var patientInfo = await Patient.findOne({_id:req.body.patientId}) 
-   var preObj = new Prescription(req.body)
-    preObj.save((err,resp)=>{
-        if(err){
-            console.log('prescription not add')
-        }else{
-            console.log(resp)
-            patient_pres.patPrescription(resp,patientInfo).then((filePath)=>{
-            console.log(filePath)
-            var sp = filePath.split('/')
-            console.log(sp)
-            var lst = sp.slice(-1).pop()
-            console.log(lst,'last')
+  socket.on("prescription", async function (patDetail) {
+    console.log('prescription', patDetail)
+    var patientInfo = await Patient.findOne({ _id: req.body.patientId })
+    var preObj = new Prescription(req.body)
+    preObj.save((err, resp) => {
+      if (err) {
+        console.log('prescription not add')
+      } else {
+        console.log(resp)
+        patient_pres.patPrescription(resp, patientInfo).then((filePath) => {
+          console.log(filePath)
+          var sp = filePath.split('/')
+          console.log(sp)
+          var lst = sp.slice(-1).pop()
+          console.log(lst, 'last')
 
-            cloud.prescription_patient(lst).then((pdf)=>{
-                console.log(pdf)
-                Fs.unlinkSync(pdf.fileP)
-                Patient.updateOne({_id:req.body.patientId},{$push:{prescription:resp.id,prescription_url:pdf.url}},(err,resp)=>{
-                if(err){
-                    console.log('prescription not add in patient')
-                }else{
-                    // res.json({code:200,msg:'prescription add successfully'})
-                    io.emit("prescription",patDetail)
-                }
-              })
+          cloud.prescription_patient(lst).then((pdf) => {
+            console.log(pdf, 'url')
+            Fs.unlinkSync(pdf.fileP)
+
+            Patient.updateOne({ _id: req.body.patientId }, { $push: { prescription: resp.id, prescription_url: pdf.url } }, (err, resp) => {
+              if (err) {
+                console.log('prescription not add in patient')
+              } else {
+                // var datas = await helth_workers.findOne({ _id: health_worker_id })
+                //        const datadoctor =await Doct.findOne({_id:patDetail.})
+                // var msg = {}
+                // var Notification = {}
+                // msg.to = data.firebase_token
+                // msg.collapse_key = 'XXX'
+                // msg.data = { my_key: 'my value', contents: "abcv/" }
+                // Notification.title = `${datas.username} Title of the notification`
+                // Notification.body = `Doctor Has Send prescription To you.`
+                // msg.notification = Notification
+                // notification_firebase.Notification(msg).then(async (resp) => {
+                //   console.log(resp)
+                //   var obj = {}
+                //   obj.username = datas.username
+                //   obj.email = datas.email
+                //   obj.profile_pic = datas.profile_pic
+                //   obj.notification_text = `Doctor Has Send prescription To you.`
+                //   obj.healthworker_id = health_worker_id
+                //   obj.docId = doctor_id;
+                //   var notObj = new not(obj)
+                //   var notData = await notObj.save()
+                console.log('prescription add successfully')
+                io.emit("prescription", { url: pdf.url })
+                // })
+              }
             })
-         })
-       }
+          })
+
+        })
+      }
     })
- })
+    // }
+  })
+  // })
 
 
-socket.on("accept_petient", async function (datas) {
+  socket.on("accept_petient", async function (datas) {
     if (datas.type == "1") {
       socket.join(datas.p_id);
       socket.join(datas.d_id);
     }
- })
+  })
 
-socket.on('chat message', async function (msg) {
-    console.log("Message " + msg['message']);
-    io.emit('chat message', msg);
-    //   io.emit('chat message', msg);
-  });
+  // socket.on('chat message', async function (msg) {
+  //   console.log("Message " + msg['message']);
+  //   io.emit('chat message', msg);
+  //   io.emit('chat message', msg);
+  // });
 });
 
 
@@ -486,11 +551,87 @@ app.use('/api', doctor_reg)
 const port = process.env.PORT || 8000
 // const server = http.createServer(app)
 
-http.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
+
+
+
+
+
+
+function create_UUID() {
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
+}
+
+app.get('/s', (req, res) => {
+  res.redirect(`/${create_UUID()}`)
 })
 
-const webSocket = new Socket({ httpServer: http })
+app.get('/:room', (req, res) => {
+  res.render('room', { roomId: req.params.room })
+})
+
+io.on('connection', socket => {
+  socket.on('join-room', (roomId, userId) => {
+    console.log(roomId, userId)
+    socket.join(roomId)
+    socket.to(roomId).broadcast.emit('user-connected', userId)
+  })
+})
+
+
+// var webSocket = new WebSocket("wss://backend.xpresscure.com/socketserver", "protocolOne");
+// var https = require('http');
+// var Server = https.createServer(app);
+
+
+// const Socket1 = require("websocket").server
+// const http1 = require("http")
+// .Server(app)
+// const server = http1.createServer(app)
+
+
+
+// http.listen(port, () => {
+//   console.log(`Server is running on port ${port}`)
+// })
+
+var privateKey = fs.readFileSync('./ssl/key.pem', "utf-8");
+// console.log(privateKey,"kkkkkk")
+var certificate = fs.readFileSync('./ssl/cert.pem', "utf-8");;
+
+// var credentials = { key: privateKey, cert: certificate };
+
+var server = PeerServer({
+  port: 8000,
+  path: '/',
+  ssl: {
+    key: privateKey,
+    cert: certificate
+  }
+});
+
+// const peerServer = ExpressPeerServer(http, {
+//   debug: true,
+//   path: '/',
+//   host: 5000,
+//   secure: true,
+// });
+
+app.use('/peerjs', server);
+
+
+
+
+const listener = http.listen(5000, () => {
+  console.log("Your app is listening on port " + 5000);
+});
+
+const webSocket = new Socket1({ httpServer: http, autoAcceptConnections: false })
 
 let users = []
 
@@ -571,7 +712,7 @@ webSocket.on('request', (req) => {
 
         break
     }
-})
+  })
 
   connection.on('close', (reason, description) => {
     users.forEach(user => {
@@ -593,3 +734,4 @@ function findUser(username) {
       return users[i]
   }
 }
+

@@ -18,9 +18,9 @@ exports.blog_search = (req, res) => {
 }
 
 exports.blogInfo = (req, res) => {
-    const info = url.parse(req.url, true).query
+    const info = req.params.blog_id
     console.log(info)
-    blogModal.findOne({ _id: info.blogId })
+    blogModal.findOne({ _id: info })
         .populate('comment')
         .exec((err, resp) => {
             if (err) {
@@ -157,7 +157,7 @@ exports.edit_blog = (req, res) => {
                     cloud.uploads(path).then((resp) => {
                         console.log(resp,"images")
                         console.log(resp,"images")
-                        const data = [resp]
+                        const data = resp
                         blogModal.updateOne({ _id: req.params.blogId }, { $set:{blog_img:data } })
                             .exec((err, blogUpdte) => {
                                 if (err) {

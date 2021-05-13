@@ -1,18 +1,27 @@
 const { model, Promise } = require("mongoose")
 const blogCat = require("../../model/admin/blog_cat")
-// const a = require("../../views/add")
+const blog = require("../../model/admin/blog")
 const path = require("path")
 const blog_data = require("../../model/admin/blog")
 
 exports.list_cat_blog = (req, res) => {
     blogCat.find()
    .select('blog_cat_name')
-   .exec((err,catList)=>{
+   .exec(async(err,catList)=>{
         if(err){
             res.json({code:400,msg:'blog category list not found'})
         }
         else{
-            res.json({code:200,msg:catList})
+            const array =[]
+            await Promise.all(catList.map(async(item)=>{
+                const obj = {}
+                obj._id = item._id
+                obj.blog_cat_name = item.blog_cat_name
+                const datablog =await blog.find({blog_cat_name:item.blog_cat_name})
+                obj.total_blog = datablog.length
+                array.push(obj)
+            }))
+            res.json({code:200,msg:array})
         }
     })
 }

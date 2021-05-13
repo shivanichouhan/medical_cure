@@ -27,6 +27,7 @@ exports.sent_Otp = (req, res) => {
     Doctor_num.findOne({ _id: user_ids })
         .exec((err, data) => {
             if (err) {
+                console.log(err)
                 res.json({ code: 400, error: 'data not found' })
             }
             else {
@@ -41,6 +42,7 @@ exports.sent_Otp = (req, res) => {
                         res.json({code:200,msg:{_id:respdata._id,otp:OTP}})
                     })
                 }).catch((err) => {
+                    console.log(err,"error hai hmari")
                     res.json({code:400,msg:"something went wrong"})
                     console.log('send otp error',err)
                 })
@@ -72,3 +74,12 @@ exports.number_verify = (req, res) => {
 
         })
 }
+
+
+
+
+// curedev/.pm2/logs/app-out.log last 15 lines:
+// 0|app      |   password: '123456789',
+// 0|app      |   user_name: 'Shivani Chouhan',
+// 0|app      |   email: 'shina12@gmail.com'
+// 0|app      | }
