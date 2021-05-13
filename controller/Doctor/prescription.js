@@ -19,7 +19,7 @@ const { promises } = require("dns")
 exports.list_daignosis =(req,res)=>{
     // var daignosis = new RegExp('^'+req.body.search,'i');
     daignos.find()
-    .limit(500)
+    .limit(50)
     .exec((err,resp)=>{
         if(err){
             console.log(err)
