@@ -15,6 +15,8 @@ const reviewSchema = new schema(
             type: String
         }, responce_time: {
             type: String
+        },Response_rating:{
+            type:Number
         }
     }
     ,

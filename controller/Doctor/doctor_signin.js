@@ -1,6 +1,6 @@
 const doc = require("../../model/Doctor/doctor_regis")
 const subCategories = require("../../model/Doctor/doctor_subcategory")
-
+const availabiltyHour = require("../../model/Doctor/availability_hour")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 var otpGenerator = require('otp-generator')
@@ -88,7 +88,7 @@ exports.reg_from = async (req, res) => {
                     if (err) {
                         res.send({ code: 400, msg: 'images not add in doctor' })
                         console.log(err, 'doc_img')
-                    }else {
+                    } else {
                         res.send({ code: 200, msg: 'success with img' })
                     }
                 })
@@ -333,15 +333,101 @@ exports.otpVerify = (req, res) => {
         })
 }
 
-exports.doctorOnline_status = (req, res) => {
+exports.doctorOnline_status = async (req, res) => {
     const { doctorId, type } = req.body;
-    doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
-        .then((resp) => {
-            res.json({ code: 200, msg: "doctor status change successfully" })
-        }).catch((err) => {
-            res.json({ code: 400, msg: "something went wrong" })
+    // availabiltyHour
+    var currentDate = new Date()
+    let year = currentDate.getFullYear()
+    let month = currentDate.getMonth() + 1 //because January starts with 0
+    let day = currentDate.getDate()
+    const dataresp = await availabiltyHour.aggregate([
+        {
+            "$match": {
+                $and: [
+                    {
+                        doctor_id: doctorId
+                    },
+                    {
+                        "year": currentDate.getFullYear(),
+                        "month": currentDate.getMonth() + 1, //because January starts with 0
+                        "day": currentDate.getDate()
+                    }
+                ]
+            }
+        }
+    ]
+    )
 
-        })
+    console.log(dataresp, "perday response")
+
+    if (type == "1" || type == 1) {
+        if (dataresp.length == 0) {
+            const avail = new availabiltyHour({
+                year: year,
+                month: month,
+                day: day,
+                availability_hour: 0,
+                OnlineTime: currentDate,
+                doctor_id: doctorId,
+                switch: "on"
+            })
+            await avail.save()
+        } else {
+            const avails = availabiltyHour.updateOne({ doctor_id: doctorId }, {
+                $set: {
+                    OnlineTime: currentDate
+                }
+            })
+            console.log("already add this day")
+        }
+        doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
+            .then((resp) => {
+                res.json({ code: 200, msg: "doctor status change successfully" })
+            }).catch((err) => {
+                res.json({ code: 400, msg: "something went wrong" })
+            })
+    } else if (type == "0" || type == 0) {
+        if (dataresp.length != 0) {
+            const hours = dataresp[0]
+            const details = await availabiltyHour.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            {
+                                _id: hours._id,
+                            }
+                            // { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    }
+                },
+                {
+                    $project: {
+                        availability_hour: 1,
+                        OnlineTime: 1,
+                        duration: { $divide: [{ $sum: ["$OnlineTime",currentDate ] }, 3600000] }
+                    }
+                }
+            ])
+            console.log(details,"jjjjjjjj")
+
+
+        } else {
+            console.log("not have dataaaaaaa")
+        }
+        doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
+            .then((resp) => {
+                res.json({ code: 200, msg: 
+                    "doctor status change successfully"
+                 })
+            }).catch((err) => {
+                console.log(err)
+                res.json({ code: 400, msg: "something went wrong" })
+
+            })
+
+    } else {
+        res.json({ code: 400, msg: "didn't give any online type" })
+    }
 }
 
 exports.passupdate = async (req, res) => {
