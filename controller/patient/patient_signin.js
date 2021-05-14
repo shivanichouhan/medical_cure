@@ -7,6 +7,7 @@ var otpGenerator = require('otp-generator')
 const _ = require('lodash')
 const cloud = require("../../cloudinary")
 const fs = require('fs')
+const rat = require("../../model/Doctor/rating")
 
 
 async function hashPassword(password) {
@@ -371,4 +372,19 @@ exports.other_patient = async (req,res)=>{
     }
 }
 
-
+exports.rating = (req,res)=>{
+    var ratObj = new rat({
+        doctor_id:req.body.doctor_id,
+        rating:req.body.rating,
+        patient_id:req.body.patient_id
+    })
+    ratObj.date = new Date()
+    console.log(ratObj)
+    ratObj.save((err,resp)=>{
+        if(err){
+            res.send({code:400,msg:'rating detail not add'})
+        }else{
+            res.send({code:200,msg:'rating add successfully'})
+        }
+    })
+}

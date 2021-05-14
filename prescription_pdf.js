@@ -15,9 +15,10 @@ function TimeZone(){
   
 var time_date =  TimeZone()
 var fs = require("fs");
-var html = fs.readFileSync("index1.html", "utf8");
-
 var path = require('path')  
+var html = fs.readFileSync( path.join(__dirname,'views/pre.html'), "utf8");
+
+
 var Pa = path.join('logo','xpressimg.png')
 console.log(Pa,'filepath')
 
