@@ -222,14 +222,18 @@ exports.list_dai =(req,res)=>{
         if(err){
             res.json({code:400,msg:'daignoisis list not found'})
         }else{
-            var dn = resp.daignosis_name
             var data = []
+            if(resp){
+            var dn = resp.daignosis_name
             dn.forEach(element => {
                var obj ={} 
                obj.name = element
                data.push(obj)
             });
             res.json({code:200,msg:data})
+        }else{
+            res.json({code:200,msg:data})
+        }
         }
     })
 }
@@ -278,14 +282,18 @@ exports.alergies_list = (req,res)=>{
         if(err){
             res.json({code:400,msg:'alergies list not found'})
         }else{
-            var dn = resp.alergies_name
             var data = []
+            if(resp){
+            var dn = resp.alergies_name
             dn.forEach(element => {
                var obj ={} 
                obj.name = element
                data.push(obj)
             });
             res.json({code:200,msg:data})
+            }else{
+                res.json({code:200,msg:data})
+            }
         }
     })
 }
