@@ -12,7 +12,7 @@ exports.patient_ragister =async (req, res) => {
     const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     if (result) {
         var result = await Patient.updateOne({ phone_number: mobile }, { $set: { otp: OTP,device_token:device_token } })
-        otp.send_otp(str, OTP).then((resp) => {
+        otp.send_otp(mobile, OTP).then((resp) => {
             res.json({
                 code: 200,
                 otp: `${OTP}`,
