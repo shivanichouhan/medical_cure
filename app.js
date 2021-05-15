@@ -75,8 +75,7 @@ const chat_msg = require("./model/chat_msg")
 
 //hel[line ===
 const helpline_specelize = require("./routes/helpLines/helpline_specelization")
-
-
+const helpline_patient =require("./routes/helpLines/patient_ragister")
 
 //user routes
 const payment = require('./routes/helth_worker/payment')
@@ -205,7 +204,7 @@ app.use('/api', mail)
 
 //helpline numberss
 app.use("/api",helpline_specelize)
-
+app.use("/api",helpline_patient)
 
 //helthworker middleware
 app.use("/api", Feedbacks)
