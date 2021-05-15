@@ -328,25 +328,25 @@ exports.chatAccepted_by_Doctor = (req, res) => {
                             patient_id: patient_id,
                         }, { $set: { responce_time: j, Response_rating:5 } })
     
-                    }else if(j >= 5 && j <=10 ){
+                    }else if(j > 5 && j <=10 ){
                         const respons = await responseTimes.updateOne({
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                         }, { $set: { responce_time: j, Response_rating:4 } })
      
-                    }else if(j >= 10 && j <=20 ){
+                    }else if(j > 10 && j <=20 ){
                         const respons = await responseTimes.updateOne({
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                         }, { $set: { responce_time: j, Response_rating:3 } })
      
-                    }else if(j >= 20 && j <=30 ){
+                    }else if(j > 20 && j <=30 ){
                         const respons = await responseTimes.updateOne({
                             doctor_id: doctor_id,
                             patient_id: patient_id,
                         }, { $set: { responce_time: j, Response_rating:2 } })
      
-                    }else if(j >= 30 && j <=60 ){
+                    }else if(j > 30 && j <=60 ){
                         const respons = await responseTimes.updateOne({
                             doctor_id: doctor_id,
                             patient_id: patient_id,
@@ -694,6 +694,12 @@ exports.onGoing_patients = (req, res) => {
             }
         })
 }
+
+
+
+
+
+
 
 
 // http://148.72.214.135

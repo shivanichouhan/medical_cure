@@ -7,7 +7,7 @@ const ratingSchema = new schema(
             type: String
         },
         rating : {
-            type: String
+            type: Number
         },
         patient_id: {
             type: String

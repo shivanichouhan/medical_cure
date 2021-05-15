@@ -73,6 +73,10 @@ cloudenary.config({
 
 const chat_msg = require("./model/chat_msg")
 
+//hel[line ===
+const helpline_specelize = require("./routes/helpLines/helpline_specelization")
+
+
 
 //user routes
 const payment = require('./routes/helth_worker/payment')
@@ -197,6 +201,10 @@ app.get("/demo", (req, res) => {
 })
 //email
 app.use('/api', mail)
+
+
+//helpline numberss
+app.use("/api",helpline_specelize)
 
 
 //helthworker middleware

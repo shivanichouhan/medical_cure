@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
+require('mongoose-double')(mongoose);
+var SchemaTypes = mongoose.Schema.Types;
 
 const reviewSchema = new schema(
     {
@@ -7,7 +9,7 @@ const reviewSchema = new schema(
             type: String
         },
         availability_hour: {
-            type: Number
+            type: SchemaTypes.Double
         }, OnlineTime: {
             type: Date
         },

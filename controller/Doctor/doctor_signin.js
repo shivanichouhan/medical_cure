@@ -357,7 +357,6 @@ exports.doctorOnline_status = async (req, res) => {
         }
     ]
     )
-
     console.log(dataresp, "perday response")
 
     if (type == "1" || type == 1) {
@@ -396,7 +395,6 @@ exports.doctorOnline_status = async (req, res) => {
                             {
                                 _id: hours._id,
                             }
-                            // { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
                         ]
                     }
                 },
@@ -404,27 +402,29 @@ exports.doctorOnline_status = async (req, res) => {
                     $project: {
                         availability_hour: 1,
                         OnlineTime: 1,
-                        duration: { $divide: [{ $sum: ["$OnlineTime",currentDate ] }, 3600000] }
+                        duration: { $divide: [{ $subtract: [currentDate, "$OnlineTime"] }, 3600000] }
                     }
                 }
             ])
-            console.log(details,"jjjjjjjj")
-
+            const details1 = details[0]
+            const hours_data = hours.availability_hour + details1.duration
+            const update_details = await availabiltyHour.updateOne({ _id: hours._id }, {$set:{availability_hour:hours_data,OnlineTime:currentDate}})
+            console.log(hours_data, details, "jjjjjjjj")
 
         } else {
             console.log("not have dataaaaaaa")
         }
         doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
             .then((resp) => {
-                res.json({ code: 200, msg: 
-                    "doctor status change successfully"
-                 })
+                res.json({
+                    code: 200, msg:
+                        "doctor status change successfully"
+                })
             }).catch((err) => {
                 console.log(err)
                 res.json({ code: 400, msg: "something went wrong" })
 
             })
-
     } else {
         res.json({ code: 400, msg: "didn't give any online type" })
     }

@@ -50,7 +50,6 @@ exports.all_category = async (req, res) => {
 
 exports.last_three_month = async (req, res) => {
 
-  const repnce = await responce_time.find()
   // responce_time.aggregate([{ $match: { patient_id: "6065f6bd6b98a35ead850d4c" } },
   // {
   //   $project: {
