@@ -18,9 +18,9 @@ exports.blog_search = (req, res) => {
 }
 
 exports.blogInfo = (req, res) => {
-    const info = url.parse(req.url, true).query
+    const info = req.params.blogId
     console.log(info)
-    blogModal.findOne({ _id: info.blogId })
+    blogModal.findOne({ _id: info })
         .populate('comment')
         .exec((err, resp) => {
             if (err) {

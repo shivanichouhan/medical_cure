@@ -245,6 +245,12 @@ const EventSchema = new mongoose.Schema(
         }, online_status: {
             type: String,
             default: 0
+        }, algorithm_index: {
+            type: Number,
+            default :0
+        },total_cases :{
+            type:Number,
+            default:0
         }
     },
     {

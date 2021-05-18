@@ -93,7 +93,8 @@ exports.algo_method = async (req, res) => {
     
 
     const methods = ratingAvarage + (2 * responceAvarage) + (2*availableAvarage) +patient_detail/4
-  
+    let j = parseInt(methods, 10)
+    
     console.log(methods,"methods")
 
     res.json({ rating: monrating, responce_time: mon, avail: availabilityTimes, numberOfCases: numberOfCases.length })

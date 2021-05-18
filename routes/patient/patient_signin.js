@@ -11,6 +11,7 @@ const{ patient_signup,
        reg_patient,
        edit_patient,
        other_patient,
+       doctor_find,
        rating  } = require("../../controller/patient/patient_signin")
 const upload = require("../../handler/multer")       
 
@@ -30,6 +31,8 @@ router.put("/patient/edit_profile",upload.single('patient_img'),edit_patient)
 router.get("/patient/list_other_patient/:patient_id",other_patient)
 
 router.post("/patient/rating",rating)
+
+router.post("/doctor/doctor_find",doctor_find)
 
 
 
