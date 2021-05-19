@@ -255,8 +255,6 @@ const EventSchema = new mongoose.Schema(
     },
     {
         timestamps: true
-
-
     })
 
 module.exports = mongoose.model('Doctor_Registration', EventSchema)

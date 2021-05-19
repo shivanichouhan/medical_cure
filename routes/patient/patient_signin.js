@@ -12,6 +12,7 @@ const{ patient_signup,
        edit_patient,
        other_patient,
        doctor_find,
+       patientDetailsForDoctor,
        rating  } = require("../../controller/patient/patient_signin")
 const upload = require("../../handler/multer")       
 
@@ -34,6 +35,8 @@ router.post("/patient/rating",rating)
 
 router.post("/doctor/doctor_find",doctor_find)
 
+
+router.post("/doctor/patient_details",patientDetailsForDoctor)
 
 
 module.exports = router;

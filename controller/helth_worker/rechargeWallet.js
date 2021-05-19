@@ -63,10 +63,7 @@ exports.recharge_verify = async (req, res) => {
                 .then((resp) => {
                     res.send({ code: 200, msg: 'payment successfully' })
                 })
-            // patient_data.updateOne({$and:[{doctor_id:doctor_id,_id:patient_id}]},{status:"booked"})
-            // .then((responce)=>{
 
-            // })
         } else {
             dataresp.status = "failed"
             dataresp.save()

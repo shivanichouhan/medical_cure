@@ -141,6 +141,9 @@ const EventSchema = new schema(
       type: Number,
       default: ""
 
+    },activeStatus:{
+      type:String,
+      default:"0"
     }
   })
 

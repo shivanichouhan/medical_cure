@@ -15,16 +15,16 @@ const rating = require("../../model/Doctor/rating")
 var availabilityTime = require("../../model/Doctor/availability_hour")
 const Doct = require("../../model/Doctor/doctor_regis")
 // console.log(pets.includes('cat'));
+// const patient = require("../../model/patient/patient_signin")
+const helthworkers = require("../../model/helth_worker/users")
 
 
-function sorting(employees) {
-    employees.sort((a, b) => {
-        return a.resp_time - b.resp_time;
-    });
-}
+// function sorting(employees) {
+
+// }
 
 
-async function checkResponseTime(Doctor_list) {
+async function checkResponseTime(Doctor_list, callback) {
     console.log(Doctor_list)
     const array = []
     let date = new Date();
@@ -53,207 +53,249 @@ async function checkResponseTime(Doctor_list) {
                 }
             ])
             const responceTime = mon[0]
-            console.log(mon, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
             obj.resp_time = responceTime.Response_rating
             obj.data = item
             array.push(obj)
-            console.log(array, "dataaaaaaa")
-        })).then(async(responce) => {
-            console.log(responce, "respppppppppppppp")
+        })).then(async (responce) => {
             const resp_ar = []
-            console.log(array)
-            const sort_data =await sorting(array)
-            // .then((sort_data)=>{
-            // if()
-            console.log(array, "lkjjkjiojiojioo,l",sort_data)
+            const sort_data = await array.sort((a, b) => {
+                return a.resp_time - b.resp_time;
+            });
+
+            console.log(array, "lkjjkjiojiojioo,l", sort_data)
             const highest_data = sort_data[0]
-            sort_data.forEach(item => {
+            await sort_data.map(item => {
                 if (item.resp_time == highest_data.resp_time) {
+                    console.log(highest_data.resp_time)
                     resp_ar.push(item.data)
                 }
             })
-            return resp_ar
-
+            // console.log(resp_ar, "SSSSSSSSSSSSSSSSSSSSSSSS")
+            callback(resp_ar)
         })
-
-
-
-    // })
-
 }
 
-function sorting1(employees) {
-    employees.sort((a, b) => {
-        return a.rating - b.rating;
-    });
-}
 
-async function ratingCheck(Doctor_list) {
+async function ratingCheck(Doctor_list, callback) {
     const array = []
     let date = new Date();
     date.setMonth(date.getMonth() - 01);
     let dateInput = date.toISOString();
-    await Doctor_list.map(item => {
-        const obj = {}
-        rating.aggregate([
-            {
-                $match: {
-                    // totalValue: {$sum: "$rating"},
-                    $and: [
-                        { doctor_id: item._id },
-                        { $expr: { $gt: ["$date", { $toDate: dateInput }] } },
-                    ]
-                },
-            },
-            {
-                $group:
+    await Promise.all(
+        Doctor_list.map(async (item) => {
+            const obj = {}
+            const monrating = await rating.aggregate([
                 {
-                    _id: null,
-                    rating: { $sum: "$rating" }
+                    $match: {
+                        // totalValue: {$sum: "$rating"},
+                        $and: [
+                            // { doctor_id: item._id },
+                            { $expr: { $gt: ["$date", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        rating: { $sum: "$rating" }
+                    }
                 }
-            }
 
-        ]).then(err, monrating => {
+            ])
             const ratingdata = monrating[0]
-
+            // console.log(item, "GGGGGGGGGgg", monrating)
             obj.rating = ratingdata.rating
             obj.data = item
             array.push(obj)
-        }).catch((err) => {
-            res.send(err)
+        })).then(async (responce) => {
+            console.log(array, "WWWWWWWWWWWWWWWWWWWWWWWWWW")
+            const resp_ar = []
+            const sort_data = await array.sort((a, b) => {
+                return a.rating - b.rating;
+            });
+            const highest_data = sort_data[0]
+            sort_data.forEach(item => {
+                if (item.rating == highest_data.rating) {
+                    resp_ar.push(item.data)
+                }
+            })
+            console.log(resp_ar, "sss")
+            callback(resp_ar)
         })
-    })
-
-    const resp_ar = []
-    const sort_data = sorting1(array)
-    const highest_data = sort_data[0]
-    sort_data.forEach(item => {
-        if (item.rating == highest_data.rating) {
-            resp_ar.push(item.data)
-        }
-    })
-    return resp_ar
-
 
 }
 
-function sorting2(employees) {
-    employees.sort((a, b) => {
-        return a.availability_hour - b.availability_hour;
-    });
-}
 
 
 
-
-function sorting3(employees) {
-    employees.sort((a, b) => {
-        return a.total_cases - b.total_cases;
-    });
-}
-
-
-async function availability_hours() {
+async function availability_hours(Doctor_list, callback) {
     const array = []
     let date = new Date();
     date.setMonth(date.getMonth() - 01);
     let dateInput = date.toISOString();
-    await Doctor_list.map(item => {
-        const obj = {}
-        availabilityTime.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { doctor_id: item._id },
-
-                        { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
-                    ]
-                },
-            },
-            {
-                $group:
+    await Promise.all(
+        Doctor_list.map(async (item) => {
+            const obj = {}
+            const availabilityTimes = await availabilityTime.aggregate([
                 {
-                    _id: null,
-                    availability_hour: { $sum: "$availability_hour" }
+                    $match: {
+                        $and: [
+                            // { doctor_id: item._id },
+
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        availability_hour: { $sum: "$availability_hour" }
+                    }
                 }
-            }
-        ]).exec(err, availabilityTimes => {
+            ])
             const availabilitydata = availabilityTimes[0]
             obj.availability_hour = availabilitydata.availability_hour
             obj.data = item
             array.push(obj)
+        })).then(async (responce) => {
+            const resp_ar = []
+            const sort_data = await array.sort((a, b) => {
+                return a.availability_hour - b.availability_hour;
+            });
+            const highest_data = sort_data[0]
+            await sort_data.forEach(item => {
+                if (item.availability_hour == highest_data.availability_hour) {
+                    resp_ar.push(item.data)
+                }
+            })
+            callback(resp_ar)
         })
-    })
-
-    const resp_ar = []
-    const sort_data = sorting2(array)
-    const highest_data = sort_data[0]
-    sort_data.forEach(item => {
-        if (item.availability_hour == highest_data.availability_hour) {
-            resp_ar.push(item.data)
-        }
-    })
-    return resp_ar
 
 }
 
-async function FindByCases(doctor_list) {
+async function FindByCases(doctor_list, callback) {
     const array = []
     let date = new Date();
     date.setMonth(date.getMonth() - 01);
     let dateInput = date.toISOString();
-    await doctor_list.map(item => {
-        const obj = {}
-        Doct.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { doctor_id: item._id },
-
-                        { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
-                    ]
-                },
-            }
-        ]).then(err, Doctors => {
+    await Promise.all(
+        doctor_list.map(async (item) => {
+            const obj = {}
+            const Doctors = await Doct.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            // { doctor_id: item._id },
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                }
+            ])
+            console.log(Doctors, "klklkkooooo")
             const Doctorsdata = Doctors[0]
             obj.total_cases = Doctorsdata.total_cases
             obj.data = item
             array.push(obj)
-        }).catch((err) => {
-            res.send(err)
+        })).then(async (responce) => {
+            const resp_ar = []
+            const sort_data = await array.sort((a, b) => {
+                return a.total_cases - b.total_cases;
+            });
+            const highest_data = sort_data[0]
+            await sort_data.forEach(item => {
+                if (item.total_cases == highest_data.total_cases) {
+                    resp_ar.push(item.data)
+                }
+            })
+            callback(resp_ar)
         })
-    })
-
-
-    const resp_ar = []
-    const sort_data = sorting3(array)
-    const highest_data = sort_data[0]
-    sort_data.forEach(item => {
-        if (item.total_cases == highest_data.total_cases) {
-            resp_ar.push(item.data)
-        }
-    })
-    return resp_ar
-
-
 }
 
-function sortDrByName(employees) {
-    employees.sort((a, b) => {
+async function sortDrByName(employees, callback) {
+    const data = await employees.sort((a, b) => {
         return a.username - b.username;
     });
+    callback(data)
+}
+
+
+async function DoctorDetailsCheck(dr1Check, find_doctor_check, callback) {
+    await find_duplicate_in_array(dr1Check, find_doctor_check.algorithm_index, async function (Doctor_list) {
+        console.log(Doctor_list, "lksssssss")
+        if (Doctor_list.length > 1) {
+            await checkResponseTime(Doctor_list, async function (findByrespTime) {
+                if (findByrespTime.length > 1) {
+                    await ratingCheck(findByrespTime, async function (findDrByRating) {
+                        if (findDrByRating.length > 1) {
+                            await availability_hours(findDrByRating, async function (availabilityResp) {
+                                if (availabilityResp.length > 1) {
+                                    await FindByCases(availabilityResp, async function (totalCases) {
+                                        if (totalCases.length > 1) {
+                                            await sortDrByName(totalCases, async function (final_doctor) {
+                                                const finallyDrByChar = final_doctor[0]
+                                                callback({ "dr": "dr not find in a1", "code": "A category", status: finallyDrByChar })
+                                                // console.log(finallyDrByChar)
+                                                // res.json({ "dr": "dr not find in a1", "code": "A category", status: finallyDrByChar })
+                                            })
+                                        } else {
+                                            callback({ "dr": "doctor find by totalCases", "code": "A category", status: totalCases })
+
+                                            // res.json({ "dr": "doctor find by totalCases", "code": "A category", status:  })
+
+                                            console.log("doctor find by totalCases")
+
+                                        }
+                                    })
+                                } else {
+                                    // res.json({ "dr": "doctor find by availability_hours", "code": "A category", status: availabilityResp })
+                                    callback({ "dr": "doctor find by availability_hours", "code": "A category", status: availabilityResp })
+
+                                    console.log("doctor find by availability_hours")
+                                }
+                            })
+                        } else {
+                            callback({ "dr": "doctor find by rattings", "code": "A category", status: findDrByRating })
+
+                            // res.json({ "dr": "doctor find by rattings", "code": "A category", status: findDrByRating })
+
+                            console.log("doctor find by rattings")
+
+                        }
+                    })
+                } else {
+                    callback({ "dr": "doctor find by responce time", "code": "A category", status: findByrespTime })
+
+                    // res.json({ "dr": "doctor find by responce time", "code": "A category", status: findByrespTime })
+
+                    console.log("doctor find by responce time")
+                }
+                console.log(" having same docot")
+            })
+
+        } else {
+            callback({ "dr": "not same docot", "code": "A category", status: Doctor_list })
+
+            console.log(Doctor_list, "kjjkjkjijii")
+            console.log("not same docot")
+            // res.json({ "dr": "not same docot", "code": "A category", status: Doctor_list })
+
+        }
+
+    })
 }
 
 
 
-async function find_duplicate_in_array(array, item_data) {
+function find_duplicate_in_array(array, item_data, callback) {
     const arraya = []
     array.forEach(item => {
         if (item.algorithm_index == item_data) {
             arraya.push(item)
         }
     })
-    return arraya;
+    callback(arraya);
 
 }
 
@@ -262,7 +304,7 @@ async function find_duplicate_in_array(array, item_data) {
 exports.doctor_find = async (req, res) => {
     const { patient_id } = req.body;
     console.log(req.body)
-    const bcd_category = ["Dermatology", "GP/MBBS", "GP/Infections", "Venerology", "Leprosy", "Paediatrics", "Gynaecology", " General Medicine", "Family Medicine", "Ear, Nose and Throat", "Orthopaedics"]
+    const bcd_category = ["Dermatology","Diabetology", "GP/MBBS", "GP/Infections", "Venerology", "Leprosy", "Paediatrics", "Gynaecology", " General Medicine", "Family Medicine", "Ear, Nose and Throat", "Orthopaedics"]
     const e_category = ["Oncology", "Cardiology", "Neurology", "Psychiatry", "Endocrinology", "Gastroenterology", "Nephrology", "Pulmonology", "Urology"]
 
     const patient_data = await Patient.findOne({ _id: patient_id })
@@ -299,81 +341,404 @@ exports.doctor_find = async (req, res) => {
                             res.json({ "dr": "dr not find in a1", "code": "A category", status: dr1Check })
                         } else {
                             const find_doctor_check = dr1Check[0]
-                            const Doctor_list = await find_duplicate_in_array(dr1Check, find_doctor_check.algorithm_index)
-                            console.log(Doctor_list, "lksssssss")
-                            if (Doctor_list.length == 0) {
-                                console.log("not same docot")
-                            } else {
-                                const findByrespTime = await checkResponseTime(Doctor_list)
-                                if (findByrespTime.length > 1) {
-                                    const findDrByRating = await ratingCheck(findByrespTime)
-                                    if (findDrByRating.length > 1) {
-                                        const availabilityResp = await availability_hours(findDrByRating)
-                                        if (availabilityResp.length > 1) {
-                                            // total_cases
-                                            const totalCases = await FindByCases(availabilityResp)
-                                            if (totalCases.length > 1) {
-                                                const final_doctor = await sortDrByName(totalCases)
-                                                const finallyDrByChar = final_doctor[0]
-                                                console.log(finallyDrByChar)
-                                            } else {
-                                                console.log("doctor find by totalCases")
-
-                                            }
-                                        } else {
-                                            console.log("doctor find by availability_hours")
-                                        }
-                                    } else {
-                                        console.log("doctor find by rattings")
-
-                                    }
-                                } else {
-                                    console.log("doctor find by responce time")
-
-
-                                }
-                                // const respTimeOfDoc =await response_time.findOne({doctor_id:})
-
-                                console.log(" having same docot")
-
-                            }
-                            console.log(Doctor_list, "kjjkjkjijii")
-
-                            res.json({ "dr": "dr not find in a1", "code": "A category", status: Doctor_list })
-
+                            await DoctorDetailsCheck(dr1Check, find_doctor_check, function (doctorresp) {
+                                res.send(doctorresp)
+                            })
                         }
-
                     } else {
-
-                        res.json({ "dr": "dr find in a2", "code": "A category", status: A1categDr })
-
+                        const find_doctor_dr2Check = dr2Check[0]
+                        await DoctorDetailsCheck(dr2Check, find_doctor_dr2Check, function (doctorresp) {
+                            res.send(doctorresp)
+                        })
                     }
 
                 } else {
-                    res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
-
+                    const find_doctor_dr3Check = dr3Check[0]
+                    await DoctorDetailsCheck(dr3Check, find_doctor_dr3Check, function (doctorresp) {
+                        res.send(doctorresp)
+                    })
+                    // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
                 }
 
             } else {
-                res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
+                const find_doctor_dr4Check = dr3Check[0]
+                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, function (doctorresp) {
+                    res.send(doctorresp)
+                })
+                // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
             }
-
-
         } else {
-            res.json({ "dr": "dr  find in a5", "code": "A category", status: dr4Check })
+            const find_doctor_drCheck = drCheck[0]
+            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
+                res.send(doctorresp)
+            })
         }
-        // } else {
-        //     res.json({ "dr": "dr find in a5", "code": "A category", status: A5categDr })
-
-        // }
 
     } else if (bcd_category.includes(depname)) {
-        console.log("bbbbbbb")
-        res.send("BCD category")
+        console.log("BCD category")
+        const D5categDr = await doctorSubcategory.findOne({ _id: "609bc8fec1fe1147aede544e" }).populate(
+            {
+                path: 'DoctorList',
+                // match: { _id: "609bc94dc1fe1147aede5457" },
+                // select: 'name -_id',
+                options: { sort: { algorithm_index: -1 }, limit: 5 }
+            }
+        )
+        const drCheck = D5categDr.DoctorList
+        if (drCheck.length == 0) {
+            const C5categDr = await doctorSubcategory.findOne({ _id: "609bc8e9c1fe1147aede544d" }).populate(
+                {
+                    path: 'DoctorList',
+                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                    // select: 'name -_id',
+                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                }
+            )
+            const drC5Check = C5categDr.DoctorList
+            if (drC5Check.length == 0) {
+                const B5categDr = await doctorSubcategory.findOne({ _id: "609bc8b9c1fe1147aede5448" }).populate(
+                    {
+                        path: 'DoctorList',
+                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                        // select: 'name -_id',
+                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                    }
+                )
+                const drB5Check = B5categDr.DoctorList
+                if (drB5Check.length == 0) {
+                    const D4categDr = await doctorSubcategory.findOne({ _id: "609bc908c1fe1147aede544f" }).populate(
+                        {
+                            path: 'DoctorList',
+                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                            // select: 'name -_id',
+                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                        }
+                    )
+                    const drD4Check = D4categDr.DoctorList
+                    if (drD4Check.length == 0) {
+                        const C4categDr = await doctorSubcategory.findOne({ _id: "609bc8e4c1fe1147aede544c" })
+                            .populate(
+                                {
+                                    path: 'DoctorList',
+                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                    // select: 'name -_id',
+                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                }
+                            )
+                        const drC4Check = C4categDr.DoctorList
+                        if (drC4Check.length == 0) {
+                            // res.json({ "dr": "dr not find in E1", "code": "E1 category", status: drC4Check })
+                            const B4categDr = await doctorSubcategory.findOne({ _id: "609bc8b4c1fe1147aede5447" })
+                                .populate(
+                                    {
+                                        path: 'DoctorList',
+                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                        // select: 'name -_id',
+                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                    }
+                                )
+                            const drB4Check = B4categDr.DoctorList
+                            if (drB4Check.length == 0) {
+                                const D3categDr = await doctorSubcategory.findOne({ _id: "609bc911c1fe1147aede5450" })
+                                    .populate(
+                                        {
+                                            path: 'DoctorList',
+                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                            // select: 'name -_id',
+                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                        }
+                                    )
+                                const drD3Check = D3categDr.DoctorList
+                                if (drD3Check.length == 0) {
+                                    const C3categDr = await doctorSubcategory.findOne({ _id: "609bc8dec1fe1147aede544b" })
+                                        .populate(
+                                            {
+                                                path: 'DoctorList',
+                                                // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                // select: 'name -_id',
+                                                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                            }
+                                        )
+                                    const drC3Check = C3categDr.DoctorList
+                                    if (drC3Check.length == 0) {
+                                        const B3categDr = await doctorSubcategory.findOne({ _id: "609bc8afc1fe1147aede5446" })
+                                            .populate(
+                                                {
+                                                    path: 'DoctorList',
+                                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                    // select: 'name -_id',
+                                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                }
+                                            )
+                                        const drB3Check = B3categDr.DoctorList
+                                        if (drB3Check.length == 0) {
+
+
+                                            const D2categDr = await doctorSubcategory.findOne({ _id: "609bc917c1fe1147aede5451" })
+                                                .populate(
+                                                    {
+                                                        path: 'DoctorList',
+                                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                        // select: 'name -_id',
+                                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                    }
+                                                )
+                                            const drD2Check = D2categDr.DoctorList
+                                            if (drD2Check.length == 0) {
+                                                const C2categDr = await doctorSubcategory.findOne({ _id: "609bc8d9c1fe1147aede544a" })
+                                                    .populate(
+                                                        {
+                                                            path: 'DoctorList',
+                                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                            // select: 'name -_id',
+                                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                        }
+                                                    )
+                                                const drC2Check = C2categDr.DoctorList
+                                                if (drC2Check.length == 0) {
+                                                    const B2categDr = await doctorSubcategory.findOne({ _id: "609bc8a8c1fe1147aede5445" })
+                                                        .populate(
+                                                            {
+                                                                path: 'DoctorList',
+                                                                // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                // select: 'name -_id',
+                                                                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                            }
+                                                        )
+                                                    const drB2Check = B2categDr.DoctorList
+                                                    if (drB2Check.length == 0) {
+
+                                                        const D1categDr = await doctorSubcategory.findOne({ _id: "609ccdce54298e19d7ccd9a4" })
+                                                            .populate(
+                                                                {
+                                                                    path: 'DoctorList',
+                                                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                    // select: 'name -_id',
+                                                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                }
+                                                            )
+                                                        const drD1Check = D1categDr.DoctorList
+                                                        if (drD1Check.length == 0) {
+
+                                                            const C1categDr = await doctorSubcategory.findOne({ _id: "609bc8d2c1fe1147aede5449" })
+                                                                .populate(
+                                                                    {
+                                                                        path: 'DoctorList',
+                                                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                        // select: 'name -_id',
+                                                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                    }
+                                                                )
+                                                            const drC1Check = C1categDr.DoctorList
+                                                            if (drC1Check.length == 0) {
+                                                                const B1categDr = await doctorSubcategory.findOne({ _id: "609bc89ac1fe1147aede5444" })
+                                                                    .populate(
+                                                                        {
+                                                                            path: 'DoctorList',
+                                                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                            // select: 'name -_id',
+                                                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                        }
+                                                                    )
+                                                                const drB1Check = B1categDr.DoctorList
+                                                                if (drB1Check.length == 0) {
+                                                                    res.send({ datas: drB1Check, status: "B1 not have doctor category" })
+
+                                                                } else {
+                                                                    const find_doctorB1_check = drB1Check[0]
+                                                                    await DoctorDetailsCheck(drB1Check, find_doctorB1_check, function (doctorresp) {
+                                                                        res.send({ datas: doctorresp, status: "B1 category" })
+                                                                    })
+                                                                }
+
+                                                            } else {
+                                                                const find_doctorC1_check = drC1Check[0]
+                                                                await DoctorDetailsCheck(drC1Check, find_doctorC1_check, function (doctorresp) {
+                                                                    res.send({ datas: doctorresp, status: "C1 category" })
+                                                                })
+                                                            }
+
+
+                                                        } else {
+                                                            const find_doctorD1_check = drD1Check[0]
+                                                            await DoctorDetailsCheck(drD1Check, find_doctorD1_check, function (doctorresp) {
+                                                                res.send({ datas: doctorresp, status: "D1 category" })
+                                                            })
+                                                        }
+
+
+                                                    } else {
+                                                        const find_doctorB2_check = drB2Check[0]
+                                                        await DoctorDetailsCheck(drB2Check, find_doctorB2_check, function (doctorresp) {
+                                                            res.send({ datas: doctorresp, status: "B2 category" })
+                                                        })
+                                                    }
+                                                } else {
+                                                    const find_doctorC2_check = drC2Check[0]
+                                                    await DoctorDetailsCheck(drC2Check, find_doctorC2_check, function (doctorresp) {
+                                                        res.send({ datas: doctorresp, status: "C2 category" })
+                                                    })
+                                                }
+
+
+
+                                            } else {
+                                                const find_doctorD2_check = drD2Check[0]
+                                                await DoctorDetailsCheck(drD2Check, find_doctorD2_check, function (doctorresp) {
+                                                    res.send({ datas: doctorresp, status: "D2 category" })
+                                                })
+                                            }
+
+
+                                        } else {
+                                            const find_doctorB3_check = drB3Check[0]
+                                            await DoctorDetailsCheck(drB3Check, find_doctorB3_check, function (doctorresp) {
+                                                res.send({ datas: doctorresp, status: "B3 category" })
+                                            })
+                                        }
+
+
+                                    } else {
+                                        const find_doctorC3_check = drC3Check[0]
+                                        await DoctorDetailsCheck(drC3Check, find_doctorC3_check, function (doctorresp) {
+                                            res.send({ datas: doctorresp, status: "C3 category" })
+                                        })
+                                    }
+                                } else {
+                                    const find_doctorD3_check = drD3Check[0]
+                                    await DoctorDetailsCheck(drD3Check, find_doctorD3_check, function (doctorresp) {
+                                        res.send({ datas: doctorresp, status: "D3 category" })
+                                    })
+                                }
+
+                            } else {
+                                const find_doctorb4_check = drB4Check[0]
+                                await DoctorDetailsCheck(drB4Check, find_doctorb4_check, function (doctorresp) {
+                                    res.send({ datas: doctorresp, status: "B4 category" })
+                                })
+                            }
+                        } else {
+                            const find_doctorC4_check = drC4Check[0]
+                            await DoctorDetailsCheck(drC4Check, find_doctorC4_check, function (doctorresp) {
+                                res.send({ datas: doctorresp, status: "C4 category" })
+                            })
+                        }
+                    } else {
+                        const find_doctor_D4Check = drD4Check[0]
+                        await DoctorDetailsCheck(drD4Check, find_doctor_D4Check, function (doctorresp) {
+                            res.send({ datas: doctorresp, status: "D4 category" })
+                        })
+                    }
+
+                } else {
+                    const find_doctor_drB5Check = drB5Check[0]
+                    await DoctorDetailsCheck(drB5Check, find_doctor_drB5Check, function (doctorresp) {
+                        res.send({ datas: doctorresp, status: "B5 category" })
+                    })
+                    // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
+                }
+            } else {
+                const find_doctor_drC5Check = drC5Check[0]
+                await DoctorDetailsCheck(drC5Check, find_doctor_drC5Check, function (doctorresp) {
+                    res.send({ datas: doctorresp, status: "C5 category" })
+                })
+                // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
+            }
+        } else {
+            const find_doctor_drCheck = drCheck[0]
+            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
+                res.send({ datas: doctorresp, status: "D5 category" })
+            })
+        }
 
     } else if (e_category.includes(depname)) {
+        const E5categDr = await doctorSubcategory.findOne({ _id: "609bc94dc1fe1147aede5457" }).populate(
+            {
+                path: 'DoctorList',
+                // match: { _id: "609bc94dc1fe1147aede5457" },
+                // select: 'name -_id',
+                options: { sort: { algorithm_index: -1 }, limit: 5 }
+            }
+        )
+        const drCheck = E5categDr.DoctorList
+        if (drCheck.length == 0) {
+            const E4categDr = await doctorSubcategory.findOne({ _id: "609bc948c1fe1147aede5456" }).populate(
+                {
+                    path: 'DoctorList',
+                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                    // select: 'name -_id',
+                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                }
+            )
+            const dr4Check = E4categDr.DoctorList
+            if (dr4Check.length == 0) {
+                const E3categDr = await doctorSubcategory.findOne({ _id: "609bc943c1fe1147aede5455" }).populate(
+                    {
+                        path: 'DoctorList',
+                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                        // select: 'name -_id',
+                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                    }
+                )
+                const dr3Check = E3categDr.DoctorList
+                if (dr3Check.length == 0) {
+                    const E2categDr = await doctorSubcategory.findOne({ _id: "609bc93fc1fe1147aede5454" }).populate(
+                        {
+                            path: 'DoctorList',
+                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                            // select: 'name -_id',
+                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                        }
+                    )
+                    const dr2Check = E2categDr.DoctorList
+                    if (dr2Check.length == 0) {
+                        const E1categDr = await doctorSubcategory.findOne({ _id: "609bc93ac1fe1147aede5453" })
+                            .populate(
+                                {
+                                    path: 'DoctorList',
+                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                    // select: 'name -_id',
+                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                }
+                            )
+                        const dr1Check = E1categDr.DoctorList
+                        if (dr1Check.length == 0) {
+                            res.json({ "dr": "dr not find in E1", "code": "E1 category", status: dr1Check })
+                        } else {
+                            const find_doctor_check = dr1Check[0]
+                            await DoctorDetailsCheck(dr1Check, find_doctor_check, function (doctorresp) {
+                                res.send({ datas: doctorresp, status: "E category" })
+                            })
+                        }
+                    } else {
+                        const find_doctor_dr2Check = dr2Check[0]
+                        await DoctorDetailsCheck(dr2Check, find_doctor_dr2Check, function (doctorresp) {
+                            res.send(doctorresp)
+                        })
+                    }
+
+                } else {
+                    const find_doctor_dr3Check = dr3Check[0]
+                    await DoctorDetailsCheck(dr3Check, find_doctor_dr3Check, function (doctorresp) {
+                        res.send(doctorresp)
+                    })
+                    // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
+                }
+            } else {
+                const find_doctor_dr4Check = dr3Check[0]
+                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, function (doctorresp) {
+                    res.send(doctorresp)
+                })
+                // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
+            }
+        } else {
+            const find_doctor_drCheck = drCheck[0]
+            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
+                res.send(doctorresp)
+            })
+        }
         console.log("e category")
-        res.send("E category")
+        // res.send("E category")
     } else {
         res.send("something went wrong")
     }
@@ -762,4 +1127,28 @@ exports.rating = (req, res) => {
             res.send({ code: 200, msg: 'rating add successfully' })
         }
     })
+}
+
+
+exports.patientDetailsForDoctor = async (req, res) => {
+    const { doctor_id, patient_id } = req.body;
+    const obj = {}
+    const patient_detail = await Patient.findOne({ $and: [{ doctor_id: doctor_id }, { _id: patient_id }] }, { patient_name: 1, activeStatus: 1, health_worker_id: 1, createdAt: 1, patient_img: 1 })
+    console.log("patient",patient_detail)
+    if (patient_detail) {
+        const helth =await helthworkers.findOne({ _id: patient_detail.health_worker_id }, { firebase_token: 1, username: 1,activeStatus:1 })
+        console.log("helth",helth)
+        if(!helth){
+
+        }else{
+        obj.name = patient_detail.patient_name;
+        obj.createdAt = patient_detail.createdAt;
+        obj.profile_pic = patient_detail.patient_img
+        obj.firebaseToken = helth.firebase_token
+        obj.activeStatus = helth.activeStatus
+        res.json({code:200,msg:obj})
+        }
+    } else {
+        res.json({ code: 400, msg: "patient not found" })
+    }
 }
