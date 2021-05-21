@@ -251,6 +251,9 @@ const EventSchema = new mongoose.Schema(
         },total_cases :{
             type:Number,
             default:0
+        },patient_status:{
+            type:String,
+            default:"0"
         }
     },
     {

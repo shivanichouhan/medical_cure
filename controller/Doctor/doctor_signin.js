@@ -155,9 +155,7 @@ exports.doctorLogin = async (req, res) => {
             else {
                 res.json({ code: 400, msg: 'firebase token not update' })
             }
-
         }
-        // res.json({ code: 200, msg: Doc })
     }
 }
 

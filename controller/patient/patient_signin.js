@@ -15,9 +15,10 @@ const rating = require("../../model/Doctor/rating")
 var availabilityTime = require("../../model/Doctor/availability_hour")
 const Doct = require("../../model/Doctor/doctor_regis")
 // console.log(pets.includes('cat'));
-// const patient = require("../../model/patient/patient_signin")
+const forPatientDoctor = require("../../model/Doctor/doctor_forPatient_list")
 const helthworkers = require("../../model/helth_worker/users")
-
+const not = require("../../model/Doctor/notification")
+var notification_firebase = require("../../firebase_notification")
 
 // function sorting(employees) {
 
@@ -223,6 +224,7 @@ async function sortDrByName(employees, callback) {
 
 async function DoctorDetailsCheck(dr1Check, find_doctor_check, callback) {
     await find_duplicate_in_array(dr1Check, find_doctor_check.algorithm_index, async function (Doctor_list) {
+
         console.log(Doctor_list, "lksssssss")
         if (Doctor_list.length > 1) {
             await checkResponseTime(Doctor_list, async function (findByrespTime) {
@@ -235,7 +237,7 @@ async function DoctorDetailsCheck(dr1Check, find_doctor_check, callback) {
                                         if (totalCases.length > 1) {
                                             await sortDrByName(totalCases, async function (final_doctor) {
                                                 const finallyDrByChar = final_doctor[0]
-                                                callback({ "dr": "dr not find in a1", "code": "A category", status: finallyDrByChar })
+                                                callback({ "dr": "dr find in a1", "code": "A category", status: finallyDrByChar })
                                                 // console.log(finallyDrByChar)
                                                 // res.json({ "dr": "dr not find in a1", "code": "A category", status: finallyDrByChar })
                                             })
@@ -257,9 +259,6 @@ async function DoctorDetailsCheck(dr1Check, find_doctor_check, callback) {
                             })
                         } else {
                             callback({ "dr": "doctor find by rattings", "code": "A category", status: findDrByRating })
-
-                            // res.json({ "dr": "doctor find by rattings", "code": "A category", status: findDrByRating })
-
                             console.log("doctor find by rattings")
 
                         }
@@ -299,17 +298,60 @@ function find_duplicate_in_array(array, item_data, callback) {
 
 }
 
+function setTimeOutFunction(doctor_id, callback) {
+    setTimeout(
+        Doct.updateOne({ _id: doctor_id }, { patient_status: "0" })
+            .then((resp) => {
+                callback("doctor refused")
+            }).catch((err) => {
+                console.log(err)
+                callback(err)
+            })
+        , 600000);
+
+}
+
+function NotificationData(userdata, senderData, callback) {
+    console.log(userdata.firebase_token,"tokennnnnnnnnnnn")
+    var msg = {}
+    var Notification = {}
+    msg.to = userdata.firebase_token
+    msg.collapse_key = 'XXX'
+    msg.data = { my_key: 'my value', contents: "abcv/" }
+    Notification.title = `${senderData.patient_name} has requested for Appointment.`
+    Notification.body = senderData
+    msg.notification = Notification
+    notification_firebase.Notification(msg).then(async (resp) => {
+        console.log(resp)
+        var obj = {}
+        obj.username = userdata.username
+        obj.email = userdata.email
+        obj.profile_pic = userdata.profile_pic
+        obj.notification_text = `Doctor Has Send prescription To you.`
+        obj.patient_id = senderData._id
+        obj.docId = userdata._id;
+        obj.notificationFor = "Doctor"
+        var notObj = new not(obj)
+        var notData = await notObj.save()
+        callback(true)
+
+    })
+}
 
 
 exports.doctor_find = async (req, res) => {
     const { patient_id } = req.body;
     console.log(req.body)
-    const bcd_category = ["Dermatology","Diabetology", "GP/MBBS", "GP/Infections", "Venerology", "Leprosy", "Paediatrics", "Gynaecology", " General Medicine", "Family Medicine", "Ear, Nose and Throat", "Orthopaedics"]
+    const bcd_category = ["Dermatology", "Diabetology", "GP/MBBS", "GP/Infections", "Venerology", "Leprosy", "Paediatrics", "Gynaecology", " General Medicine", "Family Medicine", "Ear, Nose and Throat", "Orthopaedics"]
     const e_category = ["Oncology", "Cardiology", "Neurology", "Psychiatry", "Endocrinology", "Gastroenterology", "Nephrology", "Pulmonology", "Urology"]
 
     const patient_data = await Patient.findOne({ _id: patient_id })
     const depart_ment_find = await add_disease.findOne({ disease_name: patient_data.disease })
     const depname = depart_ment_find.department_name
+    console.log(depname, "departmenttttttt",patient_data)
+
+    const DoctorsArray = []
+
     if (patient_data.age > 15 && patient_data.disease == "Fever" || patient_data.disease == "Cough" || patient_data.disease == "Cold") {
         console.log(
             "aa categoryyyyyyy"
@@ -320,7 +362,6 @@ exports.doctor_find = async (req, res) => {
             const A4categDr = await doctorSubcategory.findOne({ _id: "609bc84cc1fe1147aede5442" }).populate("DoctorList")
             const dr4Check = A4categDr.DoctorList
             if (dr4Check.length == 0) {
-
                 const A3categDr = await doctorSubcategory.findOne({ _id: "609bc847c1fe1147aede5441" }).populate("DoctorList")
                 const dr3Check = A3categDr.DoctorList
                 if (dr3Check.length == 0) {
@@ -331,9 +372,9 @@ exports.doctor_find = async (req, res) => {
                             .populate(
                                 {
                                     path: 'DoctorList',
-                                    match: { _id: "609cdb4c8e0993758b5411bc" },
+                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
                                     // select: 'name -_id',
-                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                    options: { sort: { algorithm_index: -1 } }
                                 }
                             )
                         const dr1Check = A1categDr.DoctorList
@@ -341,36 +382,293 @@ exports.doctor_find = async (req, res) => {
                             res.json({ "dr": "dr not find in a1", "code": "A category", status: dr1Check })
                         } else {
                             const find_doctor_check = dr1Check[0]
-                            await DoctorDetailsCheck(dr1Check, find_doctor_check, function (doctorresp) {
-                                res.send(doctorresp)
+                            console.log()
+                            console.log(find_doctor_check, "DDDDDDDDDDDDDDDDD")
+
+                            await DoctorDetailsCheck(dr1Check, find_doctor_check, async function (doctorresp) {
+                                const suitableDoctor = doctorresp.status[0]
+                                // console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                if (dr1Check.length >= 5) {
+                                    await dr1Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else if (DoctorsArray.length == 5) {
+                                            // setTimeOutFunction(suitableDoctor._id, function (data) {
+                                            //     console.log(data)
+                                            // })
+
+
+                                            NotificationData(suitableDoctor,patient_data,function(data){
+                                                res.send(data)
+                                            })
+
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+                                } else {
+                                    await dr1Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        console.log(items, "kkk")
+                                        console.log(suitableDoctor._id, "kkkjjj")
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+                                    // setTimeOutFunction(suitableDoctor._id, function (data) {
+                                    //     console.log(data)
+                                    // })
+
+
+                                    NotificationData(suitableDoctor,patient_data,function(data){
+                                        res.send(data)
+                                    })
+
+                                }
+
                             })
                         }
                     } else {
                         const find_doctor_dr2Check = dr2Check[0]
-                        await DoctorDetailsCheck(dr2Check, find_doctor_dr2Check, function (doctorresp) {
-                            res.send(doctorresp)
+                        await DoctorDetailsCheck(dr2Check, find_doctor_dr2Check, async function (doctorresp) {
+                            // res.send(doctorresp)
+                            const suitableDoctor = doctorresp.status[0]
+                            console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                            if (dr2Check.length >= 5) {
+                                await dr2Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else if (DoctorsArray.length == 5) {
+                                        setTimeOutFunction(suitableDoctor._id, function (data) {
+                                            console.log(data)
+                                        })
+                                        res.send(doctorresp)
+
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+                            } else {
+                                await dr2Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    console.log(items, "kkk")
+                                    console.log(suitableDoctor._id, "kkkjjj")
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+                                await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                    console.log(data)
+                                })
+                                res.send(doctorresp)
+                            }
                         })
                     }
 
                 } else {
                     const find_doctor_dr3Check = dr3Check[0]
-                    await DoctorDetailsCheck(dr3Check, find_doctor_dr3Check, function (doctorresp) {
-                        res.send(doctorresp)
+                    await DoctorDetailsCheck(dr3Check, find_doctor_dr3Check, async function (doctorresp) {
+                        const suitableDoctor = doctorresp.status[0]
+                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                        if (dr3Check.length >= 5) {
+                            await dr3Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else if (DoctorsArray.length == 5) {
+                                    setTimeOutFunction(suitableDoctor._id, function (data) {
+                                        console.log(data)
+                                    })
+                                    res.send(doctorresp)
+
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+                        } else {
+                            await dr3Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                console.log(items, "kkk")
+                                console.log(suitableDoctor._id, "kkkjjj")
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+                            await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                console.log(data)
+                            })
+                            res.send(doctorresp)
+                        }
                     })
                     // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
                 }
 
             } else {
                 const find_doctor_dr4Check = dr3Check[0]
-                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, function (doctorresp) {
-                    res.send(doctorresp)
+                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, async function (doctorresp) {
+
+
+                    const suitableDoctor = doctorresp.status[0]
+                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                    if (dr4Check.length >= 5) {
+                        await dr4Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else if (DoctorsArray.length == 5) {
+                                setTimeOutFunction(suitableDoctor._id, function (data) {
+                                    console.log(data)
+                                })
+                                res.send(doctorresp)
+
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+                    } else {
+                        await dr4Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            console.log(items, "kkk")
+                            console.log(suitableDoctor._id, "kkkjjj")
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+                        await setTimeOutFunction(suitableDoctor._id, function (data) {
+                            console.log(data)
+                        })
+                        res.send(doctorresp)
+                    }
+
                 })
                 // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
             }
         } else {
             const find_doctor_drCheck = drCheck[0]
-            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
-                res.send(doctorresp)
+            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, async function (doctorresp) {
+                const suitableDoctor = doctorresp.status[0]
+                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                if (drCheck.length >= 5) {
+                    await drCheck.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else if (DoctorsArray.length == 5) {
+                            setTimeOutFunction(suitableDoctor._id, function (data) {
+                                console.log(data)
+                            })
+                            res.send(doctorresp)
+
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+                } else {
+                    await drCheck.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        console.log(items, "kkk")
+                        console.log(suitableDoctor._id, "kkkjjj")
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+                    await setTimeOutFunction(suitableDoctor._id, function (data) {
+                        console.log(data)
+                    })
+                    res.send(doctorresp)
+                }
             })
         }
 
@@ -379,9 +677,9 @@ exports.doctor_find = async (req, res) => {
         const D5categDr = await doctorSubcategory.findOne({ _id: "609bc8fec1fe1147aede544e" }).populate(
             {
                 path: 'DoctorList',
-                // match: { _id: "609bc94dc1fe1147aede5457" },
+                match: { $and: [{ Specialization: depname }] },
                 // select: 'name -_id',
-                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                options: { sort: { algorithm_index: -1 } }
             }
         )
         const drCheck = D5categDr.DoctorList
@@ -389,9 +687,9 @@ exports.doctor_find = async (req, res) => {
             const C5categDr = await doctorSubcategory.findOne({ _id: "609bc8e9c1fe1147aede544d" }).populate(
                 {
                     path: 'DoctorList',
-                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                    match: { $and: [{ Specialization: depname }] },
                     // select: 'name -_id',
-                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                    options: { sort: { algorithm_index: -1 } }
                 }
             )
             const drC5Check = C5categDr.DoctorList
@@ -399,19 +697,19 @@ exports.doctor_find = async (req, res) => {
                 const B5categDr = await doctorSubcategory.findOne({ _id: "609bc8b9c1fe1147aede5448" }).populate(
                     {
                         path: 'DoctorList',
-                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                        match: { $and: [{ Specialization: depname }] },
                         // select: 'name -_id',
-                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                        options: { sort: { algorithm_index: -1 } }
                     }
                 )
                 const drB5Check = B5categDr.DoctorList
                 if (drB5Check.length == 0) {
-                    const D4categDr = await doctorSubcategory.findOne({ _id: "609bc908c1fe1147aede544f" }).populate(
+                    const D4categDr = await doctorSubcateDoctorDetailsCheckgory.findOne({ _id: "609bc908c1fe1147aede544f" }).populate(
                         {
                             path: 'DoctorList',
-                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                            match: { $and: [{ Specialization: depname }] },
                             // select: 'name -_id',
-                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                            options: { sort: { algorithm_index: -1 } }
                         }
                     )
                     const drD4Check = D4categDr.DoctorList
@@ -420,9 +718,9 @@ exports.doctor_find = async (req, res) => {
                             .populate(
                                 {
                                     path: 'DoctorList',
-                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                    match: { $and: [{ Specialization: depname }] },
                                     // select: 'name -_id',
-                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                    options: { sort: { algorithm_index: -1 } }
                                 }
                             )
                         const drC4Check = C4categDr.DoctorList
@@ -432,9 +730,9 @@ exports.doctor_find = async (req, res) => {
                                 .populate(
                                     {
                                         path: 'DoctorList',
-                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                        match: { $and: [{ Specialization: depname }] },
                                         // select: 'name -_id',
-                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                        options: { sort: { algorithm_index: -1 } }
                                     }
                                 )
                             const drB4Check = B4categDr.DoctorList
@@ -443,9 +741,9 @@ exports.doctor_find = async (req, res) => {
                                     .populate(
                                         {
                                             path: 'DoctorList',
-                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                            match: { $and: [{ Specialization: depname }] },
                                             // select: 'name -_id',
-                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                            options: { sort: { algorithm_index: -1 } }
                                         }
                                     )
                                 const drD3Check = D3categDr.DoctorList
@@ -454,9 +752,9 @@ exports.doctor_find = async (req, res) => {
                                         .populate(
                                             {
                                                 path: 'DoctorList',
-                                                // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                match: { $and: [{ Specialization: depname }] },
                                                 // select: 'name -_id',
-                                                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                options: { sort: { algorithm_index: -1 } }
                                             }
                                         )
                                     const drC3Check = C3categDr.DoctorList
@@ -465,22 +763,20 @@ exports.doctor_find = async (req, res) => {
                                             .populate(
                                                 {
                                                     path: 'DoctorList',
-                                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                    match: { $and: [{ Specialization: depname }] },
                                                     // select: 'name -_id',
-                                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                    options: { sort: { algorithm_index: -1 } }
                                                 }
                                             )
                                         const drB3Check = B3categDr.DoctorList
                                         if (drB3Check.length == 0) {
-
-
                                             const D2categDr = await doctorSubcategory.findOne({ _id: "609bc917c1fe1147aede5451" })
                                                 .populate(
                                                     {
                                                         path: 'DoctorList',
-                                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                        match: { $and: [{ Specialization: depname }] },
                                                         // select: 'name -_id',
-                                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                        options: { sort: { algorithm_index: -1 } }
                                                     }
                                                 )
                                             const drD2Check = D2categDr.DoctorList
@@ -489,9 +785,9 @@ exports.doctor_find = async (req, res) => {
                                                     .populate(
                                                         {
                                                             path: 'DoctorList',
-                                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                            match: { $and: [{ Specialization: depname }] },
                                                             // select: 'name -_id',
-                                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                            options: { sort: { algorithm_index: -1 } }
                                                         }
                                                     )
                                                 const drC2Check = C2categDr.DoctorList
@@ -500,9 +796,9 @@ exports.doctor_find = async (req, res) => {
                                                         .populate(
                                                             {
                                                                 path: 'DoctorList',
-                                                                // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                match: { $and: [{ Specialization: depname }] },
                                                                 // select: 'name -_id',
-                                                                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                options: { sort: { algorithm_index: -1 } }
                                                             }
                                                         )
                                                     const drB2Check = B2categDr.DoctorList
@@ -512,21 +808,20 @@ exports.doctor_find = async (req, res) => {
                                                             .populate(
                                                                 {
                                                                     path: 'DoctorList',
-                                                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                    match: { $and: [{ Specialization: depname }] },
                                                                     // select: 'name -_id',
-                                                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                    options: { sort: { algorithm_index: -1 } }
                                                                 }
                                                             )
                                                         const drD1Check = D1categDr.DoctorList
                                                         if (drD1Check.length == 0) {
-
                                                             const C1categDr = await doctorSubcategory.findOne({ _id: "609bc8d2c1fe1147aede5449" })
                                                                 .populate(
                                                                     {
                                                                         path: 'DoctorList',
-                                                                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                        match: { $and: [{ Specialization: depname }] },
                                                                         // select: 'name -_id',
-                                                                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                        options: { sort: { algorithm_index: -1 } }
                                                                     }
                                                                 )
                                                             const drC1Check = C1categDr.DoctorList
@@ -535,9 +830,9 @@ exports.doctor_find = async (req, res) => {
                                                                     .populate(
                                                                         {
                                                                             path: 'DoctorList',
-                                                                            // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                                                            match: { $and: [{ Specialization: depname }] },
                                                                             // select: 'name -_id',
-                                                                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                                                            options: { sort: { algorithm_index: -1 } }
                                                                         }
                                                                     )
                                                                 const drB1Check = B1categDr.DoctorList
@@ -546,37 +841,281 @@ exports.doctor_find = async (req, res) => {
 
                                                                 } else {
                                                                     const find_doctorB1_check = drB1Check[0]
-                                                                    await DoctorDetailsCheck(drB1Check, find_doctorB1_check, function (doctorresp) {
-                                                                        res.send({ datas: doctorresp, status: "B1 category" })
+                                                                    await DoctorDetailsCheck(drB1Check, find_doctorB1_check, async function (doctorresp) {
+                                                                        const suitableDoctor = doctorresp.status[0]
+                                                                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                                        if (drB1Check.length >= 5) {
+                                                                            await drB1Check.map(async (items) => {
+                                                                                const datapatient = new forPatientDoctor({
+                                                                                    doctor_id: items._id,
+                                                                                    patient_id: patient_id
+                                                                                })
+                                                                                if (items._id == suitableDoctor._id) {
+                                                                                    datapatient.Doctor_status = "1"
+                                                                                    await datapatient.save()
+                                                                                    console.log("kuchh nhi")
+                                                                                    DoctorsArray.push(items)
+                                                                                } else if (DoctorsArray.length == 5) {
+                                                                                    setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                                        console.log(data)
+                                                                                    })
+                                                                                    res.send({ datas: doctorresp, status: "B1 category" })
+
+                                                                                } else {
+                                                                                    datapatient.Doctor_status = "0"
+                                                                                    await datapatient.save()
+                                                                                    DoctorsArray.push(items)
+                                                                                }
+                                                                            })
+                                                                        } else {
+                                                                            await drB1Check.map(async (items) => {
+                                                                                const datapatient = new forPatientDoctor({
+                                                                                    doctor_id: items._id,
+                                                                                    patient_id: patient_id
+                                                                                })
+                                                                                console.log(items, "kkk")
+                                                                                console.log(suitableDoctor._id, "kkkjjj")
+                                                                                if (items._id == suitableDoctor._id) {
+                                                                                    datapatient.Doctor_status = "1"
+                                                                                    await datapatient.save()
+                                                                                    console.log("kuchh nhi")
+                                                                                    DoctorsArray.push(items)
+                                                                                } else {
+                                                                                    datapatient.Doctor_status = "0"
+                                                                                    await datapatient.save()
+                                                                                    DoctorsArray.push(items)
+                                                                                }
+                                                                            })
+                                                                            await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                                console.log(data)
+                                                                            })
+                                                                            res.send({ datas: doctorresp, status: "B1 category" })
+                                                                        }
                                                                     })
                                                                 }
 
                                                             } else {
                                                                 const find_doctorC1_check = drC1Check[0]
-                                                                await DoctorDetailsCheck(drC1Check, find_doctorC1_check, function (doctorresp) {
-                                                                    res.send({ datas: doctorresp, status: "C1 category" })
+                                                                await DoctorDetailsCheck(drC1Check, find_doctorC1_check, async function (doctorresp) {
+                                                                    const suitableDoctor = doctorresp.status[0]
+                                                                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                                    if (drC1Check.length >= 5) {
+                                                                        await drC1Check.map(async (items) => {
+                                                                            const datapatient = new forPatientDoctor({
+                                                                                doctor_id: items._id,
+                                                                                patient_id: patient_id
+                                                                            })
+                                                                            if (items._id == suitableDoctor._id) {
+                                                                                datapatient.Doctor_status = "1"
+                                                                                await datapatient.save()
+                                                                                console.log("kuchh nhi")
+                                                                                DoctorsArray.push(items)
+                                                                            } else if (DoctorsArray.length == 5) {
+                                                                                setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                                    console.log(data)
+                                                                                })
+                                                                                res.send({ datas: doctorresp, status: "C1 category" })
+
+                                                                            } else {
+                                                                                datapatient.Doctor_status = "0"
+                                                                                await datapatient.save()
+                                                                                DoctorsArray.push(items)
+                                                                            }
+                                                                        })
+                                                                    } else {
+                                                                        await drC1Check.map(async (items) => {
+                                                                            const datapatient = new forPatientDoctor({
+                                                                                doctor_id: items._id,
+                                                                                patient_id: patient_id
+                                                                            })
+                                                                            console.log(items, "kkk")
+                                                                            console.log(suitableDoctor._id, "kkkjjj")
+                                                                            if (items._id == suitableDoctor._id) {
+                                                                                datapatient.Doctor_status = "1"
+                                                                                await datapatient.save()
+                                                                                console.log("kuchh nhi")
+                                                                                DoctorsArray.push(items)
+                                                                            } else {
+                                                                                datapatient.Doctor_status = "0"
+                                                                                await datapatient.save()
+                                                                                DoctorsArray.push(items)
+                                                                            }
+                                                                        })
+                                                                        await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                            console.log(data)
+                                                                        })
+                                                                        res.send({ datas: doctorresp, status: "C1 category" })
+                                                                    }
                                                                 })
                                                             }
 
 
                                                         } else {
                                                             const find_doctorD1_check = drD1Check[0]
-                                                            await DoctorDetailsCheck(drD1Check, find_doctorD1_check, function (doctorresp) {
-                                                                res.send({ datas: doctorresp, status: "D1 category" })
+                                                            await DoctorDetailsCheck(drD1Check, find_doctorD1_check, async function (doctorresp) {
+                                                                const suitableDoctor = doctorresp.status[0]
+                                                                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                                if (drD1Check.length >= 5) {
+                                                                    await drD1Check.map(async (items) => {
+                                                                        const datapatient = new forPatientDoctor({
+                                                                            doctor_id: items._id,
+                                                                            patient_id: patient_id
+                                                                        })
+                                                                        if (items._id == suitableDoctor._id) {
+                                                                            datapatient.Doctor_status = "1"
+                                                                            await datapatient.save()
+                                                                            console.log("kuchh nhi")
+                                                                            DoctorsArray.push(items)
+                                                                        } else if (DoctorsArray.length == 5) {
+                                                                            setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                                console.log(data)
+                                                                            })
+                                                                            res.send({ datas: doctorresp, status: "D1 category" })
+
+                                                                        } else {
+                                                                            datapatient.Doctor_status = "0"
+                                                                            await datapatient.save()
+                                                                            DoctorsArray.push(items)
+                                                                        }
+                                                                    })
+                                                                } else {
+                                                                    await drD1Check.map(async (items) => {
+                                                                        const datapatient = new forPatientDoctor({
+                                                                            doctor_id: items._id,
+                                                                            patient_id: patient_id
+                                                                        })
+                                                                        console.log(items, "kkk")
+                                                                        console.log(suitableDoctor._id, "kkkjjj")
+                                                                        if (items._id == suitableDoctor._id) {
+                                                                            datapatient.Doctor_status = "1"
+                                                                            await datapatient.save()
+                                                                            console.log("kuchh nhi")
+                                                                            DoctorsArray.push(items)
+                                                                        } else {
+                                                                            datapatient.Doctor_status = "0"
+                                                                            await datapatient.save()
+                                                                            DoctorsArray.push(items)
+                                                                        }
+                                                                    })
+                                                                    await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                        console.log(data)
+                                                                    })
+                                                                    res.send({ datas: doctorresp, status: "D1 category" })
+                                                                }
                                                             })
                                                         }
 
 
                                                     } else {
                                                         const find_doctorB2_check = drB2Check[0]
-                                                        await DoctorDetailsCheck(drB2Check, find_doctorB2_check, function (doctorresp) {
-                                                            res.send({ datas: doctorresp, status: "B2 category" })
+                                                        await DoctorDetailsCheck(drB2Check, find_doctorB2_check, async function (doctorresp) {
+
+
+                                                            const suitableDoctor = doctorresp.status[0]
+                                                            console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                            if (drB2Check.length >= 5) {
+                                                                await drB2Check.map(async (items) => {
+                                                                    const datapatient = new forPatientDoctor({
+                                                                        doctor_id: items._id,
+                                                                        patient_id: patient_id
+                                                                    })
+                                                                    if (items._id == suitableDoctor._id) {
+                                                                        datapatient.Doctor_status = "1"
+                                                                        await datapatient.save()
+                                                                        console.log("kuchh nhi")
+                                                                        DoctorsArray.push(items)
+                                                                    } else if (DoctorsArray.length == 5) {
+                                                                        setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                            console.log(data)
+                                                                        })
+                                                                        res.send({ datas: doctorresp, status: "B2 category" })
+
+                                                                    } else {
+                                                                        datapatient.Doctor_status = "0"
+                                                                        await datapatient.save()
+                                                                        DoctorsArray.push(items)
+                                                                    }
+                                                                })
+                                                            } else {
+                                                                await drB2Check.map(async (items) => {
+                                                                    const datapatient = new forPatientDoctor({
+                                                                        doctor_id: items._id,
+                                                                        patient_id: patient_id
+                                                                    })
+                                                                    console.log(items, "kkk")
+                                                                    console.log(suitableDoctor._id, "kkkjjj")
+                                                                    if (items._id == suitableDoctor._id) {
+                                                                        datapatient.Doctor_status = "1"
+                                                                        await datapatient.save()
+                                                                        console.log("kuchh nhi")
+                                                                        DoctorsArray.push(items)
+                                                                    } else {
+                                                                        datapatient.Doctor_status = "0"
+                                                                        await datapatient.save()
+                                                                        DoctorsArray.push(items)
+                                                                    }
+                                                                })
+                                                                await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                    console.log(data)
+                                                                })
+                                                                res.send({ datas: doctorresp, status: "B2 category" })
+                                                            }
+
                                                         })
                                                     }
                                                 } else {
                                                     const find_doctorC2_check = drC2Check[0]
-                                                    await DoctorDetailsCheck(drC2Check, find_doctorC2_check, function (doctorresp) {
-                                                        res.send({ datas: doctorresp, status: "C2 category" })
+                                                    await DoctorDetailsCheck(drC2Check, find_doctorC2_check, async function (doctorresp) {
+
+                                                        const suitableDoctor = doctorresp.status[0]
+                                                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                        if (drC2Check.length >= 5) {
+                                                            await drC2Check.map(async (items) => {
+                                                                const datapatient = new forPatientDoctor({
+                                                                    doctor_id: items._id,
+                                                                    patient_id: patient_id
+                                                                })
+                                                                if (items._id == suitableDoctor._id) {
+                                                                    datapatient.Doctor_status = "1"
+                                                                    await datapatient.save()
+                                                                    console.log("kuchh nhi")
+                                                                    DoctorsArray.push(items)
+                                                                } else if (DoctorsArray.length == 5) {
+                                                                    setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                        console.log(data)
+                                                                    })
+                                                                    res.send({ datas: doctorresp, status: "C2 category" })
+
+                                                                } else {
+                                                                    datapatient.Doctor_status = "0"
+                                                                    await datapatient.save()
+                                                                    DoctorsArray.push(items)
+                                                                }
+                                                            })
+                                                        } else {
+                                                            await drC2Check.map(async (items) => {
+                                                                const datapatient = new forPatientDoctor({
+                                                                    doctor_id: items._id,
+                                                                    patient_id: patient_id
+                                                                })
+                                                                console.log(items, "kkk")
+                                                                console.log(suitableDoctor._id, "kkkjjj")
+                                                                if (items._id == suitableDoctor._id) {
+                                                                    datapatient.Doctor_status = "1"
+                                                                    await datapatient.save()
+                                                                    console.log("kuchh nhi")
+                                                                    DoctorsArray.push(items)
+                                                                } else {
+                                                                    datapatient.Doctor_status = "0"
+                                                                    await datapatient.save()
+                                                                    DoctorsArray.push(items)
+                                                                }
+                                                            })
+                                                            await setTimeOutFunction(suitableDoctor._id, function (data) {
+                                                                console.log(data)
+                                                            })
+                                                            res.send({ datas: doctorresp, status: "C2 category" })
+                                                        }
                                                     })
                                                 }
 
@@ -584,70 +1123,513 @@ exports.doctor_find = async (req, res) => {
 
                                             } else {
                                                 const find_doctorD2_check = drD2Check[0]
-                                                await DoctorDetailsCheck(drD2Check, find_doctorD2_check, function (doctorresp) {
-                                                    res.send({ datas: doctorresp, status: "D2 category" })
+                                                await DoctorDetailsCheck(drD2Check, find_doctorD2_check, async function (doctorresp) {
+                                                    const suitableDoctor = doctorresp.status[0]
+                                                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                    if (drD2Check.length >= 5) {
+                                                        await drD2Check.map(async (items) => {
+                                                            const datapatient = new forPatientDoctor({
+                                                                doctor_id: items._id,
+                                                                patient_id: patient_id
+                                                            })
+                                                            if (items._id == suitableDoctor._id) {
+                                                                datapatient.Doctor_status = "1"
+                                                                await datapatient.save()
+                                                                console.log("kuchh nhi")
+                                                                DoctorsArray.push(items)
+                                                            } else if (DoctorsArray.length == 5) {
+                                                                res.send({ datas: doctorresp, status: "D2 category" })
+
+                                                            } else {
+                                                                datapatient.Doctor_status = "0"
+                                                                await datapatient.save()
+                                                                DoctorsArray.push(items)
+                                                            }
+                                                        })
+                                                    } else {
+                                                        await drD2Check.map(async (items) => {
+                                                            const datapatient = new forPatientDoctor({
+                                                                doctor_id: items._id,
+                                                                patient_id: patient_id
+                                                            })
+                                                            console.log(items, "kkk")
+                                                            console.log(suitableDoctor._id, "kkkjjj")
+                                                            if (items._id == suitableDoctor._id) {
+                                                                datapatient.Doctor_status = "1"
+                                                                await datapatient.save()
+                                                                console.log("kuchh nhi")
+                                                                DoctorsArray.push(items)
+                                                            } else {
+                                                                datapatient.Doctor_status = "0"
+                                                                await datapatient.save()
+                                                                DoctorsArray.push(items)
+                                                            }
+                                                        })
+
+                                                        res.send({ datas: doctorresp, status: "D2 category" })
+                                                    }
+
                                                 })
                                             }
 
 
                                         } else {
                                             const find_doctorB3_check = drB3Check[0]
-                                            await DoctorDetailsCheck(drB3Check, find_doctorB3_check, function (doctorresp) {
-                                                res.send({ datas: doctorresp, status: "B3 category" })
+                                            await DoctorDetailsCheck(drB3Check, find_doctorB3_check, async function (doctorresp) {
+                                                const suitableDoctor = doctorresp.status[0]
+                                                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                                if (drB3Check.length >= 5) {
+                                                    await drB3Check.map(async (items) => {
+                                                        const datapatient = new forPatientDoctor({
+                                                            doctor_id: items._id,
+                                                            patient_id: patient_id
+                                                        })
+                                                        if (items._id == suitableDoctor._id) {
+                                                            datapatient.Doctor_status = "1"
+                                                            await datapatient.save()
+                                                            console.log("kuchh nhi")
+                                                            DoctorsArray.push(items)
+                                                        } else if (DoctorsArray.length == 5) {
+                                                            res.send({ datas: doctorresp, status: "B3 category" })
+
+                                                        } else {
+                                                            datapatient.Doctor_status = "0"
+                                                            await datapatient.save()
+                                                            DoctorsArray.push(items)
+                                                        }
+                                                    })
+                                                } else {
+                                                    await drB3Check.map(async (items) => {
+                                                        const datapatient = new forPatientDoctor({
+                                                            doctor_id: items._id,
+                                                            patient_id: patient_id
+                                                        })
+                                                        console.log(items, "kkk")
+                                                        console.log(suitableDoctor._id, "kkkjjj")
+                                                        if (items._id == suitableDoctor._id) {
+                                                            datapatient.Doctor_status = "1"
+                                                            await datapatient.save()
+                                                            console.log("kuchh nhi")
+                                                            DoctorsArray.push(items)
+                                                        } else {
+                                                            datapatient.Doctor_status = "0"
+                                                            await datapatient.save()
+                                                            DoctorsArray.push(items)
+                                                        }
+                                                    })
+
+                                                    res.send({ datas: doctorresp, status: "B3 category" })
+                                                }
+
                                             })
                                         }
 
 
                                     } else {
                                         const find_doctorC3_check = drC3Check[0]
-                                        await DoctorDetailsCheck(drC3Check, find_doctorC3_check, function (doctorresp) {
-                                            res.send({ datas: doctorresp, status: "C3 category" })
+                                        await DoctorDetailsCheck(drC3Check, find_doctorC3_check, async function (doctorresp) {
+
+                                            const suitableDoctor = doctorresp.status[0]
+                                            console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                            if (drC3Check.length >= 5) {
+                                                await drC3Check.map(async (items) => {
+                                                    const datapatient = new forPatientDoctor({
+                                                        doctor_id: items._id,
+                                                        patient_id: patient_id
+                                                    })
+                                                    if (items._id == suitableDoctor._id) {
+                                                        datapatient.Doctor_status = "1"
+                                                        await datapatient.save()
+                                                        console.log("kuchh nhi")
+                                                        DoctorsArray.push(items)
+                                                    } else if (DoctorsArray.length == 5) {
+                                                        res.send({ datas: doctorresp, status: "C3 category" })
+
+                                                    } else {
+                                                        datapatient.Doctor_status = "0"
+                                                        await datapatient.save()
+                                                        DoctorsArray.push(items)
+                                                    }
+                                                })
+                                            } else {
+                                                await drC3Check.map(async (items) => {
+                                                    const datapatient = new forPatientDoctor({
+                                                        doctor_id: items._id,
+                                                        patient_id: patient_id
+                                                    })
+                                                    console.log(items, "kkk")
+                                                    console.log(suitableDoctor._id, "kkkjjj")
+                                                    if (items._id == suitableDoctor._id) {
+                                                        datapatient.Doctor_status = "1"
+                                                        await datapatient.save()
+                                                        console.log("kuchh nhi")
+                                                        DoctorsArray.push(items)
+                                                    } else {
+                                                        datapatient.Doctor_status = "0"
+                                                        await datapatient.save()
+                                                        DoctorsArray.push(items)
+                                                    }
+                                                })
+
+                                                res.send({ datas: doctorresp, status: "C3 category" })
+                                            }
                                         })
                                     }
                                 } else {
                                     const find_doctorD3_check = drD3Check[0]
-                                    await DoctorDetailsCheck(drD3Check, find_doctorD3_check, function (doctorresp) {
-                                        res.send({ datas: doctorresp, status: "D3 category" })
+                                    await DoctorDetailsCheck(drD3Check, find_doctorD3_check, async function (doctorresp) {
+
+                                        const suitableDoctor = doctorresp.status[0]
+                                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                        if (drD3Check.length >= 5) {
+                                            await drD3Check.map(async (items) => {
+                                                const datapatient = new forPatientDoctor({
+                                                    doctor_id: items._id,
+                                                    patient_id: patient_id
+                                                })
+                                                if (items._id == suitableDoctor._id) {
+                                                    datapatient.Doctor_status = "1"
+                                                    await datapatient.save()
+                                                    console.log("kuchh nhi")
+                                                    DoctorsArray.push(items)
+                                                } else if (DoctorsArray.length == 5) {
+                                                    res.send({ datas: doctorresp, status: "D3 category" })
+
+                                                } else {
+                                                    datapatient.Doctor_status = "0"
+                                                    await datapatient.save()
+                                                    DoctorsArray.push(items)
+                                                }
+                                            })
+                                        } else {
+                                            await drD3Check.map(async (items) => {
+                                                const datapatient = new forPatientDoctor({
+                                                    doctor_id: items._id,
+                                                    patient_id: patient_id
+                                                })
+                                                console.log(items, "kkk")
+                                                console.log(suitableDoctor._id, "kkkjjj")
+                                                if (items._id == suitableDoctor._id) {
+                                                    datapatient.Doctor_status = "1"
+                                                    await datapatient.save()
+                                                    console.log("kuchh nhi")
+                                                    DoctorsArray.push(items)
+                                                } else {
+                                                    datapatient.Doctor_status = "0"
+                                                    await datapatient.save()
+                                                    DoctorsArray.push(items)
+                                                }
+                                            })
+
+                                            res.send({ datas: doctorresp, status: "D3 category" })
+                                        }
+
+
                                     })
                                 }
 
                             } else {
                                 const find_doctorb4_check = drB4Check[0]
-                                await DoctorDetailsCheck(drB4Check, find_doctorb4_check, function (doctorresp) {
-                                    res.send({ datas: doctorresp, status: "B4 category" })
+                                await DoctorDetailsCheck(drB4Check, find_doctorb4_check, async function (doctorresp) {
+                                    const suitableDoctor = doctorresp.status[0]
+                                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                    if (drB4Check.length >= 5) {
+                                        await drB4Check.map(async (items) => {
+                                            const datapatient = new forPatientDoctor({
+                                                doctor_id: items._id,
+                                                patient_id: patient_id
+                                            })
+                                            if (items._id == suitableDoctor._id) {
+                                                datapatient.Doctor_status = "1"
+                                                await datapatient.save()
+                                                console.log("kuchh nhi")
+                                                DoctorsArray.push(items)
+                                            } else if (DoctorsArray.length == 5) {
+                                                res.send({ datas: doctorresp, status: "B4 category" })
+
+                                            } else {
+                                                datapatient.Doctor_status = "0"
+                                                await datapatient.save()
+                                                DoctorsArray.push(items)
+                                            }
+                                        })
+                                    } else {
+                                        await drB4Check.map(async (items) => {
+                                            const datapatient = new forPatientDoctor({
+                                                doctor_id: items._id,
+                                                patient_id: patient_id
+                                            })
+                                            console.log(items, "kkk")
+                                            console.log(suitableDoctor._id, "kkkjjj")
+                                            if (items._id == suitableDoctor._id) {
+                                                datapatient.Doctor_status = "1"
+                                                await datapatient.save()
+                                                console.log("kuchh nhi")
+                                                DoctorsArray.push(items)
+                                            } else {
+                                                datapatient.Doctor_status = "0"
+                                                await datapatient.save()
+                                                DoctorsArray.push(items)
+                                            }
+                                        })
+
+                                        res.send({ datas: doctorresp, status: "B4 category" })
+                                    }
+
                                 })
                             }
                         } else {
                             const find_doctorC4_check = drC4Check[0]
-                            await DoctorDetailsCheck(drC4Check, find_doctorC4_check, function (doctorresp) {
-                                res.send({ datas: doctorresp, status: "C4 category" })
+                            await DoctorDetailsCheck(drC4Check, find_doctorC4_check, async function (doctorresp) {
+
+                                const suitableDoctor = doctorresp.status[0]
+                                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                if (drC4Check.length >= 5) {
+                                    await drC4Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else if (DoctorsArray.length == 5) {
+                                            res.send({ datas: doctorresp, status: "C4 category" })
+
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+                                } else {
+                                    await drC4Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        console.log(items, "kkk")
+                                        console.log(suitableDoctor._id, "kkkjjj")
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+
+                                    res.send({ datas: doctorresp, status: "C4 category" })
+                                }
+
                             })
                         }
                     } else {
                         const find_doctor_D4Check = drD4Check[0]
-                        await DoctorDetailsCheck(drD4Check, find_doctor_D4Check, function (doctorresp) {
-                            res.send({ datas: doctorresp, status: "D4 category" })
+                        await DoctorDetailsCheck(drD4Check, find_doctor_D4Check, async function (doctorresp) {
+
+                            const suitableDoctor = doctorresp.status[0]
+                            console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                            if (drD4Check.length >= 5) {
+                                await drD4Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else if (DoctorsArray.length == 5) {
+                                        res.send({ datas: doctorresp, status: "D4 category" })
+
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+                            } else {
+                                await drD4Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    console.log(items, "kkk")
+                                    console.log(suitableDoctor._id, "kkkjjj")
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+
+                                res.send({ datas: doctorresp, status: "D4 category" })
+                            }
                         })
                     }
 
                 } else {
                     const find_doctor_drB5Check = drB5Check[0]
-                    await DoctorDetailsCheck(drB5Check, find_doctor_drB5Check, function (doctorresp) {
-                        res.send({ datas: doctorresp, status: "B5 category" })
+                    await DoctorDetailsCheck(drB5Check, find_doctor_drB5Check, async function (doctorresp) {
+
+                        const suitableDoctor = doctorresp.status[0]
+                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                        if (drB5Check.length >= 5) {
+                            await drB5Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else if (DoctorsArray.length == 5) {
+                                    res.send({ datas: doctorresp, status: "B5 category" })
+
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+                        } else {
+                            await drB5Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                console.log(items, "kkk")
+                                console.log(suitableDoctor._id, "kkkjjj")
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+
+                            res.send({ datas: doctorresp, status: "B5 category" })
+                        }
                     })
                     // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
                 }
             } else {
                 const find_doctor_drC5Check = drC5Check[0]
-                await DoctorDetailsCheck(drC5Check, find_doctor_drC5Check, function (doctorresp) {
-                    res.send({ datas: doctorresp, status: "C5 category" })
+                await DoctorDetailsCheck(drC5Check, find_doctor_drC5Check, async function (doctorresp) {
+
+                    const suitableDoctor = doctorresp.status[0]
+                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                    if (drC5Check.length >= 5) {
+                        await drC5Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else if (DoctorsArray.length == 5) {
+                                res.send({ datas: doctorresp, status: "C5 category" })
+
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+                    } else {
+                        await drC5Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            console.log(items, "kkk")
+                            console.log(suitableDoctor._id, "kkkjjj")
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+
+                        res.send({ datas: doctorresp, status: "C5 category" })
+                    }
                 })
                 // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
             }
         } else {
             const find_doctor_drCheck = drCheck[0]
-            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
-                res.send({ datas: doctorresp, status: "D5 category" })
+            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, async function (doctorresp) {
+
+                const suitableDoctor = doctorresp.status[0]
+                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                if (drCheck.length >= 5) {
+                    await drCheck.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else if (DoctorsArray.length == 5) {
+                            res.send({ datas: doctorresp, status: "D5 category" })
+
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+                } else {
+                    await drCheck.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        console.log(items, "kkk")
+                        console.log(suitableDoctor._id, "kkkjjj")
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+
+                    res.send({ datas: doctorresp, status: "D5 category" })
+                }
             })
         }
 
@@ -655,19 +1637,19 @@ exports.doctor_find = async (req, res) => {
         const E5categDr = await doctorSubcategory.findOne({ _id: "609bc94dc1fe1147aede5457" }).populate(
             {
                 path: 'DoctorList',
-                // match: { _id: "609bc94dc1fe1147aede5457" },
+                match: { $and: [{ Specialization: depname }] },
                 // select: 'name -_id',
-                options: { sort: { algorithm_index: -1 }, limit: 5 }
+                options: { sort: { algorithm_index: -1 } }
             }
         )
-        const drCheck = E5categDr.DoctorList
-        if (drCheck.length == 0) {
+        const drCheckE1 = E5categDr.DoctorList
+        if (drCheckE1.length == 0) {
             const E4categDr = await doctorSubcategory.findOne({ _id: "609bc948c1fe1147aede5456" }).populate(
                 {
                     path: 'DoctorList',
-                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                    match: { $and: [{ Specialization: depname }] },
                     // select: 'name -_id',
-                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                    options: { sort: { algorithm_index: -1 } }
                 }
             )
             const dr4Check = E4categDr.DoctorList
@@ -675,76 +1657,291 @@ exports.doctor_find = async (req, res) => {
                 const E3categDr = await doctorSubcategory.findOne({ _id: "609bc943c1fe1147aede5455" }).populate(
                     {
                         path: 'DoctorList',
-                        // match: { _id: "609cdb4c8e0993758b5411bc" },
+                        match: { $and: [{ Specialization: depname }] },
                         // select: 'name -_id',
-                        options: { sort: { algorithm_index: -1 }, limit: 5 }
+                        options: { sort: { algorithm_index: -1 } }
                     }
                 )
-                const dr3Check = E3categDr.DoctorList
-                if (dr3Check.length == 0) {
+                const drE3Check = E3categDr.DoctorList
+                if (drE3Check.length == 0) {
                     const E2categDr = await doctorSubcategory.findOne({ _id: "609bc93fc1fe1147aede5454" }).populate(
                         {
                             path: 'DoctorList',
-                            // match: { _id: "609cdb4c8e0993758b5411bc" },
-                            // select: 'name -_id',
-                            options: { sort: { algorithm_index: -1 }, limit: 5 }
+                            match: { $and: [{ Specialization: depname }] },
+                            options: { sort: { algorithm_index: -1 } }
                         }
                     )
-                    const dr2Check = E2categDr.DoctorList
-                    if (dr2Check.length == 0) {
+                    const drE2Check = E2categDr.DoctorList
+                    if (drE2Check.length == 0) {
                         const E1categDr = await doctorSubcategory.findOne({ _id: "609bc93ac1fe1147aede5453" })
                             .populate(
                                 {
                                     path: 'DoctorList',
-                                    // match: { _id: "609cdb4c8e0993758b5411bc" },
+                                    match: { $and: [{ Specialization: depname }] },
                                     // select: 'name -_id',
-                                    options: { sort: { algorithm_index: -1 }, limit: 5 }
+                                    options: { sort: { algorithm_index: -1 } }
                                 }
                             )
-                        const dr1Check = E1categDr.DoctorList
-                        if (dr1Check.length == 0) {
+                        const drE1Check = E1categDr.DoctorList
+                        if (drE1Check.length == 0) {
                             res.json({ "dr": "dr not find in E1", "code": "E1 category", status: dr1Check })
                         } else {
-                            const find_doctor_check = dr1Check[0]
-                            await DoctorDetailsCheck(dr1Check, find_doctor_check, function (doctorresp) {
-                                res.send({ datas: doctorresp, status: "E category" })
+                            const find_doctor_check = drE1Check[0]
+                            await DoctorDetailsCheck(drE1Check, find_doctor_check, async function (doctorresp) {
+                                const suitableDoctor = doctorresp.status[0]
+                                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                                if (drE1Check.length >= 5) {
+                                    await drE1Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else if (DoctorsArray.length == 5) {
+                                            res.send({ datas: doctorresp, status: "D5 category" })
+
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+                                } else {
+                                    await drE1Check.map(async (items) => {
+                                        const datapatient = new forPatientDoctor({
+                                            doctor_id: items._id,
+                                            patient_id: patient_id
+                                        })
+                                        console.log(items, "kkk")
+                                        console.log(suitableDoctor._id, "kkkjjj")
+                                        if (items._id == suitableDoctor._id) {
+                                            datapatient.Doctor_status = "1"
+                                            await datapatient.save()
+                                            console.log("kuchh nhi")
+                                            DoctorsArray.push(items)
+                                        } else {
+                                            datapatient.Doctor_status = "0"
+                                            await datapatient.save()
+                                            DoctorsArray.push(items)
+                                        }
+                                    })
+
+                                    res.send({ datas: doctorresp, status: "D5 category" })
+                                }
+
                             })
                         }
                     } else {
                         const find_doctor_dr2Check = dr2Check[0]
-                        await DoctorDetailsCheck(dr2Check, find_doctor_dr2Check, function (doctorresp) {
+                        await DoctorDetailsCheck(drE2Check, find_doctor_dr2Check, async function (doctorresp) {
                             res.send(doctorresp)
+                            const suitableDoctor = doctorresp.status[0]
+                            console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                            if (drE2Check.length >= 5) {
+                                await drE2Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else if (DoctorsArray.length == 5) {
+                                        res.send({ datas: doctorresp, status: "E2 category" })
+
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+                            } else {
+                                await drE2Check.map(async (items) => {
+                                    const datapatient = new forPatientDoctor({
+                                        doctor_id: items._id,
+                                        patient_id: patient_id
+                                    })
+                                    console.log(items, "kkk")
+                                    console.log(suitableDoctor._id, "kkkjjj")
+                                    if (items._id == suitableDoctor._id) {
+                                        datapatient.Doctor_status = "1"
+                                        await datapatient.save()
+                                        console.log("kuchh nhi")
+                                        DoctorsArray.push(items)
+                                    } else {
+                                        datapatient.Doctor_status = "0"
+                                        await datapatient.save()
+                                        DoctorsArray.push(items)
+                                    }
+                                })
+
+                                res.send({ datas: doctorresp, status: "E2 category" })
+                            }
                         })
                     }
 
                 } else {
-                    const find_doctor_dr3Check = dr3Check[0]
-                    await DoctorDetailsCheck(dr3Check, find_doctor_dr3Check, function (doctorresp) {
-                        res.send(doctorresp)
+                    const find_doctor_dr3Check = drE3Check[0]
+                    await DoctorDetailsCheck(drE3Check, find_doctor_dr3Check, async function (doctorresp) {
+                        const suitableDoctor = doctorresp.status[0]
+                        console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                        if (drE3Check.length >= 5) {
+                            await drE3Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else if (DoctorsArray.length == 5) {
+                                    res.send({ datas: doctorresp, status: "E3 category" })
+
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+                        } else {
+                            await drE3Check.map(async (items) => {
+                                const datapatient = new forPatientDoctor({
+                                    doctor_id: items._id,
+                                    patient_id: patient_id
+                                })
+                                console.log(items, "kkk")
+                                console.log(suitableDoctor._id, "kkkjjj")
+                                if (items._id == suitableDoctor._id) {
+                                    datapatient.Doctor_status = "1"
+                                    await datapatient.save()
+                                    console.log("kuchh nhi")
+                                    DoctorsArray.push(items)
+                                } else {
+                                    datapatient.Doctor_status = "0"
+                                    await datapatient.save()
+                                    DoctorsArray.push(items)
+                                }
+                            })
+
+                            res.send({ datas: doctorresp, status: "E3 category" })
+                        }
                     })
                     // res.json({ "dr": "dr find in a3", "code": "A category", status: dr2Check })
                 }
             } else {
-                const find_doctor_dr4Check = dr3Check[0]
-                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, function (doctorresp) {
-                    res.send(doctorresp)
+                const find_doctor_dr4Check = dr4Check[0]
+                await DoctorDetailsCheck(dr4Check, find_doctor_dr4Check, async function (doctorresp) {
+
+
+                    const suitableDoctor = doctorresp.status[0]
+                    console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                    if (dr4Check.length >= 5) {
+                        await dr4Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else if (DoctorsArray.length == 5) {
+                                res.send({ datas: doctorresp, status: "E4 category" })
+
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+                    } else {
+                        await dr4Check.map(async (items) => {
+                            const datapatient = new forPatientDoctor({
+                                doctor_id: items._id,
+                                patient_id: patient_id
+                            })
+                            console.log(items, "kkk")
+                            console.log(suitableDoctor._id, "kkkjjj")
+                            if (items._id == suitableDoctor._id) {
+                                datapatient.Doctor_status = "1"
+                                await datapatient.save()
+                                console.log("kuchh nhi")
+                                DoctorsArray.push(items)
+                            } else {
+                                datapatient.Doctor_status = "0"
+                                await datapatient.save()
+                                DoctorsArray.push(items)
+                            }
+                        })
+
+                        res.send({ datas: doctorresp, status: "E4 category" })
+                    }
                 })
                 // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
             }
         } else {
-            const find_doctor_drCheck = drCheck[0]
-            await DoctorDetailsCheck(drCheck, find_doctor_drCheck, function (doctorresp) {
-                res.send(doctorresp)
+            const find_doctor_drCheck = drCheckE1[0]
+            await DoctorDetailsCheck(drCheckE1, find_doctor_drCheck, async function (doctorresp) {
+                const suitableDoctor = doctorresp.status[0]
+                console.log(suitableDoctor, "DDDDDDDDDDDDDDDDD", doctorresp)
+                if (drCheckE1.length >= 5) {
+                    await drCheckE1.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else if (DoctorsArray.length == 5) {
+                            res.send({ datas: doctorresp, status: "E5 category" })
+
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+                } else {
+                    await drCheckE1.map(async (items) => {
+                        const datapatient = new forPatientDoctor({
+                            doctor_id: items._id,
+                            patient_id: patient_id
+                        })
+                        console.log(items, "kkk")
+                        console.log(suitableDoctor._id, "kkkjjj")
+                        if (items._id == suitableDoctor._id) {
+                            datapatient.Doctor_status = "1"
+                            await datapatient.save()
+                            console.log("kuchh nhi")
+                            DoctorsArray.push(items)
+                        } else {
+                            datapatient.Doctor_status = "0"
+                            await datapatient.save()
+                            DoctorsArray.push(items)
+                        }
+                    })
+
+                    res.send({ datas: doctorresp, status: "E5 category" })
+                }
             })
         }
-        console.log("e category")
         // res.send("E category")
     } else {
         res.send("something went wrong")
     }
 }
-
-
 
 
 async function hashPassword(password) {
@@ -1134,19 +2331,19 @@ exports.patientDetailsForDoctor = async (req, res) => {
     const { doctor_id, patient_id } = req.body;
     const obj = {}
     const patient_detail = await Patient.findOne({ $and: [{ doctor_id: doctor_id }, { _id: patient_id }] }, { patient_name: 1, activeStatus: 1, health_worker_id: 1, createdAt: 1, patient_img: 1 })
-    console.log("patient",patient_detail)
+    console.log("patient", patient_detail)
     if (patient_detail) {
-        const helth =await helthworkers.findOne({ _id: patient_detail.health_worker_id }, { firebase_token: 1, username: 1,activeStatus:1 })
-        console.log("helth",helth)
-        if(!helth){
+        const helth = await helthworkers.findOne({ _id: patient_detail.health_worker_id }, { firebase_token: 1, username: 1, activeStatus: 1 })
+        console.log("helth", helth)
+        if (!helth) {
 
-        }else{
-        obj.name = patient_detail.patient_name;
-        obj.createdAt = patient_detail.createdAt;
-        obj.profile_pic = patient_detail.patient_img
-        obj.firebaseToken = helth.firebase_token
-        obj.activeStatus = helth.activeStatus
-        res.json({code:200,msg:obj})
+        } else {
+            obj.name = patient_detail.patient_name;
+            obj.createdAt = patient_detail.createdAt;
+            obj.profile_pic = patient_detail.patient_img
+            obj.firebaseToken = helth.firebase_token
+            obj.activeStatus = helth.activeStatus
+            res.json({ code: 200, msg: obj })
         }
     } else {
         res.json({ code: 400, msg: "patient not found" })

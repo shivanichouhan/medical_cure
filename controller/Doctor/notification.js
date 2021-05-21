@@ -50,7 +50,7 @@ exports.notification = async (req, res) => {
 }
 
 exports.list_notification = async (req, res) => {
-  var not_data = await not.find({ docId: req.body.docId })
+  var not_data = await not.find({ $and: [{ docId: req.body.docId, notificationFor: "Doctor" }] })
   if (not_data.length > 0) {
     var docUp = await Doct.updateOne({ _id: req.body.docId }, { $set: { notification_count: 0 } })
     if (docUp) {

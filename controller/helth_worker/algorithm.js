@@ -14,102 +14,183 @@ var responce_time = require("../../model/Doctor/responce_time")
 const rating = require("../../model/Doctor/rating")
 
 
+const cron = require('node-cron');
+
+cron.schedule('15 17 * * *',async function () {
+    console.log('---------------------');
+    console.log('Running Cron Job');
+    let date = new Date();
+    date.setMonth(date.getMonth() - 01);
+    let dateInput = date.toISOString();
+    const allDoctors = await Doct.find()
+    console.log(allDoctors)
+    await Promise.all(
+        allDoctors.map(async (item) => {
+            const mon = await responce_time.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                }
+                ,
+                {
+                    $group:
+                    {
+                        _id: null,
+                        Response_rating: { $sum: "$Response_rating" }
+                    }
+                }
+            ])
+            const monrating = await rating.aggregate([
+                {
+                    $match: {
+                        // totalValue: {$sum: "$rating"},
+                        $and: [
+                            { $expr: { $gt: ["$date", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        rating: { $sum: "$rating" }
+                    }
+                }
+
+            ])
+
+            const availabilityTimes = await availabilityTime.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        availability_hour: { $sum: "$availability_hour" }
+                    }
+                }
+            ])
+            const numberOfCases = await patient_data.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    }
+                }])
+
+            const ratingdata = monrating[0]
+            const ratingAvarage = ratingdata.rating / 30
+            const available = availabilityTimes[0]
+            const availableAvarage = available.availability_hour / 30
+            const responceTime = mon[0]
+            const responceAvarage = responceTime.Response_rating / 30
+            const patient_detail = numberOfCases.length
+            const methods = ratingAvarage + (2 * responceAvarage) + (2 * availableAvarage) + patient_detail / 4
+            let j = parseInt(methods, 10)
+
+            console.log(methods, "methods")
+            const Doctor_data = await Doct.updateOne({ _id: item._id }, { algorithm_index: j })
+        })).then((resp) => {
+            console.log("all doctor is checked")
+        })
+});
+
+
 
 exports.algo_method = async (req, res) => {
     let date = new Date();
     date.setMonth(date.getMonth() - 01);
     let dateInput = date.toISOString();
-    const mon = await responce_time.aggregate([
-        {
-            $match: {
-                $and: [
-                    { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
-                ]
-            },
-        }
-        ,
-        {
-            $group:
-            {
-                _id: null,
-                Response_rating: { $sum: "$Response_rating" }
-            }
-        }
-    ])
-    const monrating = await rating.aggregate([
-        {
-            $match: {
-                // totalValue: {$sum: "$rating"},
-                $and: [
-                    { $expr: { $gt: ["$date", { $toDate: dateInput }] } },
-                ]
-            },
-        },
-        {
-            $group:
-            {
-                _id: null,
-                rating: { $sum: "$rating" }
-            }
-        }
+    const allDoctors = await Doct.findOne()
+    await Promise.all(
+        allDoctors.map(async (item) => {
+            const mon = await responce_time.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                }
+                ,
+                {
+                    $group:
+                    {
+                        _id: null,
+                        Response_rating: { $sum: "$Response_rating" }
+                    }
+                }
+            ])
+            const monrating = await rating.aggregate([
+                {
+                    $match: {
+                        // totalValue: {$sum: "$rating"},
+                        $and: [
+                            { $expr: { $gt: ["$date", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        rating: { $sum: "$rating" }
+                    }
+                }
 
-    ])
+            ])
 
-    const availabilityTimes = await availabilityTime.aggregate([
-        {
-            $match: {
-                $and: [
-                    { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
-                ]
-            },
-        },
-        {
-            $group:
-            {
-                _id: null,
-                availability_hour: { $sum: "$availability_hour" }
-            }
-        }
-    ])
-    const numberOfCases = await patient_data.aggregate([
-        {
-            $match: {
-                $and: [
-                    { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
-                ]
-            }
-        }])
+            const availabilityTimes = await availabilityTime.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    },
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        availability_hour: { $sum: "$availability_hour" }
+                    }
+                }
+            ])
+            const numberOfCases = await patient_data.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $gt: ["$createdAt", { $toDate: dateInput }] } },
+                        ]
+                    }
+                }])
 
-    const ratingdata = monrating[0]
-    const ratingAvarage = ratingdata.rating / 30
+            const ratingdata = monrating[0]
+            const ratingAvarage = ratingdata.rating / 30
+            const available = availabilityTimes[0]
+            const availableAvarage = available.availability_hour / 30
+            const responceTime = mon[0]
+            const responceAvarage = responceTime.Response_rating / 30
+            const patient_detail = numberOfCases.length
+            const methods = ratingAvarage + (2 * responceAvarage) + (2 * availableAvarage) + patient_detail / 4
+            let j = parseInt(methods, 10)
 
-    const available = availabilityTimes[0]
-    const availableAvarage = available.availability_hour / 30 
-
-    const responceTime =mon[0]
-    const responceAvarage = responceTime.Response_rating/30
-
-    const patient_detail = numberOfCases.length
-    
-
-    const methods = ratingAvarage + (2 * responceAvarage) + (2*availableAvarage) +patient_detail/4
-    let j = parseInt(methods, 10)
-    
-    console.log(methods,"methods")
-
-    res.json({ rating: monrating, responce_time: mon, avail: availabilityTimes, numberOfCases: numberOfCases.length })
-
-
-
-    // ,
-    // {
-    //     $project: {
-    //         ongoing_time: 1,
-    //         accepted_time: 1,
-    //         duration: { $divide: [{ $subtract: ["$ongoing_time", "$accepted_time"] }, 3600000] }
-    //     }
-    // }
-
+            console.log(methods, "methods")
+            const Doctor_data = await Doct.updateOne({ _id: item._id }, { algorithm_index: j })
+            // res.json({ rating: monrating, responce_time: mon, avail: availabilityTimes, numberOfCases: numberOfCases.length })
+        })).then((resp) => {
+            console.log("all doctor is checked")
+            // res.send("kkk")
+        })
 }
 
 
