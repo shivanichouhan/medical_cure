@@ -60,11 +60,12 @@ exports.helthNotification = async (req, res) => {
         array.DcotorData =DcotorData
         array.PatientData = PatientData
         array.notification_type = "incoming_call"
+        array.room_id = room_id
         NotificationData(helthworkerData, array, function (data) {
             if (data) {
-                res.json({ code: 200, msg: "notification send" })
+                res.json({ code: 200, msg: "notification send" ,room_id:room_id})
             } else {
-                res.json({ code: 400, msg: "something went wrong" })
+                res.json({ code: 400, msg: "something went wrong",room_id:room_id })
 
             }
         })
