@@ -154,6 +154,7 @@ const Comission = require("./routes/admin/comission")
 const rechargePoint = require("./routes/admin/recharge_point")
 const Xpost = require("./routes/admin/xpost")
 const MyPost = require("./routes/admin/mypost")
+const helthnotifications = require("./routes/helth_worker/helthwork_notification")
 //
 
 const contact_us = require('./routes/admin/contact_us')
@@ -224,6 +225,7 @@ app.use('/api', dep_health)
 app.use("/api", conversation)
 app.use('/api', payment)
 app.use("/api", rechargewallet)
+app.use("/api",helthnotifications)
 //
 
 //admin middleware

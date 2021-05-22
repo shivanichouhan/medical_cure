@@ -312,9 +312,10 @@ function setTimeOutFunction(doctor_id, callback) {
 }
 
 function NotificationData(userdata, senderData, callback) {
-    console.log(userdata.firebase_token,"tokennnnnnnnnnnn")
+    console.log(userdata.firebase_token, "tokennnnnnnnnnnn")
     var msg = {}
     var Notification = {}
+    // msg.to = "fpuv1cdIQQK67zq6CBmbwA:APA91bH2e3NdL6TK5OuC1wakQDwwx4Ct0JhSkrdxg6EI3S0HFYU4IH-5shSImK5BZaTOeZFx9W3pTKPZrNrXeOWFWnEaUdV-ZvedwxQSxfMF0SmY5wmKrTYq6phFFFyIk22nGFaGlYlX"
     msg.to = userdata.firebase_token
     msg.collapse_key = 'XXX'
     msg.data = { my_key: 'my value', contents: "abcv/" }
@@ -327,7 +328,7 @@ function NotificationData(userdata, senderData, callback) {
         obj.username = userdata.username
         obj.email = userdata.email
         obj.profile_pic = userdata.profile_pic
-        obj.notification_text = `Doctor Has Send prescription To you.`
+        obj.notification_text = `${senderData.patient_name} has requested for Appointment.`
         obj.patient_id = senderData._id
         obj.docId = userdata._id;
         obj.notificationFor = "Doctor"
@@ -335,8 +336,12 @@ function NotificationData(userdata, senderData, callback) {
         var notData = await notObj.save()
         callback(true)
 
+    }).catch((Err) => {
+        console.log(Err)
+        callback(false)
     })
 }
+
 
 
 exports.doctor_find = async (req, res) => {
@@ -348,7 +353,7 @@ exports.doctor_find = async (req, res) => {
     const patient_data = await Patient.findOne({ _id: patient_id })
     const depart_ment_find = await add_disease.findOne({ disease_name: patient_data.disease })
     const depname = depart_ment_find.department_name
-    console.log(depname, "departmenttttttt",patient_data)
+    console.log(depname, "departmenttttttt", patient_data)
 
     const DoctorsArray = []
 
@@ -405,7 +410,7 @@ exports.doctor_find = async (req, res) => {
                                             // })
 
 
-                                            NotificationData(suitableDoctor,patient_data,function(data){
+                                            NotificationData(suitableDoctor, patient_data, function (data) {
                                                 res.send(data)
                                             })
 
@@ -439,7 +444,7 @@ exports.doctor_find = async (req, res) => {
                                     // })
 
 
-                                    NotificationData(suitableDoctor,patient_data,function(data){
+                                    NotificationData(suitableDoctor, patient_data, function (data) {
                                         res.send(data)
                                     })
 

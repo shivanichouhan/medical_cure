@@ -7,7 +7,7 @@ const docDegSchema = new schema(
     {
         doctor_id: {
             type: String
-        }, doctor_id:
+        }, patient_id:
         {
             type: String
         }, Doctor_status: {

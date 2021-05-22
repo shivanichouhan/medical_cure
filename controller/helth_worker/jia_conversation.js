@@ -11,6 +11,7 @@ const Doct = require("../../model/Doctor/doctor_regis")
 const not = require("../../model/Doctor/notification")
 var notification_firebase = require("../../firebase_notification")
 var responseTimes = require("../../model/Doctor/responce_time")
+const forPatientDoctor = require("../../model/Doctor/doctor_forPatient_list")
 
 
 const greeting_time = (today) => {
@@ -326,42 +327,39 @@ exports.chatAccepted_by_Doctor = (req, res) => {
                         const respons = await responseTimes.updateOne({
                             doctor_id: doctor_id,
                             patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:5 } })
-    
-                    }else if(j > 5 && j <=10 ){
-                        const respons = await responseTimes.updateOne({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:4 } })
-     
-                    }else if(j > 10 && j <=20 ){
-                        const respons = await responseTimes.updateOne({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:3 } })
-     
-                    }else if(j > 20 && j <=30 ){
-                        const respons = await responseTimes.updateOne({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:2 } })
-     
-                    }else if(j > 30 && j <=60 ){
-                        const respons = await responseTimes.updateOne({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:1 } })
-     
-                    }else{
-                        const respons = await responseTimes.updateOne({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                        }, { $set: { responce_time: j, Response_rating:0 } })
-    
-                    }
-                   
+                        }, { $set: { responce_time: j, Response_rating: 5 } })
 
-                    var msg = {}
+                    } else if (j > 5 && j <= 10) {
+                        const respons = await responseTimes.updateOne({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                        }, { $set: { responce_time: j, Response_rating: 4 } })
+
+                    } else if (j > 10 && j <= 20) {
+                        const respons = await responseTimes.updateOne({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                        }, { $set: { responce_time: j, Response_rating: 3 } })
+
+                    } else if (j > 20 && j <= 30) {
+                        const respons = await responseTimes.updateOne({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                        }, { $set: { responce_time: j, Response_rating: 2 } })
+
+                    } else if (j > 30 && j <= 60) {
+                        const respons = await responseTimes.updateOne({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                        }, { $set: { responce_time: j, Response_rating: 1 } })
+
+                    } else {
+                        const respons = await responseTimes.updateOne({
+                            doctor_id: doctor_id,
+                            patient_id: patient_id,
+                        }, { $set: { responce_time: j, Response_rating: 0 } })
+
+                    }
                     // var Notification = {}
                     // msg.to = datas.firebase_token
                     // msg.collapse_key = 'XXX'
@@ -464,6 +462,42 @@ exports.chatAccepted_by_Doctor = (req, res) => {
 }
 
 
+function NotificationData(userdata, senderData, text, notifyType, body, callback) {
+    console.log(userdata.firebase_token, "tokennnnnnnnnnnn")
+    var msg = {}
+    var Notification = {}
+    msg.to = userdata.firebase_token
+    msg.collapse_key = 'XXX'
+    msg.data = { my_key: 'my value', contents: "abcv/" }
+    Notification.title = text
+    Notification.body = body
+    msg.notification = Notification
+    notification_firebase.Notification(msg).then(async (resp) => {
+        console.log(resp)
+        var obj = {}
+        obj.username = userdata.username
+        obj.email = userdata.email
+        obj.profile_pic = userdata.profile_pic
+        obj.notification_text = text
+        obj.patient_id = senderData._id
+        obj.docId = userdata._id;
+        obj.notificationFor = notifyType
+        var notObj = new not(obj)
+        var notData = await notObj.save()
+        callback(true)
+
+    }).catch((Err) => {
+        callback(false)
+    })
+}
+
+
+function DoctorFindForPatient(patient_id, callback) {
+    forPatientDoctor.findOne({ $and: [{ patient_id: patient_id, Doctor_status: "0" }] })
+        .then((responce) => {
+            callback(responce)
+        })
+}
 
 
 
@@ -511,7 +545,7 @@ function randomString(len, charSet) {
 }
 
 
-exports.accept_patient = (req, res) => {
+exports.accept_patient = async (req, res) => {
     const { doctor_id, patient_id, health_worker_id, type } = req.body;
     var otp = randomString(8, 'abcdefgjklmnopqrstuvwxyz')
     if (patient_id && doctor_id) {
@@ -526,85 +560,13 @@ exports.accept_patient = (req, res) => {
                         accepted_time: new Date()
                     })
                     const dd = await respon.save()
-
-                    var msg = {}
-                    var Notification = {}
-                    // console.log(datas)
-                    // msg.to = datas.firebase_token
-                    // msg.collapse_key = 'XXX'
-                    // msg.data = { my_key: 'my value', contents: "abcv/" }
-                    // Notification.title = `${datas.username} Title of the notification`
-                    // Notification.body = `${doctor_resp.username} Doctor Has accepted your Appointment.`
-                    // msg.notification = Notification
-                    // notification_firebase.Notification(msg).then(async (resp) => {
-                    //     console.log(resp, "ijijjkj")
-                    //     var obj = {}
-                    //     obj.username = doctor_resp.username
-                    //     obj.email = doctor_resp.email
-                    //     obj.profile_pic = doctor_resp.profile_pic
-                    //     obj.notification_text = `${doctor_resp.username} Doctor Has accepted your Appointment.`
-                    //     obj.healthworker_id = health_worker_id
-                    //     var notObj = new not(obj)
-                    //     var notData = await notObj.save()
-                    if (response) {
-                        const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
-                        )
-                        const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
-                        console.log(update_patient)
-
-                        res.json({ code: 200, msg: "patient change status" })
-
-                    } else {
-                        const data_resp = new doctor_patientChat({
-                            doctor_id: doctor_id,
-                            patient_id: patient_id,
-                            room: otp,
-                            status: "accepted"
-                        })
-                        data_resp.save()
-                            .then((resp) => {
-                                patient_data.updateOne({ _id: patient_id }, { $set: { status: "accepted" } })
-                                console.log(patient_data)
-                                res.json({ code: 200, msg: resp })
-                            }).catch((err) => {
-                                console.log(err)
-                                res.json({ code: 400, msg: "something went wrong" })
-
-                            })
-                    }
-                }).catch((err) => {
-                    res.send(err)
-                    console.log(err)
-                })
-            // })
-        } if (type == "0") {
-            doctor_patientChat.findOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] })
-                .then(async (response) => {
-                    var datas = await helth_workers.findOne({ _id: health_worker_id })
-                    var doctor_resp = await Doct.findOne({ _id: doctor_id })
-                    var msg = {}
-                    var Notification = {}
-                    msg.to = data.firebase_token
-                    msg.collapse_key = 'XXX'
-                    msg.data = { my_key: 'my value', contents: "abcv/" }
-                    Notification.title = `${datas.username} Title of the notification`
-                    Notification.body = `${doctor_resp.username} Doctor Has rejected your Appointment.`
-                    msg.notification = Notification
-                    notification_firebase.Notification(msg).then(async (resp) => {
-                        console.log(resp)
-                        var obj = {}
-                        obj.username = doctor_resp.username
-                        obj.email = doctor_resp.email
-                        obj.profile_pic = doctor_resp.profile_pic
-                        obj.notification_text = `${doctor_resp.username} Doctor Has rejected your Appointment.`
-                        obj.healthworker_id = health_worker_id
-                        // obj.docId = doctor_id;
-                        var notObj = new not(obj)
-                        var notData = await notObj.save()
+                    const title1 = ` Accept Appointment request`
+                    const title = `${datas.username} Doctor Accept Appointment`
+                    NotificationData(doctor_resp, datas, title1, "healthworker", title, async function (data) {
                         if (response) {
                             const data = await doctor_patientChat.updateOne({ $and: [{ doctor_id: doctor_id, patient_id: patient_id }] }, { $set: { doctor_id: doctor_id } }
                             )
-                            const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
+                            const update_patient = await patient_data.updateOne({ _id: patient_id }, { $set: { status: "booked" } })
                             console.log(update_patient)
                             res.json({ code: 200, msg: "patient change status" })
                         } else {
@@ -612,22 +574,47 @@ exports.accept_patient = (req, res) => {
                                 doctor_id: doctor_id,
                                 patient_id: patient_id,
                                 room: otp,
-                                status: "cancelled"
+                                status: "booked"
                             })
                             data_resp.save()
                                 .then((resp) => {
-                                    patient_data.updateOne({ _id: patient_id }, { $set: { status: "cancelled" } })
+                                    patient_data.updateOne({ _id: patient_id }, { $set: { status: "booked" } })
                                     console.log(patient_data)
-
-                                    res.json({ code: 200, msg: "patient change status" })
+                                    res.json({ code: 200, msg: resp })
                                 }).catch((err) => {
+                                    console.log(err)
                                     res.json({ code: 400, msg: "something went wrong" })
 
                                 })
                         }
                     })
+                }).catch((err) => {
+                    res.send(err)
+                    console.log(err)
                 })
+            // })
+        } if (type == "0") {
+            var patientsDetails = await patient_data.findOne({ _id: patient_id })
+            DoctorFindForPatient(patient_id, async function (doctorData) {
+                if (doctorData) {
+                    const title1 = `${senderData.patient_name} has requested for Appointment.`
+                    const doctDetail = await Doct.findOne({ _id: doctorData.doctor_id })
+                    NotificationData(doctDetail, patientsDetails, title1, "healthworker", patientsDetails, async function (data) {
+                        if (data) {
+                            res.json({ code: 200, msg: "patient change status" })
+                        } else {
+                            res.json({ code: 400, msg: "something wrong" })
+
+                        }
+                    })
+                } else {
+                    res.json({ code: 200, msg: "patient change status" })
+
+                }
+
+            })
         }
+
     } else {
         res.json({ code: 400, msg: "something went wrong" })
     }
