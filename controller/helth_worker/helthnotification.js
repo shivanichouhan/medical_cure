@@ -13,8 +13,8 @@ function NotificationData(userdata, senderData, callback) {
     console.log(userdata.firebase_token, "tokennnnnnnnnnnn",senderData)
     var msg = {}
     var Notification = {}
-    msg.to ="esed0YcuSNmd5V4ndADDfo:APA91bHD20VlzC4HkDILzcBpbtmr-0e_Xv4SMp7Jf6dt_hzJjlBxyx7wYzUB_BEleVKnpBNroDoxi_hBBybOJypXO8CoFMtFpmOK1s7Q1dE7dqxcpXxeCH6IcA71PAKqSxM3ZKPrQOEx"
-    //  userdata.firebase_token
+    // msg.to ="esed0YcuSNmd5V4ndADDfo:APA91bHD20VlzC4HkDILzcBpbtmr-0e_Xv4SMp7Jf6dt_hzJjlBxyx7wYzUB_BEleVKnpBNroDoxi_hBBybOJypXO8CoFMtFpmOK1s7Q1dE7dqxcpXxeCH6IcA71PAKqSxM3ZKPrQOEx"
+    msg.to = userdata.firebase_token
     // "eJrtPtR0Rj6jaL5kDn_KGj:APA91bFDveVG4ZV4KOepK3F9T2Qzv_VVheeArUFgsOSbuu47c_aftUvLCt1CmC68KHgiDAT0CT1ZQ6-HRsaydL5QxuxB2bsb0lzGxln1ivAnGnL3rr59KoSkoV6YeH87wZB5wFa2Xjpu"
     msg.collapse_key = 'XXX'
     msg.data = { my_key: 'my value', contents: "abcv/" }
@@ -23,16 +23,6 @@ function NotificationData(userdata, senderData, callback) {
     msg.notification = Notification
     notification_firebase.NotificationForHelthworker(msg).then(async (resp) => {
         console.log(resp)
-        // var obj = {}
-        // obj.username = userdata.username
-        // obj.email = userdata.email
-        // obj.profile_pic = userdata.profile_pic
-        // obj.notification_text = `${senderData.patient_name} has requested for Appointment.`
-        // obj.patient_id = senderData._id
-        // obj.docId = userdata._id;
-        // obj.notificationFor = "Doctor"
-        // var notObj = new not(obj)
-        // var notData = await notObj.save()
         callback(true)
 
     }).catch((Err) => {
@@ -56,7 +46,6 @@ exports.helthNotification = async (req, res) => {
     } else if (!PatientData) {
         res.json({ code: 400, "msg": "Patient not find" })
     } else {
-        // array.push(helthworkerData)
         array.DcotorData =DcotorData
         array.PatientData = PatientData
         array.notification_type = "incoming_call"

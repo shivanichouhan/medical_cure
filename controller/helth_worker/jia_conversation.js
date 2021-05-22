@@ -29,9 +29,41 @@ const greeting_time = (today) => {
     }
 }
 
+
+function NotificationData(userdata, senderData, text, notifyType, body, callback) {
+    console.log(userdata.firebase_token, "tokennnnnnnnnnnn")
+    var msg = {}
+    var Notification = {}
+    msg.to = userdata.firebase_token
+    msg.collapse_key = 'XXX'
+    msg.data = { my_key: 'my value', contents: "abcv/" }
+    Notification.title = text
+    Notification.body = body
+    msg.notification = Notification
+    notification_firebase.Notification(msg).then(async (resp) => {
+        console.log(resp)
+        var obj = {}
+        obj.username = userdata.username
+        obj.email = userdata.email
+        obj.profile_pic = userdata.profile_pic
+        obj.notification_text = text
+        obj.patient_id = senderData._id
+        obj.docId = userdata._id;
+        obj.notificationFor = notifyType
+        var notObj = new not(obj)
+        var notData = await notObj.save()
+        callback(true)
+
+    }).catch((Err) => {
+        callback(false)
+    })
+}
+
 exports.greetings = async (req, res) => {
     const { patient_id, disease_name, desease_id, depart_name, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
+
     const depart_data = await desease_name.find({ department_name: depart_name }, { department_name: 1, disease_name: 1 })
     const update_desease = await patient_data.updateOne({ _id: patient_id }, { disease: disease_name })
     const my_question = await Jiaquestion.findOne({ _id: "609132894d19905b5761bf97" })
@@ -58,7 +90,9 @@ exports.greetings = async (req, res) => {
     const dats = ["1Week", "1Month", "2Month", "1Year"]
     details.problem_time = dats
     // details.disease = depart_data
-    res.json({ code: 200, msg: details })
+    NotificationData(patientsHelthWork, patients, "Notification From Jia", "healthworker", texts, async function (data) {
+        res.json({ code: 200, msg: details })
+    })
 }
 
 
@@ -66,6 +100,7 @@ exports.greetings1 = async (req, res) => {
     const { patient_id, disease_id, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
     const my_question = await Jiaquestion.findOne({ _id: "609132894d19905b5761bf97" })
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
 
     let greet = '';
     const details = {}
@@ -78,41 +113,56 @@ exports.greetings1 = async (req, res) => {
     details.text = texts;
     const dats = ["1Week", "1Month", "2Month", "1Year"]
     details.problem_time = dats
-    res.json({ code: 200, msg: details });
+    NotificationData(patientsHelthWork, patients, "Notification From Jia", "healthworker", texts, async function (data) {
+        res.json({ code: 200, msg: details });
+    })
 }
 
 exports.greetings2 = async (req, res) => {
     const { patient_id, disease_id, helthwork_id, week, depart_ment } = req.body;
     console.log(req.body);
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
+
     console.log(depart_data)
     const details = {}
 
     const texts = `Thanks for your reply. When does this ${depart_data.disease_name} affect you the most?`
     details.text = texts
-    res.json({ code: 200, msg: details })
+    NotificationData(patientsHelthWork, {}, "Notification From Jia", "healthworker", texts, async function (data) {
+
+        res.json({ code: 200, msg: details })
+    })
 }
 
 exports.greetings3 = async (req, res) => {
     const { patient_id, disease_id, helthwork_id, week, depart_ment } = req.body;
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
+
     if (depart_data) {
         const details = {}
 
         const texts = `Can you describe your ${depart_data.disease_name} problem?`
         details.text = texts
-        res.json({ code: 200, msg: details })
+        NotificationData(patientsHelthWork, {}, "Notification From Jia", "healthworker", texts, async function (data) {
+            res.json({ code: 200, msg: details })
+        })
     } else {
-        res.json({ code: 200, msg: "desease not defind" })
+        NotificationData(patientsHelthWork, {}, "Notification From Jia", "healthworker", "desease not defind", async function (data) {
+            res.json({ code: 200, msg: "desease not defind" })
+        })
 
     }
 }
 
 exports.greetings4 = async (req, res) => {
-    const { text_msg, disease_id, patient_id, department } = req.body;
+    const { text_msg, disease_id, patient_id, department, helthwork_id } = req.body;
     let greet = '';
     const patients = await patient_name.findOne({ _id: patient_id })
     const patient_status = await patient_data.updateOne({ _id: patient_id }, { $set: { disease_id: disease_id } })
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
 
     const my_question = await Jiaquestion.findOne({ _id: "6091395c2440c212efd0ea78" })
 
@@ -124,29 +174,40 @@ exports.greetings4 = async (req, res) => {
     }
     const texts = `${greet} ${patients.patient_name} ${my_question.text}  `
     details.text = texts
-    res.json({ code: 200, msg: details })
+    NotificationData(patientsHelthWork, {}, "Notification From Jia", "healthworker", texts, async function (data) {
+
+        res.json({ code: 200, msg: details })
+    })
 }
 
 exports.greetings5 = async (req, res) => {
-    const { text_msg, disease_id, patient_id, department } = req.body;
+    const { text_msg, disease_id, patient_id, department, helthwork_id } = req.body;
     const depart_data = await desease_name.findOne({ _id: disease_id }, { department_name: 1, disease_name: 1 })
+
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
+
     const details = {}
 
     const text_ms = `Still we are finding. the best ${depart_data.disease_name} doctor for you! `
     details.text = text_ms
-    res.json({ code: 200, msg: details })
+    NotificationData(patientsHelthWork, {}, "Notification From Jia", "healthworker", text_ms, async function (data) {
+
+        res.json({ code: 200, msg: details })
+    })
 }
 
 exports.doctor_sagastion = async (req, res) => {
-    const { text_msg, disease_id, patient_id, department_name } = req.body;
+    const { text_msg, disease_id, patient_id,helthwork_id, department_name } = req.body;
     const doctor_find = await Doctor_data.findOne({ _id: "6068453d8a864506bebe73f9" });
     const my_question = await Jiaquestion.findOne({ _id: "60913aad10daa714512132e4" })
+    const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
 
     const details = {}
     if (doctor_find) {
         const text_data = `Dr. ${doctor_find.username} ${my_question.text}`
         details.doctor_detail = doctor_find
         details.text = text_data;
+        
     } else {
         details.text = my_question.text
         details.doctor_detail = {}
@@ -462,34 +523,7 @@ exports.chatAccepted_by_Doctor = (req, res) => {
 }
 
 
-function NotificationData(userdata, senderData, text, notifyType, body, callback) {
-    console.log(userdata.firebase_token, "tokennnnnnnnnnnn")
-    var msg = {}
-    var Notification = {}
-    msg.to = userdata.firebase_token
-    msg.collapse_key = 'XXX'
-    msg.data = { my_key: 'my value', contents: "abcv/" }
-    Notification.title = text
-    Notification.body = body
-    msg.notification = Notification
-    notification_firebase.Notification(msg).then(async (resp) => {
-        console.log(resp)
-        var obj = {}
-        obj.username = userdata.username
-        obj.email = userdata.email
-        obj.profile_pic = userdata.profile_pic
-        obj.notification_text = text
-        obj.patient_id = senderData._id
-        obj.docId = userdata._id;
-        obj.notificationFor = notifyType
-        var notObj = new not(obj)
-        var notData = await notObj.save()
-        callback(true)
 
-    }).catch((Err) => {
-        callback(false)
-    })
-}
 
 
 function DoctorFindForPatient(patient_id, callback) {
@@ -592,7 +626,6 @@ exports.accept_patient = async (req, res) => {
                     res.send(err)
                     console.log(err)
                 })
-            // })
         } if (type == "0") {
             var patientsDetails = await patient_data.findOne({ _id: patient_id })
             DoctorFindForPatient(patient_id, async function (doctorData) {
