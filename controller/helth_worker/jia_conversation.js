@@ -59,6 +59,11 @@ function NotificationData(userdata, senderData, text, notifyType, body, callback
     })
 }
 
+
+
+
+
+
 exports.greetings = async (req, res) => {
     const { patient_id, disease_name, desease_id, depart_name, helthwork_id } = req.body;
     const patients = await patient_name.findOne({ _id: patient_id })
@@ -200,6 +205,7 @@ exports.doctor_sagastion = async (req, res) => {
     const { text_msg, disease_id, patient_id,helthwork_id, department_name } = req.body;
     const doctor_find = await Doctor_data.findOne({ _id: "6068453d8a864506bebe73f9" });
     const my_question = await Jiaquestion.findOne({ _id: "60913aad10daa714512132e4" })
+
     const patientsHelthWork = await helth_workers.findOne({ _id: helthwork_id })
 
     const details = {}

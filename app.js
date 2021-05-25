@@ -78,6 +78,7 @@ const helpline_specelize = require("./routes/helpLines/helpline_specelization")
 const helpline_patient =require("./routes/helpLines/patient_ragister")
 
 //user routes
+const Faq = require("./routes/helth_worker/faq")
 const payment = require('./routes/helth_worker/payment')
 const product = require('./routes/helth_worker/products');
 const Users = require('./routes/helth_worker/users')
@@ -207,6 +208,7 @@ app.use("/api",helpline_specelize)
 app.use("/api",helpline_patient)
 
 //helthworker middleware
+app.use("/api",Faq)
 app.use("/api", Feedbacks)
 app.use('/api', dashboard_img)
 app.use('/api', product)
