@@ -35,6 +35,7 @@ function NotificationData(userdata, senderData, callback) {
 exports.helthNotification = async (req, res) => {
     const { helthworker_id, doctor_id, patient_id, room_id } = req.body
     const array = {}
+    console.log(req.body,"jhjhjjhjhjh")
     const helthworkerData = await helthworkers.findOne({ _id: helthworker_id })
     const DcotorData = await Doct.findOne({ _id: doctor_id },{username:1,_id:1,Specialization:1,profile_pic:1})
     const PatientData = await Patient.findOne({ _id: patient_id },{patient_name:1,_id:1,disease:1,patient_img:1,disease_id:1})

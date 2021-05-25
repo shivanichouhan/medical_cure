@@ -807,70 +807,84 @@ exports.doctor_find = async (req, res) => {
                                             } else {
                                                 const find_doctorD2_check = drD2Check[0]
                                                 await DoctorSentMsgToDoctor(drD2Check, find_doctorD2_check, patient_id, function (doctorresp) {
-                                                    res.send(doctorresp)
-                                                })
+                                                    NotificationData(doctorresp, patient_data, function (data) {
+                                                        res.send(doctorresp)
+                                                    })                                                 })
                                             }
 
 
                                         } else {
                                             const find_doctorB3_check = drB3Check[0]
                                             await DoctorSentMsgToDoctor(drB3Check, find_doctorB3_check, patient_id, function (doctorresp) {
-                                                res.send(doctorresp)
-                                            })
+                                                NotificationData(doctorresp, patient_data, function (data) {
+                                                    res.send(doctorresp)
+                                                }) 
+                                                                                        })
                                         }
 
 
                                     } else {
                                         const find_doctorC3_check = drC3Check[0]
                                         await DoctorSentMsgToDoctor(drC3Check, find_doctorC3_check, patient_id, function (doctorresp) {
-                                            res.send(doctorresp)
-                                        })
+                                            NotificationData(doctorresp, patient_data, function (data) {
+                                                res.send(doctorresp)
+                                            })                                         })
 
                                     }
                                 } else {
                                     const find_doctorD3_check = drD3Check[0]
                                     await DoctorSentMsgToDoctor(drD3Check, find_doctorD3_check, patient_id, function (doctorresp) {
-                                        res.send(doctorresp)
-                                    })
+                                        NotificationData(doctorresp, patient_data, function (data) {
+                                            res.send(doctorresp)
+                                        })                                     })
                                 }
 
                             } else {
                                 const find_doctorb4_check = drB4Check[0]
                                 await DoctorSentMsgToDoctor(drB4Check, find_doctorb4_check, patient_id, function (doctorresp) {
-                                    res.send(doctorresp)
-                                })
+                                    NotificationData(doctorresp, patient_data, function (data) {
+                                        res.send(doctorresp)
+                                    })                                 })
                             }
                         } else {
                             const find_doctorC4_check = drC4Check[0]
                             await DoctorSentMsgToDoctor(drC4Check, find_doctorC4_check, patient_id, function (doctorresp) {
-                                res.send(doctorresp)
-                            })
+                                NotificationData(doctorresp, patient_data, function (data) {
+                                    res.send(doctorresp)
+                                }) 
+                                                        })
                         }
                     } else {
                         const find_doctor_D4Check = drD4Check[0]
                         await DoctorSentMsgToDoctor(drD4Check, find_doctor_D4Check, patient_id, function (doctorresp) {
-                            res.send(doctorresp)
-                        })
+                            NotificationData(doctorresp, patient_data, function (data) {
+                                res.send(doctorresp)
+                            }) 
+                                                })
                     }
 
                 } else {
                     const find_doctor_drB5Check = drB5Check[0]
                     await DoctorSentMsgToDoctor(drB5Check, find_doctor_drB5Check, patient_id, function (doctorresp) {
-                        res.send(doctorresp)
-                    })
+                        NotificationData(doctorresp, patient_data, function (data) {
+                            res.send(doctorresp)
+                        })                     })
                 }
             } else {
                 const find_doctor_drC5Check = drC5Check[0]
                 await DoctorSentMsgToDoctor(drC5Check, find_doctor_drC5Check, patient_id, function (doctorresp) {
-                    res.send(doctorresp)
-                })
+                    NotificationData(doctorresp, patient_data, function (data) {
+                        res.send(doctorresp)
+                    })                 })
                 // res.json({ "dr": "dr find in a4", "code": "A category", status: dr3Check })
             }
         } else {
             const find_doctor_drCheck = drCheck[0]
             await DoctorSentMsgToDoctor(drCheck, find_doctor_drCheck, patient_id, function (doctorresp) {
-                res.send(doctorresp)
-            })
+                NotificationData(doctorresp, patient_data, function (data) {
+                    res.send(doctorresp)
+                }) 
+                        })
         }
 
     } else if (e_category.includes(depname)) {
