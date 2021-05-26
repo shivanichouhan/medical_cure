@@ -25,79 +25,78 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.clinic_otp = async (req, res) => {
     var str = req.body.mobile
-    var result = await User.findOne({ mobile: str })
-    const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-    if (result) {
-        var result = await User.updateOne({ mobile: str },{$set:{otp:OTP}})
-        otp.send_otp(str, OTP).then((resp) => {
-            res.json({
-                code: 200,
-                otp: `${OTP}`,
-                msg: "OTP sent successfully"
-            })
-        }).catch((err) => {
-            res.json({
-                code: 400,
-                otp: `${OTP}`,
-                msg: "something went wrong"
-            })
-        })
-    } else {
-        var someuser = new User({
-            mobile: req.body.mobile,
-            otp: OTP
-        })
-        someuser.save()
-            .then((resp) => {
-                res.json({
-                    code: 200,
-                    otp: `${OTP}`,
-                    msg: "OTP sent successfully"
+    // var result = await User.findOne({ mobile: str })
+    // if (result) {
+    //     var result = await User.updateOne({ mobile: str }, { $set: { otp: OTP } })
+    //     otp.send_otp(str, OTP).then((resp) => {
+    //         res.json({
+    //             code: 200,
+    //             otp: `${OTP}`,
+    //             msg: "OTP sent successfully"
+    //         })
+    //     }).catch((err) => {
+    //         res.json({
+    //             code: 400,
+    //             otp: `${OTP}`,
+    //             msg: "something went wrong"
+    //         })
+    //     })
+    // } else {
+    //     var someuser = new User({
+    //         mobile: req.body.mobile,
+    //         otp: OTP
+    //     })
+    //     someuser.save()
+    //         .then((resp) => {
+    //             res.json({
+    //                 code: 200,
+    //                 otp: `${OTP}`,
+    //                 msg: "OTP sent successfully"
+    //             })
+    //         }).catch((err) => {
+    //             res.json({
+    //                 code: 400,
+    //                 otp: `${OTP}`,
+    //                 msg: "something went wrong"
+    //             })
+    //         })
+    // }
+
+    User.findOne({ _id: req.params.userId }).exec((err, resp) => {
+        if (err) {
+            res.json({ code: 400, msg: 'data not found' })
+        }
+        else {
+            if (resp.register == 1) {
+
+            }
+            else {
+                const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+                otp.send_otp(str, OTP).then((resp) => {
+                    console.log(req.params.userId)
+                    User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
+                        res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
+
+                    }).catch((err) => {
+                        res.json({ code: 400, msg: 'otp not set in user' })
+                    })
+                }).catch((err) => {
+                    res.json({ code: 400, msg: 'otp not sent' })
                 })
-            }).catch((err) => {
-                res.json({
-                    code: 400,
-                    otp: `${OTP}`,
-                    msg: "something went wrong"
-                })
-            })
-        // }
-
-        // User.findOne({ _id: req.params.userId }).exec((err, resp) => {
-        //     if (err) {
-        //         res.json({ code: 400, msg: 'data not found' })
-        //     }
-        //     else {
-        //         if (resp.register == 1) {
-
-        //         }
-        //         else {
-        //             const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-        //             otp.send_otp(str, OTP).then((resp) => {
-        //                 console.log(req.params.userId)
-        //                 User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
-        //                     res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
-
-        //                 }).catch((err) => {
-        //                     res.json({ code: 400, msg: 'otp not set in user' })
-        //                 })
-        //             }).catch((err) => {
-        //                 res.json({ code: 400, msg: 'otp not sent' })
-        //             })
-        //         }
-    }
-    // })
+            }
+        }
+    })
 
 }
 
 exports.clinic_otp_verify = async (req, res) => {
-    const {firebase_token}=req.body
+    const { firebase_token } = req.body
     var result = await User.findOne({ mobile: req.body.mobile })
     if (result) {
         console.log(req.body)
         if (result.otp == req.body.otp) {
             console.log("otp confirm")
-            User.findOneAndUpdate({ mobile: req.body.mobile }, { $set: { mobile_verfiy: 1, otp: '',firebase_token:firebase_token } },
+            User.findOneAndUpdate({ mobile: req.body.mobile }, { $set: { mobile_verfiy: 1, otp: '', firebase_token: firebase_token } },
                 (err, resp) => {
                     if (err) {
                         res.json({ code: 400, msg: 'mobile no not verfiy' })
@@ -258,7 +257,7 @@ exports.updatePass = async (req, res) => {
 exports.normal_signup = async (req, res) => {
     // try {
     console.log(req.body)
-    const { user_name, email,firebase_token, password, con_password } = req.body;
+    const { user_name, email, firebase_token, password, con_password } = req.body;
     // if (password == con_password) {
     const hashedPassword = await hashPassword(password)
     const data_check = await User.findOne({ email: email })
@@ -267,7 +266,7 @@ exports.normal_signup = async (req, res) => {
             username: user_name,
             email: email,
             password: hashedPassword,
-            firebase_token:firebase_token
+            firebase_token: firebase_token
 
         })
         datas.save()
@@ -284,8 +283,8 @@ exports.normal_signup = async (req, res) => {
 
 exports.normal_signin = async (req, res) => {
 
-    const { email, password ,firebase_token} = req.body
-    console.log(email, password,firebase_token)
+    const { email, password, firebase_token } = req.body
+    console.log(email, password, firebase_token)
     const user = await User.findOne({ email: email })
     console.log(user)
     if (!user) {
@@ -303,7 +302,7 @@ exports.normal_signin = async (req, res) => {
         else {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
             console.log(token)
-            const ss = await User.updateOne({ _id: user._id},{$set:{ bearer_token: token ,firebase_token:firebase_token}})
+            const ss = await User.updateOne({ _id: user._id }, { $set: { bearer_token: token, firebase_token: firebase_token } })
             user.bearer_token = token
             res.json({ code: 200, msg: user })
         }
@@ -323,9 +322,9 @@ exports.clinic_reg = async (req, res) => {
 
     const { username, email, mobile, status, health_worker_course, experience,
         state, city, pincode, address,
-        dob, gender, blood_group, card_name,card_no,
+        dob, gender, blood_group, card_name, card_no,
         account_no, ifsc_code,
-        phone,firebase_token
+        phone, firebase_token
 
     } = req.body
 
@@ -368,7 +367,7 @@ exports.clinic_reg = async (req, res) => {
     } if (mobile) {
         obj.mobile = mobile
     }
-    if(firebase_token){
+    if (firebase_token) {
         obj.firebase_token = firebase_token
     }
 
@@ -397,7 +396,7 @@ exports.clinic_reg = async (req, res) => {
         obj.blood_group = blood_group
     } if (card_name) {
         obj.card_name = card_name
-    } 
+    }
     if (card_no) {
         obj.card_no = card_no
     }
@@ -476,14 +475,14 @@ exports.edit_profile = (req, res) => {
 }
 
 exports.gmail_signin = (req, res) => {
-    const { email, gmailId,firebase_token, username, photo, login_type } = req.body
+    const { email, gmailId, firebase_token, username, photo, login_type } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
         User.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
-                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId,firebase_token:firebase_token } }, (err, userUpdate) => {
+                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId, firebase_token: firebase_token } }, (err, userUpdate) => {
                         if (err) {
                             res.json(err)
                         }
@@ -500,7 +499,7 @@ exports.gmail_signin = (req, res) => {
                         gmailId: req.body.gmailId,
                         username: username,
                         photo: photo,
-                        firebase_token:firebase_token
+                        firebase_token: firebase_token
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
@@ -523,7 +522,7 @@ exports.gmail_signin = (req, res) => {
             .then((resp) => {
                 console.log(resp)
                 if (resp) {
-                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId,firebase_token:firebase_token } }, (err, userUpdate) => {
+                    User.updateOne({ _id: resp._id }, { $set: { gmailId: gmailId, firebase_token: firebase_token } }, (err, userUpdate) => {
                         if (err) {
                             res.json(err)
                         }
@@ -540,7 +539,7 @@ exports.gmail_signin = (req, res) => {
                         gmailId: req.body.gmailId,
                         username: username,
                         photo: photo,
-                        firebase_token:firebase_token
+                        firebase_token: firebase_token
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
