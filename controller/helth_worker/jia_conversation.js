@@ -686,6 +686,7 @@ exports.accepted_chat_status = (req, res) => {
 
 exports.onGoing_patients = (req, res) => {
     const { helth_worker_id } = req.body
+    console.log(req.body)
     const arr = []
     patient_data.find({ $and: [{ status: "ongoing", health_worker_id: helth_worker_id }] })
         .exec(async (err, List) => {
