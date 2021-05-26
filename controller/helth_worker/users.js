@@ -25,68 +25,67 @@ async function validatePassword(plainPassword, hashedPassword) {
 
 exports.clinic_otp = async (req, res) => {
     var str = req.body.mobile
-    var result = await User.findOne({ mobile: str })
-    const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-    if (result) {
-        var result = await User.updateOne({ mobile: str },{$set:{otp:OTP}})
-        otp.send_otp(str, OTP).then((resp) => {
-            res.json({
-                code: 200,
-                otp: `${OTP}`,
-                msg: "OTP sent successfully"
-            })
-        }).catch((err) => {
-            res.json({
-                code: 400,
-                otp: `${OTP}`,
-                msg: "something went wrong"
-            })
-        })
-    } else {
-        var someuser = new User({
-            mobile: req.body.mobile,
-            otp: OTP
-        })
-        someuser.save()
-            .then((resp) => {
-                res.json({
-                    code: 200,
-                    otp: `${OTP}`,
-                    msg: "OTP sent successfully"
-                })
-            }).catch((err) => {
-                res.json({
-                    code: 400,
-                    otp: `${OTP}`,
-                    msg: "something went wrong"
-                })
-            })
+    // var result = await User.findOne({ mobile: str })
+    // const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+    // if (result) {
+    //     var result = await User.updateOne({ mobile: str },{$set:{otp:OTP}})
+    //     otp.send_otp(str, OTP).then((resp) => {
+    //         res.json({
+    //             code: 200,
+    //             otp: `${OTP}`,
+    //             msg: "OTP sent successfully"
+    //         })
+    //     }).catch((err) => {
+    //         res.json({
+    //             code: 400,
+    //             otp: `${OTP}`,
+    //             msg: "something went wrong"
+    //         })
+    //     })
+    // } else {
+    //     var someuser = new User({
+    //         mobile: req.body.mobile,
+    //         otp: OTP
+    //     })
+    //     someuser.save()
+    //         .then((resp) => {
+    //             res.json({
+    //                 code: 200,
+    //                 otp: `${OTP}`,
+    //                 msg: "OTP sent successfully"
+    //             })
+    //         }).catch((err) => {
+    //             res.json({
+    //                 code: 400,
+    //                 otp: `${OTP}`,
+    //                 msg: "something went wrong"
+    //             })
+    //         })
         // }
+    console.log(req.body)
+         User.findOne({ _id: req.params.userId }).exec((err, resp) => {
+             if (err) {
+                 res.json({ code: 400, msg: 'data not found' })
+             }
+             else {
+                 if (resp.register == "1") {
+             }
+                 else {
+                     const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+                     otp.send_otp(str, OTP).then((resp) => {
+                         console.log(req.params.userId)
+                        User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
+                             res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
 
-        // User.findOne({ _id: req.params.userId }).exec((err, resp) => {
-        //     if (err) {
-        //         res.json({ code: 400, msg: 'data not found' })
-        //     }
-        //     else {
-        //         if (resp.register == 1) {
-
-        //         }
-        //         else {
-        //             const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-        //             otp.send_otp(str, OTP).then((resp) => {
-        //                 console.log(req.params.userId)
-        //                 User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
-        //                     res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
-
-        //                 }).catch((err) => {
-        //                     res.json({ code: 400, msg: 'otp not set in user' })
-        //                 })
-        //             }).catch((err) => {
-        //                 res.json({ code: 400, msg: 'otp not sent' })
-        //             })
-        //         }
+                         }).catch((err) => {
+                             res.json({ code: 400, msg: 'otp not set in user' })
+                         })
+                     }).catch((err) => {
+                         res.json({ code: 400, msg: 'otp not sent' })
+                     })
+                 }
     }
-    // })
+     })
 
 }
 

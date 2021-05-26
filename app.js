@@ -392,10 +392,12 @@ console.log("shivani socket connected")
 io.on('connection', function (socket) {
   console.log("shivani socket is connected")
   console.log('User Conncetion');
+ 
   socket.on('connect user', async function (user) {
     console.log(user, "user details");
     io.emit('connect user', user);
     console.log(user, "user fffffff   details");
+    console.log(user)
     socket.join(user.room_id);
     console.log('check 2', socket.connected);
     console.log(socket.id, "this is connected iiiii uuuuusssseeeerrr ")
@@ -403,6 +405,7 @@ io.on('connection', function (socket) {
 
     // var clients = io.sockets.clients('chatroom1');
     // console.log(clients, "connected user on room......................")
+    
     var clientsList = io.sockets.adapter.rooms["chatroom1"];
     var numClients = clientsList;
     console.log(numClients, "shivaniiihhygyggiiiiiiiiiiiiiiiiiiiiiii")
@@ -466,7 +469,10 @@ io.on('connection', function (socket) {
   const not = require("./model/Doctor/notification")
   var notification_firebase = require("./firebase_notification")
   var helth_workers = require("./model/helth_worker/users")
-  //prescription end path
+
+ //prescription end path
+
+ 
 
   socket.on("prescription", async function (patDetail) {
     console.log('prescription', patDetail)
