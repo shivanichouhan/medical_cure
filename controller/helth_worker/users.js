@@ -61,14 +61,13 @@ exports.clinic_otp = async (req, res) => {
     //             })
     //         })
     // }
-
+    console.log(req.body)
     User.findOne({ _id: req.params.userId }).exec((err, resp) => {
         if (err) {
             res.json({ code: 400, msg: 'data not found' })
         }
         else {
-            if (resp.register == 1) {
-
+            if (resp.register == "1") {
             }
             else {
                 const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
