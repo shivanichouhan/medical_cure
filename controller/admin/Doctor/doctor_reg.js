@@ -8,6 +8,17 @@ async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
 }
 
+exports.docInfod = (req,res)=>{
+    docReg.find({_id:req.params.docId}).exec((err,resp)=>{
+        if(err){
+            res.send({error:'doctor details not get'})
+            console.log(err)
+        }else{
+            res.send(resp)
+        }
+    })
+}
+
 exports.doc_signup = async(req,res)=>{
     console.log(req.body)
     const { first_name,Specialization,mobile_number,email,password} = req.body;
@@ -133,14 +144,96 @@ exports.list_doctor =(req,res)=>{
     })
 }
 
+// if (req.files.clinic) {
+//     console.log(req.files.clinic)
+//     for (row of req.files.clinic) {
+//         var p = row.path
+//     }
+//     const path = p
+//     cloud.Clinic(path).then((resp) => {
+//         fs.unlinkSync(path)
+//         console.log(resp)
+//         User.updateOne({ 'clinic_img.imgId': req.body.imgID }, { $set: { "clinic_img.$.url": resp.url, "clinic_img.$.imgId": resp.imgId } })
+//             .then((resPatient) => {
+//                 res.json({ code: 200, msg: 'user details update with clinic image' })
+//             }).catch((error) => {
+//                 res.json({ code: 400, msg: 'clinic image not update' })
+//             })
+//     }).catch((err) => {
+//         res.send({ code: 400, msg: 'image url not create' })
+//     })
+// }
+
 exports.edit_doctor =(req,res)=>{
     docReg.updateOne({_id:req.params.doctorId},req.body)
-    .exec((err,resp)=>{
+    .exec(async(err,resp)=>{
         if(err){
             res.json(err)
         }
         else{
             if(req.file){
+
+                if(Object.entries(req.files).length != 0){
+
+                    var Certificate = []
+                    if(req.files.certificate_Img){
+                      const doc_cer = req.files.certificate_Img
+                      const p1 =doc_cer[0].path
+                      const docreg = async (path)=> await cloud.doctor_reg(path)
+                      const url_cer = await docreg(p1)
+                      Certificate.push(url_cer)
+                      fs.unlinkSync(p1)
+                    }
+               
+                   const lic_front = req.files.License_img_front_side
+                   const lic_back = req.files.License_img_back_side
+                   const identity_front = req.files.identity_front_side_img
+                   const identity_back = req.files.identity_back_side_img
+   
+               
+                   const front_lic = async (path)=> await cloud.licence_front(path)
+                   const back_lic = async (path)=> await cloud.licence_back(path)
+                   const identiy_front = async (path)=> await cloud.iden_front(path)
+                   const identiy_back = async (path)=> await cloud.iden_back(path)
+   
+               
+                   const p2 =lic_front[0].path
+                   const p3 =lic_back[0].path
+                   const p5 =identity_front[0].path
+                   const p6 =identity_back[0].path
+                   
+             
+                   const lice_front = await front_lic(p2)
+                   const lice_back = await back_lic(p3)
+                   const iden_front = await identiy_front(p5)               
+                   const iden_back = await identiy_back(p6)                              
+   
+                   console.log(Certificate,lice_front,lice_back,iden_front,iden_back)
+               
+                   fs.unlinkSync(p2)
+                   fs.unlinkSync(p3)
+                   fs.unlinkSync(p5)
+                   fs.unlinkSync(p6)
+   
+                   docReg.findByIdAndUpdate(req.params.doctorId,{$push:{
+                       License_img_front_side:lice_front,
+                       License_img_back_side:lice_back,
+                       identity_front_side_img:iden_front,
+                       identity_back_side_img:iden_back,
+                       certificate_Img:Certificate
+                   }}).exec((err,resDoc)=>{
+                       if(err){
+                           res.send({code:400,msg:'images not add in doctor'})
+                       }
+                       else{
+                           res.send({code:200,data:resDoc})
+                       }
+                   })
+                }
+                else{
+                    console.log('file not come')
+                    res.send({code:200,data:regDoc})
+                }
 
             }   
             else{
