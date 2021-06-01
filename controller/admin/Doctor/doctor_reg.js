@@ -169,10 +169,31 @@ exports.list_doctor = (req, res) => {
             res.send('doctor list not found')
         }
         else {
+            console.log(doctor_list.length)
+
             res.send(doctor_list)
         }
     })
 }
+
+
+exports.pagination_list_doctor = (req, res) => {
+    var _pageNumber = req.body.pageNumber,
+        _pageSize = 10;
+    docReg.find({ register: 1 })
+        .skip(_pageNumber > 0 ? ((_pageNumber - 1) * _pageSize) : 0)
+        .limit(_pageSize)
+        .exec((err, doctor_list) => {
+            if (err) {
+                res.send('doctor list not found')
+            }
+            else {
+                console.log(doctor_list.length)
+                res.send(doctor_list)
+            }
+        })
+}
+
 
 // if (req.files.clinic) {
 //     console.log(req.files.clinic)
