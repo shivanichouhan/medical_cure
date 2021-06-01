@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const{ reg_doctor,list_doctor,remove_doctor,status_manage,doc_signup,docInfod,edit_doctor } = require("../../../controller/admin/Doctor/doctor_reg")
+const{ reg_doctor,list_doctor,doctorByName,remove_doctor,status_manage,doc_signup,docInfod,edit_doctor } = require("../../../controller/admin/Doctor/doctor_reg")
 const{ isAdmin,checkLogin } = require("../../../auth")
 const upload = require("../../../handler/multer")
 
@@ -11,7 +11,8 @@ router.post("/admin/doctor_registration",upload.fields([{name:'certificate_Img'}
 router.put("/admin/doctor_edit_profile/:doctorId",upload.fields([{name:'certificate_Img'},{name:'License_img_front_side'},{name:'License_img_back_side'},{name:'identity_front_side_img'},{name:'identity_back_side_img'}]),edit_doctor)
 router.delete("/admin/doctor_remove/:adminId",remove_doctor)
 router.put("/admin/doctor_manage_status",status_manage)
+router.post("/admin/doctor_by_search",doctorByName)
 
-
+// http://18.220.239.106
 module.exports = router;
 

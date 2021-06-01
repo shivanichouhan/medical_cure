@@ -14,6 +14,8 @@ var responce_time = require("../../model/Doctor/responce_time")
 const rating = require("../../model/Doctor/rating")
 
 
+
+
 const cron = require('node-cron');
 
 cron.schedule('15 17 * * *',async function () {

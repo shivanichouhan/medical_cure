@@ -30,6 +30,8 @@ exports.doctor_info = (req, res) => {
         })
 }
 
+
+
 exports.reg_from = async (req, res) => {
     var data = _.extend(req.body, { register: "1" })
     console.log(data)
