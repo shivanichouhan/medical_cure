@@ -106,7 +106,7 @@ exports.doctor_reg = async (req, res) => {
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     console.log(req.body)
 
-    const { user_name, email, password } = req.body;
+    const { user_name, email, password,firebase_token } = req.body;
     console.log(email)
     const hashedPassword = await hashPassword(password)
     const data_check = await doc.findOne({ email: email })
@@ -117,6 +117,7 @@ exports.doctor_reg = async (req, res) => {
             username: user_name,
             email: email,
             password: hashedPassword,
+            firebase_token:firebase_token
 
         })
         datas.user_id = datas._id
