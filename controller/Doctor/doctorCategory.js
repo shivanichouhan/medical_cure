@@ -32,10 +32,21 @@ exports.createSubCategory = (req, res) => {
 
 }
 
+exports.doctSubCategories = (req, res) => {
+  subCategories.find({}, { subCategory: 1, _id: 1, createdAt: 1, updatedAt: 1 })
+  .then((resp) => {
+    res.send(resp)
+  }).catch((err) => {
+    res.send(err)
+  })
+}
+
 exports.all_category = async (req, res) => {
-  doctor_category.find({},{category:1,_id:1,createdAt:1,updatedAt:1})
+  doctor_category.find({}, { category: 1, _id: 1, createdAt: 1, updatedAt: 1 })
     .then((resp) => {
       res.send(resp)
+    }).catch((err) => {
+      res.send(err)
     })
 }
 
