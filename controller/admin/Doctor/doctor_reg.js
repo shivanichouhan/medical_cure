@@ -21,11 +21,17 @@ exports.docInfod = (req, res) => {
     })
 }
 
+// if(req.query.genralKey){
+//     // findQuery ={$and:[{customer_id:custId}, {$or:[{name:{$regex:req.query.genralKey}}, {rollno:{$regex:req.query.genralKey}},{enroll_number:{$regex:req.query.genralKey}} ]} ]}
+//     findQuery ={$and:[{customer_id:custId}, {$or:[{name:{$regex:req.query.genralKey}}, {rollno:req.query.genralKey},{enroll_number:req.query.genralKey} ]} ]}
+
+// }
+
 exports.doctorByName = (req, res) => {
     const { search } = req.body
     if (search) {
         var blog_name = new RegExp('^' + search, 'i');
-        var findQuery = { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }
+        var findQuery = { $and: [{ register: 1, adminVerified: 1 }, { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }] }
         docReg.find(findQuery).exec((err, resp) => {
             if (err) {
                 res.send({ error: 'doctor details not get' })
@@ -38,6 +44,27 @@ exports.doctorByName = (req, res) => {
         res.send("something went wrong")
     }
 }
+
+
+exports.unverifiedDoctorWithSearch = (req, res) => {
+    const { search } = req.body
+    if (search) {
+        var blog_name = new RegExp('^' + search, 'i');
+        var findQuery = { $and: [{ register: 1}, { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }] }
+        docReg.find(findQuery).exec((err, resp) => {
+            if (err) {
+                res.send({ error: 'doctor details not get' })
+                console.log(err)
+            } else {
+                res.send(resp)
+            }
+        })
+    } else {
+        res.send("something went wrong")
+    }
+}
+
+
 
 exports.doc_signup = async (req, res) => {
     console.log(req.body)
@@ -337,7 +364,7 @@ exports.edit_doctor = (req, res) => {
 exports.DoctorListForVarify = (req, res) => {
     var _pageNumber = req.body.pageNumber,
         _pageSize = 10;
-    docReg.find({ register: 1  })
+    docReg.find({ register: 1 })
         .skip(_pageNumber > 0 ? ((_pageNumber - 1) * _pageSize) : 0)
         .limit(_pageSize)
         .exec((err, doctor_list) => {

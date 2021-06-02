@@ -4,7 +4,8 @@ const { reg_doctor, list_doctor,
      pagination_list_doctor, doctorByName,
       remove_doctor, status_manage, doc_signup,
        docInfod, edit_doctor
-       ,DoctorListForVarify
+       ,DoctorListForVarify,
+       unverifiedDoctorWithSearch
      } = require("../../../controller/admin/Doctor/doctor_reg")
 
 
@@ -20,7 +21,9 @@ router.put("/admin/doctor_edit_profile/:doctorId", upload.fields([{ name: 'certi
 router.delete("/admin/doctor_remove/:adminId", remove_doctor)
 router.put("/admin/doctor_manage_status", status_manage)
 router.post("/admin/doctor_by_search", doctorByName)
+
 router.post("/admin/doctor_application_list",DoctorListForVarify)
+router.post("/admin/unverified_doctor_bysearch",unverifiedDoctorWithSearch)
 
 // http://18.220.239.106
 module.exports = router;
