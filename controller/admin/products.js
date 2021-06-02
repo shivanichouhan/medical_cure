@@ -1,4 +1,5 @@
 const product = require('../../model/helth_worker/products');
+const images = require("../../model/Doctor/onboard")
 const cloudenary = require('cloudinary').v2
 
 cloudenary.config({
@@ -32,15 +33,56 @@ exports.add_image = (req, res) => {
                 // product
             }
         )
-    }else{
+    } else {
         res.send("you dint choose image file")
     }
 
 }
 
-exports.image_data =(req,res)=>{
+exports.image_data = (req, res) => {
     product.find()
-    .then((resp)=>{
-        res.json({code:200,msg:resp})
-    })
+        .then((resp) => {
+            res.json({ code: 200, msg: resp })
+        })
+}
+
+
+exports.onboard_api = (req, res) => {
+    const { title, summery } = req.body
+    if (req.file) {
+        const uniqueFilename = new Date().toISOString()
+        const path = req.file.path
+        cloudenary.uploader.upload(
+            path,
+            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            function (err, image) {
+                if (err) console.log(err)
+                console.log('file uploaded to Cloudinary')
+                const fs = require('fs')
+                fs.unlinkSync(path)
+                const data = new images({
+                    title: title,
+                    summery: summery,
+                    image: image.secure_url
+                })
+                data.save()
+                    .then((resp) => {
+                        res.json({ code: 200, msg: "data save" })
+                    })
+                // product
+            }
+        )
+    } else {
+        res.send("you dint choose image file")
+    }
+}
+
+exports.onboard_apiList = (req, res) => {
+    images.find()
+        .then((resp) => {
+            res.json({ code: 200, msg: resp })
+        }).catch((err) => {
+            res.json({ code: 400, msg: "something went wrong" })
+
+        })
 }
