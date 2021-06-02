@@ -181,7 +181,7 @@ const EventSchema = new mongoose.Schema(
             default: " "
         },
         otp_verify: {
-            type: Number.toString,
+            type: Number,
             default: " "
 
         },
@@ -226,9 +226,6 @@ const EventSchema = new mongoose.Schema(
         },
         otp: {
             type: String
-        },
-        otp_verify: {
-            type: Number
         }, fees: {
             type: Number,
             default: 200
@@ -247,13 +244,16 @@ const EventSchema = new mongoose.Schema(
             default: 0
         }, algorithm_index: {
             type: Number,
-            default :0
-        },total_cases :{
-            type:Number,
-            default:0
-        },patient_status:{
-            type:String,
-            default:"0"
+            default: 0
+        }, total_cases: {
+            type: Number,
+            default: 0
+        }, patient_status: {
+            type: String,
+            default: "0"
+        }, adminVerified: {
+            type: String,
+            default: "0"
         }
     },
     {

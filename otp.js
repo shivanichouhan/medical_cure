@@ -32,13 +32,111 @@ function otp(){
         console.log('not match')
         reject('error')
       }
-      
-      // if(resp.raw_body == 'ERR: INVALID ROUTE ID SUPPLIED.'){
-      // console.log('reject')
-      //   reject('error')
-      // }else{
-      // resolve('success')
-      // }
+      });
+    })  
+  }
+
+  this.Pending_msg = (str,OTP)=>{
+    console.log(str)
+    console.log(OTP)
+      return new Promise((resolve,reject)=>{
+      var unirest = require('unirest');
+      var req = unirest("GET", "http://byebyesms.com/app/smsapi/index.php?");
+      req.query({
+      "key": "46041D0DD2BF5B",
+      "campaign":"10072",
+      "routeid": "7",
+      "type":"text",
+      "contacts": `${str}`,
+      "senderid": "XPCURE",
+      "msg": `Dear Doctor, Your Application on XpressCure portal is pending. Please check you email for further details. Thank You.`,
+      });
+
+     req.headers({
+        "cache-control": "no-cache"
+     });
+
+    req.end(function(resp){
+      var str = resp.raw_body
+      console.log('run',str,resp.code)
+     
+      if(str.match(/SMS-SHOOT-ID/g)){
+        console.log('match')
+        resolve('success')
+      }else{
+        console.log('not match')
+        reject('error')
+      }
+      });
+    })  
+  }
+
+  this.Cancel_msg = (str,OTP)=>{
+    console.log(str)
+    console.log(OTP)
+      return new Promise((resolve,reject)=>{
+      var unirest = require('unirest');
+      var req = unirest("GET", "http://byebyesms.com/app/smsapi/index.php?");
+      req.query({
+      "key": "46041D0DD2BF5B",
+      "campaign":"10072",
+      "routeid": "7",
+      "type":"text",
+      "contacts": `${str}`,
+      "senderid": "XPCURE",
+      "msg": ` Dear Applicant, Regret to inform that your application could not be processed on XpressCure. Thanks!`,
+      });
+
+     req.headers({
+        "cache-control": "no-cache"
+     });
+
+    req.end(function(resp){
+      var str = resp.raw_body
+      console.log('run',str,resp.code)
+     
+      if(str.match(/SMS-SHOOT-ID/g)){
+        console.log('match')
+        resolve('success')
+      }else{
+        console.log('not match')
+        reject('error')
+      }
+      });
+    })  
+  }
+
+  this.approve_msg = (str,OTP)=>{
+    console.log(str)
+    console.log(OTP)
+      return new Promise((resolve,reject)=>{
+      var unirest = require('unirest');
+      var req = unirest("GET", "http://byebyesms.com/app/smsapi/index.php?");
+      req.query({
+      "key": "46041D0DD2BF5B",
+      "campaign":"10072",
+      "routeid": "7",
+      "type":"text",
+      "contacts": `${str}`,
+      "senderid": "XPCURE",
+      "msg": `Dear Doctor, Your Application on XpressCure Portal has been approved. Your Username - ${OTP}`,
+      });
+
+     req.headers({
+        "cache-control": "no-cache"
+     });
+
+    req.end(function(resp){
+      var str = resp.raw_body
+      console.log('run',str,resp.code)
+     
+      if(str.match(/SMS-SHOOT-ID/g)){
+        console.log('match')
+        resolve('success')
+      }else{
+        console.log('not match')
+        reject('error')
+      }
       });
     })  
   }

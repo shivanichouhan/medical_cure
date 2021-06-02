@@ -3,6 +3,8 @@ const cloud = require("../../../cloudinary")
 const fs = require("fs")
 const path = require("path")
 const bcrypt = require('bcryptjs')
+const emailmsg = require("../../../otp")
+
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -23,7 +25,7 @@ exports.doctorByName = (req, res) => {
     const { search } = req.body
     if (search) {
         var blog_name = new RegExp('^' + search, 'i');
-        var findQuery = { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }] }
+        var findQuery = { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }
         docReg.find(findQuery).exec((err, resp) => {
             if (err) {
                 res.send({ error: 'doctor details not get' })
@@ -332,31 +334,49 @@ exports.edit_doctor = (req, res) => {
         })
 }
 
-exports.status_manage = (req, res) => {
-    if (req.body.status === 0) {
-        docReg.updateOne({ _id: req.body.doctorId }, { $set: { status: 1 } }, (err, resp) => {
-            if (err) {
-                res.json(err)
-            }
-            else {
-                res.json(resp)
-            }
+
+
+exports.status_manage = async (req, res) => {
+    const { status, doctorId } = req.body
+    const doctors = await docReg.findOne({ _id: doctorId })
+    if (status == "Pending" || status == "pending") {
+        emailmsg.Pending_msg(doctors.phone_number, doctors.username).then((data) => {
+            res.send(data)
+        }).catch((err) => {
+            res.send(err)
         })
     }
-    else if (req.body.status === 1) {
-        docReg.updateOne({ _id: req.body.doctorId }, { $set: { status: 0 } }, (err, resp) => {
+    else if (status == "Cancelled" || status == "cancelled") {
+        emailmsg.Cancel_msg(doctors.phone_number, doctors.username).then((data) => {
+            res.send(data)
+        }).catch((err) => {
+            res.send(err)
+        })
+    } else if (status == "Approved" || status == "approved") {
+        docReg.updateOne({ _id: doctorId }, { $set: { adminVerified: 1 } }, (err, resp) => {
             if (err) {
                 res.json(err)
             }
             else {
-                res.json(resp)
+                emailmsg.approve_msg(doctors.phone_number, doctors.username).then((data) => {
+                    // res.send(data)
+                    emailmsg.suscribe_mail(doctors.email).then(async (Result) => {
+                        console.log(Result)
+                    }).catch((error) => {
+                        console.log(error)
+                        res.json({ code: 400, msg: 'email not sent' })
+                    })
+                }).catch((err) => {
+                    res.send(err)
+                })
+
             }
         })
     }
 }
 
 exports.remove_doctor = (req, res) => {
-    docReg.remove({ _id: req.params.doctorId }, (err, removeDoc) => {
+    docReg.remove({ _id: req.body.doctorId }, (err, removeDoc) => {
         if (err) {
             res.json(err)
         }
