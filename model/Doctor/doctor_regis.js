@@ -252,8 +252,8 @@ const EventSchema = new mongoose.Schema(
             type: String,
             default: "0"
         }, adminVerified: {
-            type: String,
-            default: "0"
+            type: Number,
+            default: 0
         }
     },
     {

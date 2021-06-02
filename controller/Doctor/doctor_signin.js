@@ -133,7 +133,7 @@ exports.doctor_reg = async (req, res) => {
 
 exports.doctorLogin = async (req, res) => {
     var { email, password } = req.body
-    console.log(email)
+    console.log(req.body)
     const user = await doc.findOne({ email: email })
     if (!user) {
         res.json({
