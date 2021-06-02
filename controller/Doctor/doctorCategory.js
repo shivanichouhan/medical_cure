@@ -33,12 +33,9 @@ exports.createSubCategory = (req, res) => {
 }
 
 exports.all_category = async (req, res) => {
-  var lastWeek = new Date();
-  lastWeek.setDate(lastWeek.getDate() - 15);
-  const details = await doct.find({ "createdAt": { $gte: lastWeek } });
-  subCategories.find({}).populate("DoctorList")
+  doctor_category.find({},{category:1,_id:1,createdAt:1,updatedAt:1})
     .then((resp) => {
-      res.send(details)
+      res.send(resp)
     })
 }
 
