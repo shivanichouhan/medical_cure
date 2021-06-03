@@ -14,7 +14,6 @@ exports.list_patient = (req,res)=>{
 }
 
 exports.update_patient = (req,res)=>{
-   
     // console.log(req.body.child)
     Patient.findByIdAndUpdate(req.params.patientId,req.body)
     .exec((err,resp)=>{

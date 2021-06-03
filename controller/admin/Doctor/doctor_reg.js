@@ -4,6 +4,7 @@ const fs = require("fs")
 const path = require("path")
 const bcrypt = require('bcryptjs')
 const emailmsg = require("../../../otp")
+const subCategories = require("../../../model/Doctor/doctor_subcategory")
 
 
 async function hashPassword(password) {
@@ -50,7 +51,7 @@ exports.unverifiedDoctorWithSearch = (req, res) => {
     const { search } = req.body
     if (search) {
         var blog_name = new RegExp('^' + search, 'i');
-        var findQuery = { $and: [{ register: 1}, { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }] }
+        var findQuery = { $and: [{ register: 1 }, { $or: [{ username: { $regex: blog_name } }, { mobile_number: blog_name }, { email: blog_name }, { Specialization: blog_name }] }] }
         docReg.find(findQuery).exec((err, resp) => {
             if (err) {
                 res.send({ error: 'doctor details not get' })
@@ -382,18 +383,30 @@ exports.DoctorListForVarify = (req, res) => {
 
 
 exports.status_manage = async (req, res) => {
-    const { status, doctorId } = req.body
+    const { status, doctorId, subcatId } = req.body
     const doctors = await docReg.findOne({ _id: doctorId })
     if (status == "Pending" || status == "pending") {
         emailmsg.Pending_msg(doctors.phone_number, doctors.username).then((data) => {
-            res.send(data)
+            emailmsg.pending_email(doctors.email).then(async (Result) => {
+                console.log(Result)
+                res.send(Result)
+            }).catch((error) => {
+                console.log(error)
+                res.json({ code: 400, msg: 'email not sent' })
+            })
         }).catch((err) => {
             res.send(err)
         })
     }
     else if (status == "Cancelled" || status == "cancelled") {
         emailmsg.Cancel_msg(doctors.phone_number, doctors.username).then((data) => {
-            res.send(data)
+            emailmsg.disapprove_email(doctors.email).then(async (Result) => {
+                console.log(Result)
+                res.send(Result)
+            }).catch((error) => {
+                console.log(error)
+                res.json({ code: 400, msg: 'email not sent' })
+            })
         }).catch((err) => {
             res.send(err)
         })
@@ -403,17 +416,23 @@ exports.status_manage = async (req, res) => {
                 res.json(err)
             }
             else {
-                emailmsg.approve_msg(doctors.phone_number, doctors.username).then((data) => {
-                    // res.send(data)
-                    emailmsg.suscribe_mail(doctors.email).then(async (Result) => {
-                        console.log(Result)
-                    }).catch((error) => {
-                        console.log(error)
-                        res.json({ code: 400, msg: 'email not sent' })
+                subCategories.updateOne({ _id: subcatId }, { $push: { DoctorList: doctorId } })
+                    .then((resp) => {
+                        emailmsg.approve_msg(doctors.phone_number, doctors.username).then((data) => {
+                            // res.send(data)
+                            emailmsg.approve_email(doctors.email).then(async (Result) => {
+                                console.log(Result)
+                                res.send(Result)
+                            }).catch((error) => {
+                                console.log(error)
+                                res.json({ code: 400, msg: 'email not sent' })
+                            })
+                        }).catch((err) => {
+                            res.send("something went wrong")
+                        })
+                    }).catch((err) => {
+                        res.send(err)
                     })
-                }).catch((err) => {
-                    res.send(err)
-                })
 
             }
         })

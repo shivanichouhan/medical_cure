@@ -34,15 +34,28 @@ exports.createSubCategory = (req, res) => {
 
 exports.doctSubCategories = (req, res) => {
   subCategories.find({}, { subCategory: 1, _id: 1, createdAt: 1, updatedAt: 1 })
-  .then((resp) => {
-    res.send(resp)
-  }).catch((err) => {
-    res.send(err)
-  })
+    .then((resp) => {
+      res.send(resp)
+    }).catch((err) => {
+      res.send(err)
+    })
 }
 
+
+exports.update_doctSubCategories = (req, res) => {
+  const { subcat_id, subcategory } = req.body
+  subCategories.updateOne({ _id: subcat_id }, { $set: { subCategory: subcategory } })
+    .then((resp) => {
+      res.send("update successfuly")
+    }).catch((err) => {
+      res.send(err)
+    })
+}
+
+
+
 exports.all_category = async (req, res) => {
-  doctor_category.find({}, { category: 1, _id: 1, createdAt: 1, updatedAt: 1 })
+  doctor_category.find({}, { category: 1, _id: 1, createdAt: 1, updatedAt: 1, subCategory: 1 }).populate("subCategory", { _id: 1, subCategory: 1, createdAt: 1, updatedAt: 1 })
     .then((resp) => {
       res.send(resp)
     }).catch((err) => {

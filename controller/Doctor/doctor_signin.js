@@ -49,7 +49,7 @@ exports.reg_from = async (req, res) => {
                 const identity_front = req.files.identity_front_side_img
                 const identity_back = req.files.identity_back_side_img
 
-                //    const docreg = async (path)=> await cloud.doctor_reg(path)
+                const docreg = async (path)=> await cloud.doctor_reg(path)
                 const front_lic = async (path) => await cloud.licence_front(path)
                 const back_lic = async (path) => await cloud.licence_back(path)
                 //    const pass_certificate = async (path)=> await cloud.doc_pass(path)
@@ -71,7 +71,7 @@ exports.reg_from = async (req, res) => {
                 const iden_back = await identiy_back(p6)
 
                 console.log(lice_front, lice_back, iden_front, iden_back)
-                //    fs.unlinkSync(p1)
+                   fs.unlinkSync(p1)
                 fs.unlinkSync(p2)
                 fs.unlinkSync(p3)
                 //    fs.unlinkSync(p4)
