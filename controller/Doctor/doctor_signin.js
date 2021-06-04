@@ -168,7 +168,7 @@ exports.log_social = async (req, res) => {
     const { email, gmailId, username, profile_pic, login_type } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
             .then(async (resp) => {
                 if (resp) {
                     var fire_token = await doc.updateOne({ _id: resp._id }, { $set: { firebase_token: req.body.firebase_token, profile_pic: profile_pic } })
@@ -200,7 +200,7 @@ exports.log_social = async (req, res) => {
                             res.send(err)
                         }
                         else {
-                           const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+                           const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
 
                             res.send({ code: 200, msg: DataDoctor })
                         }
@@ -210,7 +210,7 @@ exports.log_social = async (req, res) => {
                 res.json({ code: 400, msg: 'data not come' })
             })
     } else if (login_type == 'facebook') {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,bearer_token:1,profile_pic,username:1,login_type:1,firebase_token:1})
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,register:1,bearer_token:1,profile_pic,username:1,login_type:1,firebase_token:1})
             .then(async (resp) => {
                 console.log(resp)
                 if (resp) {
@@ -244,7 +244,7 @@ exports.log_social = async (req, res) => {
                             res.send(err)
                         }
                         else {
-                            const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+                            const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
 
                             res.send({ code: 200, msg: DataDoctor })
                         }
