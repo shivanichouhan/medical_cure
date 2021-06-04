@@ -167,16 +167,17 @@ exports.log_social = async (req, res) => {
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     const { email, gmailId, username, profile_pic, login_type } = req.body
     console.log("shivani gmail data", req.body)
-
     if (login_type == "gmail") {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
             .then(async (resp) => {
                 if (resp) {
                     var fire_token = await doc.updateOne({ _id: resp._id }, { $set: { firebase_token: req.body.firebase_token, profile_pic: profile_pic } })
                     if (fire_token) {
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp, { bearer_token: token })
-                        res.json({ code: 200, msg: result })
+                        var result1 = _.extend(result, { firebase_token: req.body.firebase_token })
+
+                        res.json({ code: 200, msg: result1 })
                     }
                     else {
                         res.json({ code: 400, msg: 'fire_base token not update' })
@@ -207,7 +208,7 @@ exports.log_social = async (req, res) => {
                 res.json({ code: 400, msg: 'data not come' })
             })
     } else if (login_type == 'facebook') {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] })
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,bearer_token:1,profile_pic,username:1,login_type:1,firebase_token:1})
             .then(async (resp) => {
                 console.log(resp)
                 if (resp) {
@@ -215,7 +216,9 @@ exports.log_social = async (req, res) => {
                     if (firebase_token) {
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp, { bearer_token: token })
-                        res.json({ code: 200, msg: result })
+                        var result1 = _.extend(result, { firebase_token: req.body.firebase_token })
+
+                        res.json({ code: 200, msg: result1 })
                     }
                     else {
                         res.json({ code: 400, msg: 'fire_base token not update' })
