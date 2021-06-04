@@ -195,12 +195,14 @@ exports.log_social = async (req, res) => {
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
                     userinfo.dumy_userName = '@' + username + OTP
-                    userinfo.save((err, Data) => {
+                    userinfo.save(async(err, Data) => {
                         if (err) {
                             res.send(err)
                         }
                         else {
-                            res.send({ code: 200, msg: Data })
+                           const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+
+                            res.send({ code: 200, msg: DataDoctor })
                         }
                     })
                 }
@@ -237,12 +239,14 @@ exports.log_social = async (req, res) => {
                     userinfo.bearer_token = Token
                     userinfo.dumy_userName = '@' + username + OTP
                     console.log(userinfo)
-                    userinfo.save((err, Data) => {
+                    userinfo.save(async(err, Data) => {
                         if (err) {
                             res.send(err)
                         }
                         else {
-                            res.send({ code: 200, msg: Data })
+                            const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+
+                            res.send({ code: 200, msg: DataDoctor })
                         }
                     })
                 }
