@@ -49,7 +49,7 @@ exports.reg_from = async (req, res) => {
                 const identity_front = req.files.identity_front_side_img
                 const identity_back = req.files.identity_back_side_img
 
-                const docreg = async (path)=> await cloud.doctor_reg(path)
+                const docreg = async (path) => await cloud.doctor_reg(path)
                 const front_lic = async (path) => await cloud.licence_front(path)
                 const back_lic = async (path) => await cloud.licence_back(path)
                 //    const pass_certificate = async (path)=> await cloud.doc_pass(path)
@@ -71,7 +71,7 @@ exports.reg_from = async (req, res) => {
                 const iden_back = await identiy_back(p6)
 
                 console.log(lice_front, lice_back, iden_front, iden_back)
-                   fs.unlinkSync(p1)
+                fs.unlinkSync(p1)
                 fs.unlinkSync(p2)
                 fs.unlinkSync(p3)
                 //    fs.unlinkSync(p4)
@@ -106,7 +106,7 @@ exports.doctor_reg = async (req, res) => {
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
     console.log(req.body)
 
-    const { user_name, email, password,firebase_token } = req.body;
+    const { user_name, email, password, firebase_token ,deviceName} = req.body;
     console.log(email)
     const hashedPassword = await hashPassword(password)
     const data_check = await doc.findOne({ email: email })
@@ -117,7 +117,8 @@ exports.doctor_reg = async (req, res) => {
             username: user_name,
             email: email,
             password: hashedPassword,
-            firebase_token:firebase_token
+            firebase_token: firebase_token,
+            deviceName:deviceName
 
         })
         datas.user_id = datas._id
@@ -153,7 +154,17 @@ exports.doctorLogin = async (req, res) => {
             console.log(token)
             const Doc = await doc.updateOne({ _id: user._id }, { $set: { firebase_token: req.body.firebase_token } })
             if (Doc) {
-                return res.json({ code: 200, msg: { bearer_token: token, username: user.username, email: user.email, dumy_userName: user.dumy_userName, user_id: user.user_id, register: user.register } });
+                return res.json({
+                    code: 200, msg: {
+                        firebase_token: user.firebase_token, bearer_token: token,
+                        username: user.username,
+                        email: user.email, online_status: user.online_status,
+                        dumy_userName: user.dumy_userName, _id: user._id,
+                        register: user.register,
+                        deviceName: user.deviceName
+
+                    }
+                });
             }
             else {
                 res.json({ code: 400, msg: 'firebase token not update' })
@@ -165,10 +176,10 @@ exports.doctorLogin = async (req, res) => {
 exports.log_social = async (req, res) => {
     console.log(req.body)
     const OTP = otpGenerator.generate(2, { digits: true, upperCase: false, specialChars: false, alphabets: false });
-    const { email, gmailId, username, profile_pic, login_type } = req.body
+    const { email, gmailId, username, profile_pic, login_type, deviceName } = req.body
     console.log("shivani gmail data", req.body)
     if (login_type == "gmail") {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] }, { online_status: 1, _id: 1, deviceName: 1, register: 1, bearer_token: 1, email: 1, profile_pic, username: 1, login_type: 1, firebase_token: 1 })
             .then(async (resp) => {
                 if (resp) {
                     var fire_token = await doc.updateOne({ _id: resp._id }, { $set: { firebase_token: req.body.firebase_token, profile_pic: profile_pic } })
@@ -176,6 +187,7 @@ exports.log_social = async (req, res) => {
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp, { bearer_token: token })
                         var result1 = _.extend(result, { firebase_token: req.body.firebase_token })
+
 
                         res.json({ code: 200, msg: result1 })
                     }
@@ -190,17 +202,18 @@ exports.log_social = async (req, res) => {
                         gmailId: req.body.gmailId,
                         username: username,
                         firebase_token: req.body.firebase_token,
-                        profile_pic: req.body.profile_pic
+                        profile_pic: req.body.profile_pic,
+                        deviceName: deviceName
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
                     userinfo.dumy_userName = '@' + username + OTP
-                    userinfo.save(async(err, Data) => {
+                    userinfo.save(async (err, Data) => {
                         if (err) {
                             res.send(err)
                         }
                         else {
-                           const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
+                            const DataDoctor = await doc.findOne({ _id: Data._id }, { online_status: 1, _id: 1, register: 1, bearer_token: 1, email: 1, deviceName: 1, profile_pic, username: 1, login_type: 1, firebase_token: 1 })
 
                             res.send({ code: 200, msg: DataDoctor })
                         }
@@ -210,11 +223,11 @@ exports.log_social = async (req, res) => {
                 res.json({ code: 400, msg: 'data not come' })
             })
     } else if (login_type == 'facebook') {
-        doc.findOne({ $or: [{ email: email }, { gmailId: gmailId }] },{_id:1,register:1,bearer_token:1,profile_pic,username:1,login_type:1,firebase_token:1})
+        doc.findOne({ $or: [{ email: email }, { online_status: 1, gmailId: gmailId }] }, { _id: 1, deviceName: 1, register: 1, bearer_token: 1, profile_pic, username: 1, login_type: 1, firebase_token: 1 })
             .then(async (resp) => {
                 console.log(resp)
                 if (resp) {
-                    var firebase_token = await doc.updateOne({ _id: resp._id }, { $set: { firebase_token: req.body.firebase_token, profile_pic: profile_pic } })
+                    var firebase_token = await doc.updateOne({ _id: resp._id }, { $set: { deviceName: deviceName, firebase_token: req.body.firebase_token, profile_pic: profile_pic } })
                     if (firebase_token) {
                         const token = jwt.sign({ _id: resp._id }, process.env.JWT_SECRET)
                         var result = _.extend(resp, { bearer_token: token })
@@ -233,19 +246,19 @@ exports.log_social = async (req, res) => {
                         gmailId: req.body.gmailId,
                         username: username,
                         firebase_token: req.body.firebase_token,
-                        profile_pic: req.body.profile_pic
+                        profile_pic: req.body.profile_pic,
+                        deviceName: deviceName
                     })
                     var Token = jwt.sign({ _id: userinfo._id }, process.env.JWT_SECRET)
                     userinfo.bearer_token = Token
                     userinfo.dumy_userName = '@' + username + OTP
-                    console.log(userinfo)
-                    userinfo.save(async(err, Data) => {
+                    // console.log(userinfo)
+                    userinfo.save(async (err, Data) => {
                         if (err) {
                             res.send(err)
                         }
                         else {
-                            const DataDoctor =await doc.findOne({ _id:Data._id },{_id:1,register:1,bearer_token:1,email:1,profile_pic,username:1,login_type:1,firebase_token:1})
-
+                            const DataDoctor = await doc.findOne({ _id: Data._id }, { online_status: 1, _id: 1, deviceName: 1, register: 1, bearer_token: 1, email: 1, profile_pic, username: 1, login_type: 1, firebase_token: 1 })
                             res.send({ code: 200, msg: DataDoctor })
                         }
                     })
@@ -416,7 +429,7 @@ exports.doctorOnline_status = async (req, res) => {
             ])
             const details1 = details[0]
             const hours_data = hours.availability_hour + details1.duration
-            const update_details = await availabiltyHour.updateOne({ _id: hours._id }, {$set:{availability_hour:hours_data,OnlineTime:currentDate}})
+            const update_details = await availabiltyHour.updateOne({ _id: hours._id }, { $set: { availability_hour: hours_data, OnlineTime: currentDate } })
             console.log(hours_data, details, "jjjjjjjj")
 
         } else {

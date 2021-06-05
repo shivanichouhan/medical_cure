@@ -100,6 +100,10 @@ exports.Add_Health_Worker = async (req, res) => {
    
  }
 
+
+
+
+
 exports.findhealthworker = async (req, res) => {
     console.log('fds')
     try{
@@ -109,6 +113,21 @@ exports.findhealthworker = async (req, res) => {
         res.send(e);
     }
 };
+
+
+exports.searchHelthworker = (req,res)=>{
+    const {search} =req.body
+    var blog_name = new RegExp('^' + search, 'i');
+    var findQuery = { $and: [{ register: 1 }, { $or: [{ username: { $regex: blog_name } }, { mobile: blog_name }, { email: blog_name }] }] }
+    try{
+        const workersData = await HealthWorker.find();
+        res.send(workersData);
+    }catch(e){
+        res.send(e);
+    }
+}
+
+
 
 exports.DeleteHealthworker = (req, res) => {
     HealthWorker.remove({_id:req.body._id},(err,resp)=>{
@@ -120,6 +139,7 @@ exports.DeleteHealthworker = (req, res) => {
         }
     })
 };
+
 
 exports.helthworker_status = (req,res) =>{
     if(req.body.status == 1){
