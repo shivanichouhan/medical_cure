@@ -115,7 +115,7 @@ exports.findhealthworker = async (req, res) => {
 };
 
 
-exports.searchHelthworker = (req,res)=>{
+exports.searchHelthworker =async (req,res)=>{
     const {search} =req.body
     var blog_name = new RegExp('^' + search, 'i');
     var findQuery = { $and: [{ register: 1 }, { $or: [{ username: { $regex: blog_name } }, { mobile: blog_name }, { email: blog_name }] }] }
