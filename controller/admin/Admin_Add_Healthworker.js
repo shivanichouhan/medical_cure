@@ -120,7 +120,7 @@ exports.searchHelthworker =async (req,res)=>{
     var blog_name = new RegExp('^' + search, 'i');
     var findQuery = { $and: [{ register: 1 }, { $or: [{ username: { $regex: blog_name } }, { mobile: blog_name }, { email: blog_name }] }] }
     try{
-        const workersData = await HealthWorker.find();
+        const workersData = await HealthWorker.find(findQuery);
         res.send(workersData);
     }catch(e){
         res.send(e);
