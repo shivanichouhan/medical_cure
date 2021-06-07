@@ -47,6 +47,7 @@ exports.doctorByName = (req, res) => {
 }
 
 
+
 exports.unverifiedDoctorWithSearch = (req, res) => {
     const { search } = req.body
     if (search) {
@@ -64,7 +65,6 @@ exports.unverifiedDoctorWithSearch = (req, res) => {
         res.send("something went wrong")
     }
 }
-
 
 
 exports.doc_signup = async (req, res) => {
@@ -91,6 +91,7 @@ exports.doc_signup = async (req, res) => {
     }
 
 }
+
 
 exports.reg_doctor = async (req, res) => {
     console.log(req.body)
@@ -193,6 +194,7 @@ exports.reg_doctor = async (req, res) => {
         })
 }
 
+
 exports.list_doctor = (req, res) => {
     docReg.find({ register: 1 }).exec((err, doctor_list) => {
         if (err) {
@@ -205,6 +207,7 @@ exports.list_doctor = (req, res) => {
         }
     })
 }
+
 
 
 exports.pagination_list_doctor = (req, res) => {
@@ -223,6 +226,8 @@ exports.pagination_list_doctor = (req, res) => {
             }
         })
 }
+
+
 
 
 // if (req.files.clinic) {
@@ -244,6 +249,8 @@ exports.pagination_list_doctor = (req, res) => {
 //         res.send({ code: 400, msg: 'image url not create' })
 //     })
 // }
+
+
 
 exports.edit_doctor = (req, res) => {
     console.log(req.body)
@@ -362,6 +369,7 @@ exports.edit_doctor = (req, res) => {
         })
 }
 
+
 exports.DoctorListForVarify = (req, res) => {
     var _pageNumber = req.body.pageNumber,
         _pageSize = 10;
@@ -438,6 +446,7 @@ exports.status_manage = async (req, res) => {
         })
     }
 }
+
 
 exports.remove_doctor = (req, res) => {
     docReg.remove({ _id: req.body.doctorId }, (err, removeDoc) => {
