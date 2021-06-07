@@ -68,6 +68,19 @@ exports.clinic_otp = async (req, res) => {
         }
         else {
             if (resp.register == "1") {
+                const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
+                otp.send_otp(str, OTP).then((resp) => {
+                    console.log(req.params.userId)
+                    User.findByIdAndUpdate(req.params.userId, { $set: { otp: OTP, mobile: str } }).then((dataUser) => {
+                        res.json({ code: 200, msg: 'otp send successfully', otp: OTP })
+
+                    }).catch((err) => {
+                        res.json({ code: 400, msg: 'otp not set in user' })
+                    })
+                }).catch((err) => {
+                    res.json({ code: 400, msg: 'otp not sent' })
+                })
+
             }
             else {
                 const OTP = otpGenerator.generate(4, { digits: true, upperCase: false, specialChars: false, alphabets: false });
