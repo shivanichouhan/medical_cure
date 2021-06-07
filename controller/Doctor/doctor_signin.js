@@ -403,7 +403,7 @@ exports.doctorOnline_status = async (req, res) => {
         }
         doc.updateOne({ _id: doctorId }, { $set: { online_status: type } })
             .then((resp) => {
-                res.json({ code: 200, msg: "doctor status change successfully" })
+                res.json({ code: 200, msg: "doctor status change successfully",online_status:"1" })
             }).catch((err) => {
                 res.json({ code: 400, msg: "something went wrong" })
             })
@@ -440,7 +440,8 @@ exports.doctorOnline_status = async (req, res) => {
             .then((resp) => {
                 res.json({
                     code: 200, msg:
-                        "doctor status change successfully"
+                        "doctor status change successfully",
+                        online_status:"1"
                 })
             }).catch((err) => {
                 console.log(err)
