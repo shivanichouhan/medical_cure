@@ -9,7 +9,7 @@ const otp = require("../../otp")
 const _ = require('lodash')
 const cloud = require("../../cloudinary")
 const fs = require('fs')
-
+const helth_workers = require("../../model/helth_worker/users")
 
 async function hashPassword(password) {
     return await bcrypt.hash(password, 10)
@@ -516,12 +516,14 @@ exports.ongoindConsultApi =async(req,res)=>{
                     obj.health_worker_id = helth_workerdata._id
                     obj.patient_id = items._id
                     obj.patient_name = items.patient_name
+                    // obj.doctor_pic = docter_data.profile_pic
+
                     obj.status = items.status
                     obj.createdAt = items.createdAt
                     obj.patient_img = items.patient_img
                     obj.mobile = items.mobile,
                         // obj.disease = "High Blood Sugar"
-                    obj.address = " "
+                    // obj.address = " "
                     obj.doctor_id = docter_data._id
                     obj.doctor_name = docter_data.username
                     obj.doctor_pic = docter_data.profile_pic
