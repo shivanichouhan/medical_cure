@@ -1,5 +1,6 @@
 const doc = require("../../model/Doctor/doctor_regis")
 const subCategories = require("../../model/Doctor/doctor_subcategory")
+const patient_data = require("../../model/helth_worker/patient_registration")
 const availabiltyHour = require("../../model/Doctor/availability_hour")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
