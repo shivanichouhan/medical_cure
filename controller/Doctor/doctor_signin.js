@@ -441,7 +441,7 @@ exports.doctorOnline_status = async (req, res) => {
                 res.json({
                     code: 200, msg:
                         "doctor status change successfully",
-                        online_status:"1"
+                        online_status:"0"
                 })
             }).catch((err) => {
                 console.log(err)
