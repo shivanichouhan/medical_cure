@@ -161,7 +161,8 @@ exports.doctorLogin = async (req, res) => {
                         email: user.email, online_status: user.online_status,
                         dumy_userName: user.dumy_userName, _id: user._id,
                         register: user.register,
-                        deviceName: user.deviceName
+                        deviceName: user.deviceName,
+                        profile_pic:user.profile_pic
 
                     }
                 });

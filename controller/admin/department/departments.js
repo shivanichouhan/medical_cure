@@ -4,7 +4,7 @@ const cloud = require("../../../cloudinary")
 const url = require("url")
 
 exports.list_dep = (req, res) => {
-    depart.find()
+    depart.find({},{department_name:1,description:1,department_status:1,createdAt:1,_id:1})
         .exec((err, depList) => {
             if (err) {
                 res.send('department list not found')
