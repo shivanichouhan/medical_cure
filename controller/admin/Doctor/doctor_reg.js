@@ -104,6 +104,7 @@ exports.reg_doctor = async (req, res) => {
             }
             else {
                 if (!resp) {
+                    req.body.register = "1"
                     var docObj = new docReg(req.body)
                     docObj.save(async (err, regDoc) => {
                         if (err) {
@@ -170,7 +171,7 @@ exports.reg_doctor = async (req, res) => {
                                         identity_front_side_img: Ide_f,
                                         identity_back_side_img: Ide_b,
                                         certificate_Img: Certificate
-                                    }, $set: { register: "1" }
+                                    }
                                 }).exec((err, resDoc) => {
                                     if (err) {
                                         res.send({ code: 400, msg: 'images not add in doctor' })
@@ -196,7 +197,7 @@ exports.reg_doctor = async (req, res) => {
 
 
 exports.list_doctor = (req, res) => {
-    docReg.find({ register: "1" }).exec((err, doctor_list) => {
+    docReg.find().exec((err, doctor_list) => {
         if (err) {
             res.send('doctor list not found')
         }
