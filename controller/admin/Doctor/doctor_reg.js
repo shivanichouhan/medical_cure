@@ -394,11 +394,13 @@ exports.DoctorListForVarify = (req, res) => {
 exports.status_manage = async (req, res) => {
     const { status, doctorId, subcatId } = req.body
     const doctors = await docReg.findOne({ _id: doctorId })
+    console.log(doctors,"jhhjjhjjhjjhjjjhjh")
     if (status == "Pending" || status == "pending") {
-        emailmsg.Pending_msg(doctors.phone_number, doctors.username).then((data) => {
+        emailmsg.Pending_msg(doctors.mobile_number, doctors.username).then((data) => {
+            console.log(data,"data responce")
             emailmsg.pending_email(doctors.email).then(async (Result) => {
                 console.log(Result)
-                res.send(Result)
+                res.json({code:200,msg:"status change successfully"})
             }).catch((error) => {
                 console.log(error)
                 res.json({ code: 400, msg: 'email not sent' })
@@ -408,10 +410,10 @@ exports.status_manage = async (req, res) => {
         })
     }
     else if (status == "Cancelled" || status == "cancelled") {
-        emailmsg.Cancel_msg(doctors.phone_number, doctors.username).then((data) => {
+        emailmsg.Cancel_msg(doctors.mobile_number, doctors.username).then((data) => {
             emailmsg.disapprove_email(doctors.email).then(async (Result) => {
                 console.log(Result)
-                res.send(Result)
+                res.json({code:200,msg:"status change successfully"})
             }).catch((error) => {
                 console.log(error)
                 res.json({ code: 400, msg: 'email not sent' })
@@ -427,11 +429,11 @@ exports.status_manage = async (req, res) => {
             else {
                 subCategories.updateOne({ _id: subcatId }, { $push: { DoctorList: doctorId } })
                     .then((resp) => {
-                        emailmsg.approve_msg(doctors.phone_number, doctors.username).then((data) => {
+                        emailmsg.approve_msg(doctors.mobile_number, doctors.username).then((data) => {
                             // res.send(data)
                             emailmsg.approve_email(doctors.email).then(async (Result) => {
                                 console.log(Result)
-                                res.send(Result)
+                                res.json({code:200,msg:"status change successfully"})
                             }).catch((error) => {
                                 console.log(error)
                                 res.json({ code: 400, msg: 'email not sent' })

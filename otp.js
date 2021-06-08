@@ -173,6 +173,7 @@ function otp() {
     `;
       sendgrid.send_via_sendgrid(mailOptions).then(resp => {
         console.log(resp)
+        console.log("success")
         resolve('success')
       }).catch(error => {
         reject('fail')
@@ -213,7 +214,7 @@ function otp() {
       })
     })
   }
-  
+
   this.pending_email = (email) => {
     return new Promise((resolve, reject) => {
       const mailOptions = {
@@ -247,9 +248,11 @@ function otp() {
     </p>
     `;
       sendgrid.send_via_sendgrid(mailOptions).then(resp => {
-        console.log(resp)
+        // console.log(resp)
+        console.log("success")
         resolve('success')
       }).catch(error => {
+        console.log(error)
         reject('fail')
       })
     })
