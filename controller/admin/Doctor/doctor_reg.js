@@ -196,7 +196,7 @@ exports.reg_doctor = async (req, res) => {
 
 
 exports.list_doctor = (req, res) => {
-    docReg.find({ register: 1 }).exec((err, doctor_list) => {
+    docReg.find({ register: "1" }).exec((err, doctor_list) => {
         if (err) {
             res.send('doctor list not found')
         }
